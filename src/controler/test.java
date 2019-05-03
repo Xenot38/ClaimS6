@@ -1,4 +1,4 @@
-package src.model;
+package controler;
 
 public class test {
 
