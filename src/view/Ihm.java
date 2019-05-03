@@ -24,6 +24,6 @@ public class Ihm extends Application {
 		Scene s = new Scene(root , hauteur,largeur);
 		primaryStage.setScene(s);
 		primaryStage.show();
-		
+		//test
 	}
 }
