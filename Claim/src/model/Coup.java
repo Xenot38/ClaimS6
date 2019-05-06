@@ -52,7 +52,6 @@ public class Coup {
 	public void setVictoireJ1(boolean victoireJ1) {
 		this.victoireJ1 = victoireJ1;
 	}
-	
-	
+		
 }
 
