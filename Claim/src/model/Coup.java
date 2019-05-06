@@ -5,17 +5,20 @@ public class Coup {
 	private Carte carteJ1;
 	private Carte carteJ2;
 	private Carte carteEnJeu;
+	private boolean victoireJ1;
 	
-	public Coup(Carte c1,Carte c2) {
+	public Coup(Carte c1,Carte c2,boolean vic) {
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = null;
+		victoireJ1 = vic;
 	}
 	
-	public Coup(Carte c1,Carte c2, Carte cej) {
+	public Coup(Carte c1,Carte c2, Carte cej, boolean vic) {
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = cej;
+		victoireJ1 = vic;
 	}
 
 	public Carte getCarteJ1() {
@@ -41,6 +44,15 @@ public class Coup {
 	public void setCarteEnJeu(Carte carteEnJeu) {
 		this.carteEnJeu = carteEnJeu;
 	}
+
+	public boolean isVictoireJ1() {
+		return victoireJ1;
+	}
+
+	public void setVictoireJ1(boolean victoireJ1) {
+		this.victoireJ1 = victoireJ1;
+	}
 	
 	
 }
+
