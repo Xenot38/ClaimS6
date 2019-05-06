@@ -192,7 +192,6 @@ public class Plateau {
 				j1.gagnerPartisan(carteEnJeu);
 				j2.gagnerPartisan(pioche.pop());
 				j1Courant = true;
-				stockageTourHistorique(cG,cP,carteEnJeu);
 				if(cG.getFaction() == Faction.MortsVivants) {j1.gagnerCarte(cG);}
 				if(cP.getFaction() == Faction.MortsVivants) {j1.gagnerCarte(cP);}
 			}else {
@@ -207,7 +206,6 @@ public class Plateau {
 				j2.gagnerPartisan(carteEnJeu);
 				j1.gagnerPartisan(pioche.pop());
 				j1Courant = true;
-				stockageTourHistorique(cG,cP,carteEnJeu);
 				if(cG.getFaction() == Faction.MortsVivants) {j2.gagnerCarte(cG);}
 				if(cP.getFaction() == Faction.MortsVivants) {j2.gagnerCarte(cP);}
 			}else {
@@ -218,17 +216,21 @@ public class Plateau {
 				j1Courant = false;				
 			}
 		}
+		stockagePliHistorique();
 	}
 	
 	
 	
-	public void stockageTourHistorique(Carte cGagnante, Carte cPerdante, Carte carteAGagner) {	//gestion de l'historique pour la 1ere phase 
-		
+	public void stockagePliHistorique() {	//gestion de l'historique
+		Coup co;
+		if(carteEnJeu != null) {
+			co = new Coup(carteJ1,carteJ2,j1Courant);
+		}else {
+			co = new Coup(carteJ1,carteJ2,carteEnJeu,j1Courant);
+		}
+		historique.add(co);
 	}
-	
-	public void stockageTourHistorique(Carte cGagnante, Carte cPerdante) {						//gestion de l'historique pour la 2nde phase 
-		
-	}
+
 	
 	public Stack<Carte> genereCartes(){
 		Stack<Carte> cartes = new Stack<Carte>();

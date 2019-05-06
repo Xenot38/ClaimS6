@@ -40,4 +40,8 @@ public abstract class Joueur {
 	public void gagnerCarte(Carte c) {
 		cartesScore.add(c);
 	}
+        
+        public Carte choisirCarte(int index){
+            return main.remove(index);
+        }
 }

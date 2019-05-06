@@ -35,5 +35,10 @@ public class Carte {
 		this.cheminImage = cheminImage;
 	}
 	
-	
+	public String affichePropCarte(){
+                String retour = faction.name();
+                retour = retour.concat(" ");
+                retour = retour.concat(Integer.toString(force));
+                return retour;
+        }
 }
