@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class Plateau {
 
-	boolean joueurCourant;
+	boolean j1Courant;
 	private Joueur j1;
 	private Joueur j2;
 	private ArrayList<Coup> historique;
@@ -16,11 +16,12 @@ public class Plateau {
 	private Stack<Carte> pioche;
 	private ArrayList<Carte> defausse;
 	private ArrayList<Integer> score;
-
+	private int phase;
 
 
 	public Plateau(String difficulte) {
-		joueurCourant  = true;
+		phase = 1;
+		j1Courant  = true;
 		historique = new ArrayList<Coup>();
 		defausse = new ArrayList<Carte>();
 		score = new ArrayList<Integer>();
@@ -54,12 +55,28 @@ public class Plateau {
 		}
 	}
 
-	public boolean isJoueurCourant() {
-		return joueurCourant;
+	public Plateau(boolean j1Courant, Joueur j1, Joueur j2, ArrayList<Coup> historique, Carte carteJ1,
+			Carte carteJ2, Carte carteEnJeu, Stack<Carte> pioche, ArrayList<Carte> defausse, ArrayList<Integer> score, int phase) {
+		super();
+		this.phase = phase;
+		this.j1Courant = j1Courant;
+		this.j1 = j1;
+		this.j2 = j2;
+		this.historique = historique;
+		this.carteJ1 = carteJ1;
+		this.carteJ2 = carteJ2;
+		this.carteEnJeu = carteEnJeu;
+		this.pioche = pioche;
+		this.defausse = defausse;
+		this.score = score;
 	}
 
-	public void setJoueurCourant(boolean joueurCourant) {
-		this.joueurCourant = joueurCourant;
+	public boolean isj1Courant() {
+		return j1Courant;
+	}
+
+	public void setj1Courant(boolean j1Courant) {
+		this.j1Courant = j1Courant;
 	}
 
 	public Joueur getJ1() {
@@ -133,6 +150,86 @@ public class Plateau {
 		this.defausse = defausse;
 	}
 
+	
+	public int getPhase() {
+		return phase;
+	}
+
+	public void setPhase(int phase) {
+		this.phase = phase;
+	}
+
+	public void calculPli()/*Calcule le pli en cours, prenant en compte les spécificités des factions. Appelle gagnePli, qui gère la fin du pli*/ {
+		Carte c1;
+		Carte c2;
+		if(j1Courant){c1 = carteJ1;
+			c2 = carteJ2;
+		}
+		else {c1 = carteJ2;
+			c2 = carteJ1;
+		}	
+		if(c1.getFaction() == c2.getFaction()||c2.getFaction() == Faction.Doppelgangers) {
+			if(c1.getForce()>=c2.getForce()) {
+				gagnePli(c1,c2);					
+			}
+			else {
+				gagnePli(c2,c1);
+			}	
+		}
+		else {
+			if (c1.getFaction() == Faction.Gobelins && c2.getFaction() == Faction.Chevaliers) {
+				gagnePli(c2,c1);
+			}
+			else {
+				gagnePli(c1,c2);					
+			}
+		}
+	}
+	
+	public void gagnePli(Carte cG, Carte cP)/*gère les fins de plis. cG = carte gagnante, cP = carte perdante*/ {
+		if(cG == carteJ1) {//victoire du J1
+			if(phase == 1) {
+				j1.gagnerPartisan(carteEnJeu);
+				j2.gagnerPartisan(pioche.pop());
+				j1Courant = true;
+				stockageTourHistorique(cG,cP,carteEnJeu);
+				if(cG.getFaction() == Faction.MortsVivants) {j1.gagnerCarte(cG);}
+				if(cP.getFaction() == Faction.MortsVivants) {j1.gagnerCarte(cP);}
+			}else {
+				if(cG.getFaction()==Faction.Nains) {j2.gagnerCarte(cG);}
+				else {j1.gagnerCarte(cG);}
+				if(cP.getFaction()==Faction.Nains) {j2.gagnerCarte(cP);}
+				else {j1.gagnerCarte(cP);}
+				j1Courant = true;				
+			}
+		}else {//victoire du J2
+			if(phase == 1) {
+				j2.gagnerPartisan(carteEnJeu);
+				j1.gagnerPartisan(pioche.pop());
+				j1Courant = true;
+				stockageTourHistorique(cG,cP,carteEnJeu);
+				if(cG.getFaction() == Faction.MortsVivants) {j2.gagnerCarte(cG);}
+				if(cP.getFaction() == Faction.MortsVivants) {j2.gagnerCarte(cP);}
+			}else {
+				if(cG.getFaction()==Faction.Nains) {j1.gagnerCarte(cG);}
+				else {j2.gagnerCarte(cG);}
+				if(cP.getFaction()==Faction.Nains) {j1.gagnerCarte(cP);}
+				else {j2.gagnerCarte(cP);}
+				j1Courant = false;				
+			}
+		}
+	}
+	
+	
+	
+	public void stockageTourHistorique(Carte cGagnante, Carte cPerdante, Carte carteAGagner) {	//gestion de l'historique pour la 1ere phase 
+		
+	}
+	
+	public void stockageTourHistorique(Carte cGagnante, Carte cPerdante) {						//gestion de l'historique pour la 2nde phase 
+		
+	}
+	
 	public Stack<Carte> genereCartes(){
 		Stack<Carte> cartes = new Stack<Carte>();
 		//ajout des chevaliers
