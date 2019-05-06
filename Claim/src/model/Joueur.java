@@ -33,5 +33,11 @@ public abstract class Joueur {
 		cartesPartisans = new ArrayList<Carte>();
 	}
 	
+	public void gagnerPartisan(Carte c) {
+		cartesPartisans.add(c);
+	}
 	
+	public void gagnerCarte(Carte c) {
+		cartesScore.add(c);
+	}
 }
