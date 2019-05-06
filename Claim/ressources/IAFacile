@@ -1,0 +1,18 @@
+IA Simple:
+	-premiere version => aléatoire(seulement pour tester l'intégration)
+	-deuxieme version =>(Phase 1) essaie de gagner les plis pour les cartes de force > 4
+                                       =>si on veut gagner la carte
+                                            =>Leader
+                                                joue la carte de plus forte puissance(random si =)
+                                            =>Deuxième joueur
+                                                joue une carte aléatoire parmi les cartes gagnantes
+                                       =>sinon
+                                            =>Leader
+                                                joue la carte de plus faible puissance
+                                            =>Deuxième joueur
+                                                joue une carte aléatoire parmi celles perdante
+
+                            
+                               (Phase 2)(Leader du pli)joue la carte la plus forte
+                                        (2ème joueur)(peut gagner) essaie de gagner à tous les coups avec un choix aléatoire parmi les cartes qui gagnent
+                                                                              (sinon) joue une carte aléatoire parmis les cartes qu'on peut jouer

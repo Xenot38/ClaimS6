@@ -1,0 +1,14 @@
+							
+IA Difficile:
+
+	-(Phase 1)calcule un score pour les configuration future(pour chacune des cartes que l'on peut jouer et choisi aléatoirement parmi les meilleurs moyens)
+	score = "valeur" carte(s) gagnée(s) - "valeur" carte utilisée
+	-(Phase 2)(Leader du pli) joue les cartes de factions 
+			  (2ème joueur)	
+	A completer
+
+
+
+
+
+calcul score config = (nb vote faction - nb vote faction joueur ennemi) + () A reflechir
