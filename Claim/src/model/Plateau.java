@@ -122,8 +122,8 @@ public class Plateau {
                                 } else {
                                         j1.gagnerCarte(cP);
                                 }
-                                j1Courant = true;
                         }
+                        j1Courant = true;
                 } else {//victoire du J2
                         if (phase == 1) {
                                 j2.gagnerPartisan(carteEnJeu);
@@ -146,8 +146,9 @@ public class Plateau {
                                 } else {
                                         j2.gagnerCarte(cP);
                                 }
-                                j1Courant = false;
                         }
+                        j1Courant = false;
+
                 }
                 stockagePliHistorique();
                 carteJ1 = null;
