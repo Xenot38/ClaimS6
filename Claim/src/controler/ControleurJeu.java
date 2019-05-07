@@ -40,6 +40,9 @@ public class ControleurJeu {
                                 while(plateauJeu.getCarteJ2()==null){
                                         plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(index,plateauJeu.getCarteJ1()));
                                         index++;
+                                        /*if(plateauJeu.getCarteJ2() == null){
+                                                System.out.println("Cette carte n'est pas jouable dans cette situation, choisissez en une autre.");
+                                        }*/
                                 }
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
 
@@ -50,6 +53,9 @@ public class ControleurJeu {
                                 while(plateauJeu.getCarteJ1()==null){
                                         plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(index,plateauJeu.getCarteJ2()));
                                         index++;
+                                        if(plateauJeu.getCarteJ1() == null){
+                                                System.out.println("Cette carte n'est pas jouable dans cette situation, choisissez en une autre.");
+                                        }
                                 }
                                 System.out.println("Vous avez joué " + plateauJeu.getCarteJ1().affichePropCarte());
                         }
