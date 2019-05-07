@@ -36,7 +36,7 @@ public class Launcher extends Application {
                 SceneMenu Menu = new SceneMenu();
                 SceneOptionPartie optionPartie = new SceneOptionPartie();               
                 SceneJeu jeu = new SceneJeu(p);
-                Scene s =jeu.creerjeu(largeur,hauteur);   
+                Scene s =jeu.creerjeu(1500,1000);   
                // Scene s = optionPartie.creerOptionPartie(450, 250);
                // Scene s = Menu.creerMenu();
 		

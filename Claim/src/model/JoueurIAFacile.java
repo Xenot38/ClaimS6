@@ -1,4 +1,4 @@
-package model;
+/*package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -142,4 +142,4 @@ public class JoueurIAFacile  extends JoueurIA{
         int i = r.nextInt(maxs.size()-1);
         return maxs.get(i); 
     }
-}
+}*/
