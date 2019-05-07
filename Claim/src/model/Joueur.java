@@ -52,8 +52,8 @@ public abstract class Joueur {
                         main.remove(index);
                         return cChoisie;
                 }else{
-                        Iterator<Carte> iter = main.iterator(); 
-                        boolean aFaction = false;
+                Iterator<Carte> iter = main.iterator(); 
+                boolean aFaction = false;
                         while (iter.hasNext()) { 
                                 if(iter.next().getFaction() == cAdversaire.getFaction()){
                                         aFaction = true;
