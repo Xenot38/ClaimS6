@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="942.0" prefWidth="1247.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.graphic">
+    <stylesheets>
+        <URL value="@graphic.css" />
+    </stylesheets>
+   <children>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="150.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Gb0.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="210.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Dp4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="270.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Mv4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="330.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/N4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="390.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/N9.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="450.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Gb9.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="510.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Mv2.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="570.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Dp0.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="630.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Gb4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="690.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Ch5.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="750.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Gb8.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="810.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Dp7.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="870.0" layoutY="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Ch4.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="906.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Ch7.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="217.0" layoutX="687.0" layoutY="464.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="217.0" layoutX="687.0" layoutY="241.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <ImageView fitHeight="217.0" fitWidth="200.0" layoutX="513.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/Ch2.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="691.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carte jouée par l'IA" />
+      <Text layoutX="703.0" layoutY="560.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carte jouée par" />
+      <Text layoutX="721.0" layoutY="585.0" strokeType="OUTSIDE" strokeWidth="0.0" text="le joueur" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="217.0" layoutX="447.0" layoutY="350.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="217.0" layoutX="1066.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="217.0" layoutX="1066.0" layoutY="700.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <Text layoutX="480.0" layoutY="463.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Défausse" />
+      <Text layoutX="1081.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pile Partisans IA" />
+      <Text layoutX="1070.0" layoutY="813.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pile Partisan Joueur" />
+      <MenuButton fx:id="button3" layoutX="28.0" layoutY="788.0" mnemonicParsing="false" onAction="#handleButtonAction3" popupSide="TOP" text="Menu">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Sauvegarder" />
+          <MenuItem mnemonicParsing="false" text="Reprendre" />
+          <MenuItem mnemonicParsing="false" text="Quitter" />
+        </items>
+      </MenuButton>
+   </children>
+</AnchorPane>
