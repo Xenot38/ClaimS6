@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Stack;
 
 public class Plateau {
@@ -121,8 +122,8 @@ public class Plateau {
                                 } else {
                                         j1.gagnerCarte(cP);
                                 }
-                                j1Courant = true;
                         }
+                        j1Courant = true;
                 } else {//victoire du J2
                         if (phase == 1) {
                                 j2.gagnerPartisan(carteEnJeu);
@@ -145,8 +146,9 @@ public class Plateau {
                                 } else {
                                         j2.gagnerCarte(cP);
                                 }
-                                j1Courant = false;
                         }
+                        j1Courant = false;
+
                 }
                 stockagePliHistorique();
                 carteJ1 = null;
@@ -159,10 +161,150 @@ public class Plateau {
                         phase = 2;
                 }if(j1.getMain().isEmpty() && phase == 2){
                         fini = true;
-                        System.out.println("lol c fini");
+                        System.out.println("/////////////////FIN DE LA PARTIE///////////////////");
+                        ArrayList<Integer> score = calculerScore();
+                        afficherScore(score);
+                        int scoreJ1 = 0;
+                        int scoreJ2 = 0;
+                        Iterator<Integer> iterScore = score.iterator();
+                        while(iterScore.hasNext()){
+                                int scoreCourant = iterScore.next();
+                                switch (scoreCourant){
+                                        case(1):
+                                                scoreJ1++;
+                                        break;
+                                        case(0):
+                                                scoreJ2++;
+                                        break;
+                                }   
+                        }
+                        if(scoreJ1>scoreJ2){
+                                System.out.println("Vous avez gagné !");
+                        }else if(scoreJ1 == scoreJ2){
+                                System.out.println("Egalité !");
+                        }else{
+                                System.out.println("Vous avez perdu !");
+                        }
+                       
                 }
         }
 
+        public ArrayList<Integer> calculerScore(){//renvoie un tableau de booleains représentant l'affiliation des différentes factions dans l'ordre Chevaliers-Doppelgangers-Gobelins-Morts_Vivants-Nains
+                ArrayList scoreJ1 = (ArrayList<Carte>) j1.getCartesScore();
+                Iterator<Carte> iterJ1 = scoreJ1.iterator();
+                ArrayList<Carte> cartesChJ1 = new ArrayList<>();
+                ArrayList<Carte> cartesDpJ1 = new ArrayList<>();
+                ArrayList<Carte> cartesGbJ1 = new ArrayList<>();
+                ArrayList<Carte> cartesMvJ1 = new ArrayList<>();
+                ArrayList<Carte> cartesNaJ1 = new ArrayList<>();
+                while (iterJ1.hasNext()){
+                        Carte cCourante = iterJ1.next();
+                        switch(cCourante.getFaction()){
+                                case Chevaliers:
+                                        cartesChJ1.add(cCourante);
+                                break;
+                                case Doppelgangers:
+                                        cartesDpJ1.add(cCourante);
+                                break;
+                                case Gobelins:
+                                        cartesGbJ1.add(cCourante);                    
+                                break;
+                                case MortsVivants:
+                                        cartesMvJ1.add(cCourante);                          
+                                break;
+                                case Nains:
+                                        cartesNaJ1.add(cCourante);        
+                                break;   
+                        }
+                }
+                ArrayList scoreJ2 = (ArrayList<Carte>) j2.getCartesScore();
+                Iterator<Carte> iterJ2 = scoreJ2.iterator();
+                ArrayList<Carte> cartesChJ2 = new ArrayList<>();
+                ArrayList<Carte> cartesDpJ2 = new ArrayList<>();
+                ArrayList<Carte> cartesGbJ2 = new ArrayList<>();
+                ArrayList<Carte> cartesMvJ2 = new ArrayList<>();
+                ArrayList<Carte> cartesNaJ2 = new ArrayList<>();
+                while (iterJ2.hasNext()){
+                        Carte cCourante = iterJ2.next();
+                        switch(cCourante.getFaction()){
+                                case Chevaliers:
+                                        cartesChJ2.add(cCourante);
+                                break;
+                                case Doppelgangers:
+                                        cartesDpJ2.add(cCourante);
+                                break;
+                                case Gobelins:
+                                        cartesGbJ2.add(cCourante);                    
+                                break;
+                                case MortsVivants:
+                                        cartesMvJ2.add(cCourante);                          
+                                break;
+                                case Nains:
+                                        cartesNaJ2.add(cCourante);        
+                                break;   
+                        }
+                }
+                ArrayList<Integer> affiliationFactions = new ArrayList<>();
+                affiliationFactions.add(calculerFaction(cartesChJ1, cartesChJ2));
+                affiliationFactions.add(calculerFaction(cartesDpJ1, cartesDpJ2));
+                affiliationFactions.add(calculerFaction(cartesGbJ1, cartesGbJ2));
+                affiliationFactions.add(calculerFaction(cartesMvJ1, cartesMvJ2));
+                affiliationFactions.add(calculerFaction(cartesNaJ1, cartesNaJ2));  
+                return affiliationFactions;
+        }
+        
+        public Integer calculerFaction(ArrayList<Carte> cartesJ1, ArrayList<Carte> cartesJ2){//Calcule l'affiliation d'une faction en fonction des cartes de cette faction dans les mains des 2 joueurs.
+                if(cartesJ1.size() > cartesJ2.size()){
+                        return 1;
+                }else if(cartesJ1.size()==cartesJ2.size()){
+                        int forceMaxJ1 = -1;
+                        Iterator<Carte> iterJ1 = cartesJ1.iterator();
+                        while(iterJ1.hasNext()){
+                                Carte carteCourante = iterJ1.next();
+                                if(carteCourante.getForce() > forceMaxJ1){
+                                        forceMaxJ1 = carteCourante.getForce();
+                                }
+                        }
+                        int forceMaxJ2 = -1;
+                        Iterator<Carte> iterJ2 = cartesJ2.iterator();
+                        while(iterJ2.hasNext()){
+                                Carte carteCourante = iterJ2.next();
+                                if(carteCourante.getForce() > forceMaxJ2){
+                                        forceMaxJ2 = carteCourante.getForce();
+                                }
+                        }
+                        if(forceMaxJ1 == forceMaxJ2){
+                                return -1;
+                        }
+                        else if(forceMaxJ1>forceMaxJ2){
+                                return 1;
+                        }else{
+                                return 0;
+                        }
+                }else{
+                        return 0;
+                }
+        } 
+        
+        public void afficherScore(ArrayList<Integer> score){
+                Iterator<Integer> iterScore = score.iterator();
+                afficherFaction(iterScore.next(), "Chevaliers");
+                afficherFaction(iterScore.next(), "Doppelgangers");
+                afficherFaction(iterScore.next(), "Gobelins");
+                afficherFaction(iterScore.next(), "Morts-Vivants");
+                afficherFaction(iterScore.next(), "Nains");                
+        }
+        
+        public void afficherFaction(int i, String faction){
+                if(i==1){
+                        System.out.println("la faction "+ faction + " a été remportée par le joueur 1.");
+                }else if(i==0){
+                        System.out.println("la faction "+ faction + " a été remportée par le joueur 2.");                        
+                }else{
+                        System.out.println("la faction "+ faction + "n'a été remportée par aucune équipe.");
+                }
+        }
+        
         public void stockagePliHistorique() {	//gestion de l'historique
                 Coup co;
                 if (carteEnJeu != null) {

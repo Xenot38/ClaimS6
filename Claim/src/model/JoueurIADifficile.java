@@ -9,7 +9,7 @@ public class JoueurIADifficile extends JoueurIA{
     }
 
     @Override
-    public Carte joue(Plateau p) {
+    public int joue(Plateau p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -19,12 +19,12 @@ public class JoueurIADifficile extends JoueurIA{
     }
 
     @Override
-    public Carte chooseCardPhase1(Plateau p, Boolean b) {
+    public int chooseCardPhase1(Plateau p, Boolean b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Carte chooseCardPhase2(Plateau p) {
+    public int chooseCardPhase2(Plateau p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

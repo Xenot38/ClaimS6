@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane fx:id="principe" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="671.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Principale">
+   <children>
+      <ImageView fitHeight="442.0" fitWidth="328.0" layoutX="172.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../git/ClaimS6/ressources/images/305679d3be94b6b4e7d101e21e9d4a1688dd0140b2ed93062f6915eec715.jpeg" />
+         </image>
+      </ImageView>
+      <Button fx:id="game" layoutX="293.0" layoutY="283.0" mnemonicParsing="false" onAction="#game" text="new game" />
+      <Button fx:id="règles" layoutX="307.0" layoutY="328.0" mnemonicParsing="false" onAction="#règles" text="règles" />
+   </children>
+</AnchorPane>

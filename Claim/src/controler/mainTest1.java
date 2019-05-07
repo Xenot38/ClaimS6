@@ -24,8 +24,6 @@ public class mainTest1 extends Application {
         
         @Override
         public void start(Stage stage) {
-                
-                System.out.println("luuul");
                 ControleurJeu monControleur = new ControleurJeu();
                 monControleur.lancerJeu();
         }
