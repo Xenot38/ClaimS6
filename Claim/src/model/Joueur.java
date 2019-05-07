@@ -179,4 +179,9 @@ public abstract class Joueur {
             return cartesPerdantes;
         }
     }
+    
+    public int joue(Plateau p) {
+        return 0;
+    }
+
 }

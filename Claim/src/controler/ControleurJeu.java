@@ -43,17 +43,18 @@ public class ControleurJeu {
                                 //plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(0));
                                 int index = 0;
                                 System.out.println("Vous avez joué " + plateauJeu.getCarteJ1().affichePropCarte());
-                                while(plateauJeu.getCarteJ2()==null){
+                                /*while(plateauJeu.getCarteJ2()==null){
                                         plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(index,plateauJeu.getCarteJ1()));
                                         index++;
                                         /*if(plateauJeu.getCarteJ2() == null){
                                                 System.out.println("Cette carte n'est pas jouable dans cette situation, choisissez en une autre.");
-                                        }*/
-                                }
+                                        }
+                                }*/
+                                plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(plateauJeu.getJ2().joue(plateauJeu),plateauJeu.getCarteJ1()));
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
 
                         }else{
-                                plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(0));
+                                plateauJeu.setCarteJ2(plateauJeu.getJ2().getMain().get(plateauJeu.getJ2().joue(plateauJeu)));
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
                                 int index = 0;
                                 while(plateauJeu.getCarteJ1()==null){

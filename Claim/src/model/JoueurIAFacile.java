@@ -16,7 +16,7 @@ public class JoueurIAFacile  extends JoueurIA{
     }
 
     @Override
-    public Carte chooseCardPhase1(Plateau p, Boolean b) {
+    public int chooseCardPhase1(Plateau p, Boolean b) {
         
         // on récupère notre main
         ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
@@ -29,7 +29,7 @@ public class JoueurIAFacile  extends JoueurIA{
                 
                 //on recupere la carte de plus forte puissance
                 //si plusieurs égales, on choisis aléatoirement parmi celles-ci
-                return getCarteMaxForce(main);
+                return getindex(getCarteMaxForce(main));
                 
             //Si on est le deuxième joueur
             }else{
@@ -38,11 +38,11 @@ public class JoueurIAFacile  extends JoueurIA{
                 ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
                 
                 //si on peut gagner
-                if(cartesGagnante.size() > 0){
-                    return getRandomCarte(cartesGagnante);
+                if(!cartesGagnante.isEmpty()){
+                    return getindex(getRandomCarte(cartesGagnante));
                 //si on ne peut que perdre
                 }else{
-                    return getRandomCarte(cartesJouable);
+                    return getindex(getRandomCarte(cartesJouable));
                 }
             }
             
@@ -50,7 +50,7 @@ public class JoueurIAFacile  extends JoueurIA{
         }else{
             //Si on est le leader
             if (!p.isJ1Courant()){
-                return getCarteMinForce(main);
+                return getindex(getCarteMinForce(main));
             //Si on est le deuxième joueur
             }else{
                 Carte carteJ1 = p.getCarteJ1();
@@ -58,25 +58,25 @@ public class JoueurIAFacile  extends JoueurIA{
                 ArrayList<Carte> cartesPerdante = p.getJ2().getCartesPerdante(carteJ1);
             
                 //si on peut perdre
-                if(cartesPerdante.size() > 0){
-                    return getRandomCarte(cartesPerdante);
-                //si on ne peut que perdre
+                if(!cartesPerdante.isEmpty()){
+                    return getindex(getRandomCarte(cartesPerdante));
+                //si on ne peut que gagner
                 }else{
-                    return getRandomCarte(cartesJouable);
+                    return getindex(getRandomCarte(cartesJouable));
                 }
             }
         }
     }
 
     @Override
-    public Carte chooseCardPhase2(Plateau p) {
+    public int chooseCardPhase2(Plateau p) {
         
         // on récupère notre main
         ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
          
         //si on est le leader
         if(!p.isJ1Courant()){
-            return getCarteMaxForce(main);
+            return getindex(getCarteMaxForce(main));
             
         //si on est deuxième joueur
         }else{
@@ -86,24 +86,40 @@ public class JoueurIAFacile  extends JoueurIA{
             ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
                             
             //si on peut gagner
-            if(cartesGagnante.size() > 0){
-                return getRandomCarte(cartesGagnante);
+            if(!cartesGagnante.isEmpty()){
+                return getindex(getRandomCarte(cartesGagnante));
             //si on ne peut que perdre
             }else{
-                return getRandomCarte(cartesJouable);
+                return getindex(getRandomCarte(cartesJouable));
             }
         }
     }
     
+    public int getindex(Carte carteChoisis){
+        int indice = -1;
+        int i = 0;
+        Iterator<Carte> it = getMain().iterator();
+        while(indice == -1 && it.hasNext()){
+            Carte c = it.next();
+            if(c.getFaction() == carteChoisis.getFaction() && c.getForce() == carteChoisis.getForce()){
+                indice = i;
+            }
+            i++;
+        }
+        
+        return indice;
+    }
+    
     public Carte getCarteMaxForce(ArrayList<Carte> main){
-        Iterator it = main.iterator();
+        Iterator<Carte> it = main.iterator();
         // on créé l'array pour garder la ou les cartes maxs
         ArrayList<Carte> maxs = new ArrayList();
         maxs.add(main.get(0));
+        it.next();
 
         // on parcours toutes les cartes pour trouver celles de plus grandes valeurs
         while(it.hasNext()){
-            Carte c = (Carte) it.next();
+            Carte c = it.next();
             if(c.getForce() > maxs.get(0).getForce()){
                 maxs.clear();
                 maxs.add(c);
@@ -112,13 +128,13 @@ public class JoueurIAFacile  extends JoueurIA{
             }
         }
         Random r = new Random();
-        int i = r.nextInt(maxs.size()-1);
+        int i = r.nextInt(maxs.size());
         return maxs.get(i); 
     }       
 
     public Carte getRandomCarte(ArrayList<Carte> cartes) {
         Random r = new Random();
-        int i = r.nextInt(cartes.size()-1);
+        int i = r.nextInt(cartes.size());
         return cartes.get(i);
     }
 
@@ -127,6 +143,7 @@ public class JoueurIAFacile  extends JoueurIA{
         // on créé l'array pour garder la ou les cartes maxs
         ArrayList<Carte> maxs = new ArrayList();
         maxs.add(main.get(0));
+        it.next();
 
         // on parcours toutes les cartes pour trouver celles de plus grandes valeurs
         while(it.hasNext()){
@@ -139,7 +156,7 @@ public class JoueurIAFacile  extends JoueurIA{
             }
         }
         Random r = new Random();
-        int i = r.nextInt(maxs.size()-1);
+        int i = r.nextInt(maxs.size());
         return maxs.get(i); 
     }
 }
