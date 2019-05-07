@@ -13,12 +13,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Plateau;
+import view.SceneJeu;
 import view.SceneMenu;
+import view.SceneOptionPartie;
 
 
 public class Launcher extends Application {
-	public static int hauteur = 400;
-	public static int largeur = 600;
+	public static int hauteur = 300;
+	public static int largeur = 300;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -28,10 +31,14 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Claim");
-                SceneMenu Menu = new SceneMenu();
-                Scene s = Menu.creerMenu();
+                Plateau p = new Plateau("facile");
                 
-		
+                SceneMenu Menu = new SceneMenu();
+                SceneOptionPartie optionPartie = new SceneOptionPartie();               
+                SceneJeu jeu = new SceneJeu(p);
+                Scene s =jeu.creerjeu(largeur,hauteur);   
+               // Scene s = optionPartie.creerOptionPartie(450, 250);
+               // Scene s = Menu.creerMenu();
 		
 		primaryStage.setScene(s);
 		// On affiche la fenêtre (donne leur taille aux objets graphiques)
