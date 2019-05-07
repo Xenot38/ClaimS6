@@ -33,8 +33,21 @@ public class ControleurJeu {
                                 System.out.println("La carte en jeu est : " + plateauJeu.getCarteEnJeu().affichePropCarte());
                         }
                         //System.out.println("entrez l'index de la carte a jouer (0-indexé)");
-                        plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(0));
-                        plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(0));
+                        if(plateauJeu.isJ1Courant()){
+                                plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(0));
+                                int index = 0;
+                                while(plateauJeu.getCarteJ2()==null){
+                                        plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(index,plateauJeu.getCarteJ1()));
+                                        index++;
+                                }
+                        }else{
+                                plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(0));
+                                int index = 0;
+                                while(plateauJeu.getCarteJ1()==null){
+                                        plateauJeu.setCarteJ1(plateauJeu.getJ2().choisirCarte(index,plateauJeu.getCarteJ2()));
+                                        index++;
+                                }
+                        }
                         System.out.println("Vous avez joué " + plateauJeu.getCarteJ1().affichePropCarte());
                         System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
                         plateauJeu.calculPli();

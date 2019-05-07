@@ -149,6 +149,8 @@ public class Plateau {
                         }
                 }
                 stockagePliHistorique();
+                carteJ1 = null;
+                carteJ2 = null;
                 if (j1.getMain().isEmpty() && phase == 1) {
                         j1.setMain(j1.getCartesPartisans());
                         j1.setCartesPartisans(null);

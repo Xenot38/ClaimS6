@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class Joueur {
 	
@@ -41,7 +42,29 @@ public abstract class Joueur {
 		cartesScore.add(c);
 	}
         
-        public Carte choisirCarte(int index){
-            return main.remove(index);
+        public Carte choisirCarte(int index){// Si le joueur a gagné il peut choisir n'importe quelle carte
+                return main.remove(index);
+        }
+        
+        public Carte choisirCarte(int index, Carte cAdversaire){// Si le joueur a perdu au tour précédent, il doit jouer de la même faction que son adversaire si il le peut, a moins de jouer doppelganger. Si il n'a aucune carte de la faction adverse, alors il peut jouer n'importe quelle carte.
+                Carte cChoisie = main.get(index);
+                if(cChoisie.getFaction() == cAdversaire.getFaction()||cChoisie.getFaction() == Faction.Doppelgangers){
+                        main.remove(index);
+                        return cChoisie;
+                }else{
+                        Iterator<Carte> iter = main.iterator(); 
+                        boolean aFaction = false;
+                        while (iter.hasNext()) { 
+                                if(iter.next().getFaction() == cAdversaire.getFaction()){
+                                        aFaction = true;
+                                }
+                        } 
+                        if(aFaction){
+                                return null;
+                        }else{
+                                main.remove(index);
+                                return cChoisie;
+                        }
+                }
         }
 }
