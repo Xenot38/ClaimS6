@@ -71,20 +71,25 @@ public abstract class Joueur {
     public ArrayList<Carte> getCartesJouable(Carte carteJ1) {
         Iterator<Carte> it = getMain().iterator();
         ArrayList<Carte> carteJouables = new ArrayList();
+        ArrayList<Carte> carteDoppel = new ArrayList();
 
+        
         while(it.hasNext()){
             Carte c = it.next();
             //la carte est jouable si les fac sont compatibles
-            if(c.getFaction() == carteJ1.getFaction() || c.getFaction() == Faction.Doppelgangers){
+            if(c.getFaction() == carteJ1.getFaction()){
                 carteJouables.add(c);
+            }else if( c.getFaction() == Faction.Doppelgangers){
+                carteDoppel.add(c);
             }
         }
         //on return toutes les cartes de notre main si aucune de nos cartes n'est compatible
         if(carteJouables.isEmpty()){
-            return getMain();
+            carteJouables.addAll(getMain());
         }else{
-            return carteJouables;
+            carteJouables.addAll(carteDoppel);
         }
+        return carteJouables;
     }
 
     public ArrayList<Carte> getCartesGagnante(Carte carteJ1) {
