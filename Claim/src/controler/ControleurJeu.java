@@ -46,35 +46,23 @@ public class ControleurJeu {
                                 System.out.println("La carte en jeu est : " + plateauJeu.getCarteEnJeu().affichePropCarte());
                         }
                         //System.out.println("entrez l'index de la carte a jouer (0-indexé)");
-                        if(plateauJeu.isJ1Courant()){
+                        if(plateauJeu.isJ1Courant()){           //Si le J1 a la main, il joue en premier et les choix du J2 sont restreints en conséquence.
                                 Scanner sc = new Scanner(System.in);
                                 System.out.println("Veuillez saisir un nombre :");
                                 int str = sc.nextInt();
                                 plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(str));
-                                //plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(0));
-                                int index = 0;
                                 System.out.println("Vous avez joué " + plateauJeu.getCarteJ1().affichePropCarte());
-                                /*while(plateauJeu.getCarteJ2()==null){
-                                        plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(index,plateauJeu.getCarteJ1()));
-                                        index++;
-                                        /*if(plateauJeu.getCarteJ2() == null){
-                                                System.out.println("Cette carte n'est pas jouable dans cette situation, choisissez en une autre.");
-                                        }
-                                }*/
                                 plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(plateauJeu.getJ2().joue(plateauJeu),plateauJeu.getCarteJ1()));
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
 
                         }else{
                                 plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(plateauJeu.getJ2().joue(plateauJeu)));
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
-                                int index = 0;
-                                while(plateauJeu.getCarteJ1()==null){
+                                while(plateauJeu.getCarteJ1()==null){//Si le J2 a la main, il joue en premier et les choix du J1 tant que l'utilisateur n'a pas choisi une carte viable, on lui redemande de choisir une carte.
                                         Scanner sc = new Scanner(System.in);
                                         System.out.println("Veuillez saisir un nombre :");
                                         int str = sc.nextInt();
                                         plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(str,plateauJeu.getCarteJ2()));
-                                        //plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(index,plateauJeu.getCarteJ2()));
-                                        index++;
                                         if(plateauJeu.getCarteJ1() == null){
                                                 System.out.println("Cette carte n'est pas jouable dans cette situation, choisissez en une autre.");
                                         }

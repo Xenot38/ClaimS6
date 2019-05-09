@@ -101,7 +101,7 @@ public class Plateau {
 
         public void gagnePli(Carte cG, Carte cP)/*gère les fins de plis. cG = carte gagnante, cP = carte perdante*/ {
                 if (cG == carteJ1) {//victoire du J1
-                        if (phase == 1) {
+                        if (phase == 1) {                                       //Pendant la phase 1, les morts vivants vont directement dans le score du gagnant et non dans la défausse
                                 j1.gagnerPartisan(carteEnJeu);
                                 j2.gagnerPartisan(pioche.pop());
                                 j1Courant = true;
@@ -111,7 +111,7 @@ public class Plateau {
                                 if (cP.getFaction() == Faction.MortsVivants) {
                                         j1.gagnerCarte(cP);
                                 }
-                        } else {
+                        } else {                                                //Pendant la phase 2, les Nains vont dans le score du perdant et non du gagnant.
                                 if (cG.getFaction() == Faction.Nains) {
                                         j2.gagnerCarte(cG);
                                 } else {
@@ -125,17 +125,17 @@ public class Plateau {
                         }
                         j1Courant = true;
                 } else {//victoire du J2
-                        if (phase == 1) {
+                        if (phase == 1) {                                       //comme ci-dessus
                                 j2.gagnerPartisan(carteEnJeu);
                                 j1.gagnerPartisan(pioche.pop());
-                                j1Courant = true;
+                                j1Courant = true;                              
                                 if (cG.getFaction() == Faction.MortsVivants) {
                                         j2.gagnerCarte(cG);
                                 }
                                 if (cP.getFaction() == Faction.MortsVivants) {
                                         j2.gagnerCarte(cP);
                                 }
-                        } else {
+                        } else {                                                //comme ci-dessus
                                 if (cG.getFaction() == Faction.Nains) {
                                         j1.gagnerCarte(cG);
                                 } else {
@@ -150,16 +150,17 @@ public class Plateau {
                         j1Courant = false;
 
                 }
+                //A la fin de chaque pli, on reset les cartes jouées et les cartes en jeu, no enregistre le pli dans l'historique et l'on vérifie que la phase n'est pas finie
                 stockagePliHistorique();
                 carteJ1 = null;
                 carteJ2 = null;
-                if (j1.getMain().isEmpty() && phase == 1) {
+                if (j1.getMain().isEmpty() && phase == 1) {             //Si la phase 1 est finie, la liste des partisans est transférée dans la main du joueur.
                         j1.setMain(j1.getCartesPartisans());
                         j1.setCartesPartisans(null);
                         j2.setMain(j2.getCartesPartisans());
                         j2.setCartesPartisans(null);
                         phase = 2;
-                }if(j1.getMain().isEmpty() && phase == 2){
+                }if(j1.getMain().isEmpty() && phase == 2){              //Si la phase 2 est finie, on calcule le score des 2 joueurs pour déterminer un gagnant.
                         fini = true;
                         System.out.println("/////////////////FIN DE LA PARTIE///////////////////");
                         ArrayList<Integer> score = calculerScore();
@@ -254,39 +255,39 @@ public class Plateau {
         }
         
         public Integer calculerFaction(ArrayList<Carte> cartesJ1, ArrayList<Carte> cartesJ2){//Calcule l'affiliation d'une faction en fonction des cartes de cette faction dans les mains des 2 joueurs.
-                if(cartesJ1.size() > cartesJ2.size()){
+                if(cartesJ1.size() > cartesJ2.size()){                          //Si le J1 a plus de cartes de la faction, il la remporte.
                         return 1;
-                }else if(cartesJ1.size()==cartesJ2.size()){
-                        int forceMaxJ1 = -1;
-                        Iterator<Carte> iterJ1 = cartesJ1.iterator();
-                        while(iterJ1.hasNext()){
-                                Carte carteCourante = iterJ1.next();
-                                if(carteCourante.getForce() > forceMaxJ1){
-                                        forceMaxJ1 = carteCourante.getForce();
+                }else if(cartesJ1.size()==cartesJ2.size()){                     //
+                        int forceMaxJ1 = -1;                                    //
+                        Iterator<Carte> iterJ1 = cartesJ1.iterator();           //
+                        while(iterJ1.hasNext()){                                //
+                                Carte carteCourante = iterJ1.next();            //
+                                if(carteCourante.getForce() > forceMaxJ1){      //
+                                        forceMaxJ1 = carteCourante.getForce();  //
+                                }                                               //Si les deux joueurs ont le même nombre de cartes d'une faction, on cherche la carte la plus haute des deux mains
+                        }                                                       //
+                        int forceMaxJ2 = -1;                                    //
+                        Iterator<Carte> iterJ2 = cartesJ2.iterator();           //
+                        while(iterJ2.hasNext()){                                //
+                                Carte carteCourante = iterJ2.next();            //
+                                if(carteCourante.getForce() > forceMaxJ2){      //
+                                        forceMaxJ2 = carteCourante.getForce();  //
                                 }
                         }
-                        int forceMaxJ2 = -1;
-                        Iterator<Carte> iterJ2 = cartesJ2.iterator();
-                        while(iterJ2.hasNext()){
-                                Carte carteCourante = iterJ2.next();
-                                if(carteCourante.getForce() > forceMaxJ2){
-                                        forceMaxJ2 = carteCourante.getForce();
-                                }
-                        }
-                        if(forceMaxJ1 == forceMaxJ2){
+                        if(forceMaxJ1 == forceMaxJ2){                           //Si la force J1 et J2 est la même, on se trouve soit dans le cas ou aucune carte de cette faction n'été jouée, ou les deux joueurs avaient pour plus haute carte de gobelins un 0. Dans ces cas, la faction ne revient a personne.
                                 return -1;
                         }
-                        else if(forceMaxJ1>forceMaxJ2){
+                        else if(forceMaxJ1>forceMaxJ2){                         //Si la carte la plus haute des deux mains appartient a J1, J1 remporte la faction.
                                 return 1;
                         }else{
-                                return 0;
+                                return 0;                                       //Si la carte la plus haute des deux mains appartient a J2, J2 remporte la faction.
                         }
-                }else{
+                }else{                                                          //Si J2 a plus de cartes de la faction, il remporte la faction.
                         return 0;
                 }
         } 
         
-        public void afficherScore(ArrayList<Integer> score){
+        public void afficherScore(ArrayList<Integer> score){                    //Affiche l'affiliation de toutes les factions
                 Iterator<Integer> iterScore = score.iterator();
                 afficherFaction(iterScore.next(), "Chevaliers");
                 afficherFaction(iterScore.next(), "Doppelgangers");
@@ -295,7 +296,7 @@ public class Plateau {
                 afficherFaction(iterScore.next(), "Nains");                
         }
         
-        public void afficherFaction(int i, String faction){
+        public void afficherFaction(int i, String faction){                     //Affiche le joueur qui a remporté la faction fournie.
                 if(i==1){
                         System.out.println("la faction "+ faction + " a été remportée par le joueur 1.");
                 }else if(i==0){
@@ -305,7 +306,7 @@ public class Plateau {
                 }
         }
         
-        public void stockagePliHistorique() {	//gestion de l'historique
+        public void stockagePliHistorique() {                                   //gestion de l'historique
                 Coup co;
                 if (carteEnJeu != null) {
                         co = new Coup(carteJ1, carteJ2, j1Courant);
@@ -315,7 +316,7 @@ public class Plateau {
                 historique.add(co);
         }
 
-        public Stack<Carte> genereCartes() {
+        public Stack<Carte> genereCartes() {                                    //Génère toutes les cartes du jeu
                 Stack<Carte> cartes = new Stack<Carte>();
                 //ajout des chevaliers
                 cartes.add(new Carte(Faction.Chevaliers, 2, "ressources/images/Ch2.png"));

@@ -53,7 +53,7 @@ public abstract class Joueur {
                         return cChoisie;
                 }else{
                 Iterator<Carte> iter = main.iterator(); 
-                boolean aFaction = false;
+                boolean aFaction = false;                       //Tant qu'on ne trouve pas de carte de la faction demandée, cette variable reste false. soi on en trouve, alors elle devient true et reestreint le choix des cartes.
                         while (iter.hasNext()) { 
                                 if(iter.next().getFaction() == cAdversaire.getFaction()){
                                         aFaction = true;
@@ -165,7 +165,7 @@ public abstract class Joueur {
         
         
         // si on a aucune carte perdante et/ou jouable, on return les autresCartes
-        // qui sont les cartes non compatibles avec la faction( qui sont donc perdante )
+        // qui sont les cartes non compatibles avec la faction( qui sont donc perdantes )
         if (cartesPerdantes.isEmpty()){
             if(carteJouables.isEmpty()){
                 return autresCartes;

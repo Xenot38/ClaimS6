@@ -35,7 +35,7 @@ public class Carte {
 		this.cheminImage = cheminImage;
 	}
 	
-	public String affichePropCarte(){
+	public String affichePropCarte(){               //Renvoie une string contenant les infos de la carte.
                 String retour = faction.name();
                 retour = retour.concat(" ");
                 retour = retour.concat(Integer.toString(force));

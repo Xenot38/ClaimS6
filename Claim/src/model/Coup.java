@@ -7,7 +7,7 @@ public class Coup {
 	private Carte carteEnJeu;
 	private boolean victoireJ1;
 	
-	public Coup(Carte c1,Carte c2,boolean vic) {
+	public Coup(Carte c1,Carte c2,boolean vic) {                    //Durant la phase 2, il n'y a pas de carte a gagner, il faut donc un constructeur sans carteEnJeu
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = null;
@@ -15,6 +15,7 @@ public class Coup {
 	}
 	
 	public Coup(Carte c1,Carte c2, Carte cej, boolean vic) {
+		carteJ1 = c1;
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = cej;
