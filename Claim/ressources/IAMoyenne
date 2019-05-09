@@ -39,20 +39,36 @@ Deuxieme version:
    
         => non sinon
     
-    =>Qu'est-ce qu'on joue?
+    =>Qu'est-ce qu'on joue?(Phase 1)
 
         =>si on veut gagner la carte
             =>Leader
-                si on a un mort-vivant => le joue si notre mort-vivant le plus fort = mort-vivant le plus fort restant en jeu
+                si on a un mort-vivant => le joue si notre mort-vivant le plus fort = mort-vivant le plus fort restant en jeu +- 2
                 sinon => 
                         pour chacune des cartes dans notre main=>
-                                                                on fait un array qui va contenir les match-up potentiels,on enlève comme match-up les cartes qui sont dans
-                                                                la défausse , notre pile partisans, notre main - la carte a testé, les cartes connues de la pile partisans de l'adversaire
-                                                                
-                                                                on enregistre le ratio de victoire de dans un array victoireCartes
+                                    on fait un array qui va contenir les match-up potentiels,on enlève comme match-up les cartes qui sont dans
+                                    la défausse , notre pile partisans, notre main - la carte a testé, les cartes connues de la pile partisans de l'adversaire
+
+                                    on enregistre le ratio de victoire de dans un array victoireCartes
                         on joue la carte qui a le max comme victoireCartes
 
             =>Deuxième joueur
                 on minimise notre coup, on prend la carte de plus faible puissance parmi les cartes gagnantes 
+                => si on a la choix entre doppel et mort-vivant on prend plutot mort-vivant
+        sinon=>
+            =>Leader
+                pour chacune des cartes dans notre main=>
+                                    on fait un array qui va contenir les match-up potentiels,on enlève comme match-up les cartes qui sont dans
+                                    la défausse , notre pile partisans, notre main - la carte a tester, les cartes connues de la pile partisans de l'adversaire
 
-        =>sinon
+                                    on enregistre le ratio de victoire de dans un array victoireCartes
+                                    puis on prend la carte avec la ratio de victoires minimum
+            =>Deuxième joueur
+                on minimise notre coup, on prend la carte de plus faible puissance parmi les cartes perdantes/jouables
+    
+    =>Phase 2
+        =>Leader
+            
+            
+        =>Deuxième Joueur
+

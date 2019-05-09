@@ -81,10 +81,8 @@ public abstract class Joueur {
         }
         //on return toutes les cartes de notre main si aucune de nos cartes n'est compatible
         if(carteJouables.isEmpty()){
-            System.out.println("testCarteJouableEmpty////////////");
             return getMain();
         }else{
-            System.out.println("testCarteJouablePasEmpty////////////");
             return carteJouables;
         }
     }
