@@ -81,8 +81,10 @@ public abstract class Joueur {
         }
         //on return toutes les cartes de notre main si aucune de nos cartes n'est compatible
         if(carteJouables.isEmpty()){
+            System.out.println("testCarteJouableEmpty////////////");
             return getMain();
         }else{
+            System.out.println("testCarteJouablePasEmpty////////////");
             return carteJouables;
         }
     }
@@ -114,8 +116,12 @@ public abstract class Joueur {
         }
         // si on a aucune carte gagnante et/ou jouable, on return les chevaliers
         // ( qui sont soit vide soit pleins si gobelin)
-        if (cartesGagnantes.isEmpty() || carteJouables.isEmpty()) {
-             return cartesChevalier;
+        if (cartesGagnantes.isEmpty()){
+            if(carteJouables.isEmpty()) {
+                return cartesChevalier;
+            }else{
+                return cartesGagnantes;
+            }
         }else{
             //on vérifie si nos cartes gagnantes ne sont que des doppel
             Boolean mainCompleteDoppel = true;
@@ -160,8 +166,12 @@ public abstract class Joueur {
         
         // si on a aucune carte perdante et/ou jouable, on return les autresCartes
         // qui sont les cartes non compatibles avec la faction( qui sont donc perdante )
-        if (cartesPerdantes.isEmpty() || carteJouables.isEmpty() ) {
-            return autresCartes;
+        if (cartesPerdantes.isEmpty()){
+            if(carteJouables.isEmpty()){
+                return autresCartes;
+            }else{
+                return cartesPerdantes;
+            }
         }else{
             //on vérifie si nos cartesPerdantes ne sont que des doppel
             Boolean mainCompleteDoppel = true;

@@ -23,8 +23,19 @@ public class ControleurJeu {
                 while(!plateauJeu.isFini()){
                         System.out.println("----------------------------------------------------");
                         int i =0;
+                        
+                        System.out.println("[Main joueur 1]");
                         Iterator<Carte> iter = plateauJeu.getJ1().getMain().iterator();
                         int nbCarte = 0;
+                        while(iter.hasNext()){
+                                Carte maCarte = iter.next();
+                                System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
+                                nbCarte++;
+                        }
+                        
+                        System.out.println("\n\n[Main joueur 2]");
+                        iter = plateauJeu.getJ2().getMain().iterator();
+                        nbCarte = 0;
                         while(iter.hasNext()){
                                 Carte maCarte = iter.next();
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
