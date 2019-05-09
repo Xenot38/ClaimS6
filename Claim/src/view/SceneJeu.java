@@ -12,15 +12,21 @@ import javafx.scene.image.Image ;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
+import javafx.stage.Stage;
 import model.Carte;
 import model.Plateau;
 
@@ -31,184 +37,199 @@ import model.Plateau;
 public class SceneJeu {
     
    public Plateau p;
-   public SceneJeu(Plateau plateau){
+   Stage primary;
+   public SceneJeu(Plateau plateau,Stage pr){
        this.p = plateau;
+       primary = pr;
    }
    
    public Scene creerjeu(int x,int y) throws FileNotFoundException{
        
-       
+
        ////////////////////
        //cartes Joueur 2 //
-       HBox cartesJ2 = new HBox();
-       
+       HBox cartesJ2 = new HBox();   
        //espace du coter gauche des cartes du joueur 2//
        Canvas canvideJ2G = new Canvas();
        Pane panevideJ2G = new Pane(canvideJ2G);
+       HBox.setHgrow(panevideJ2G, Priority.ALWAYS);
        cartesJ2.getChildren().add(panevideJ2G);
-       //cartes//
-       
-       
-       Carte c1 = p.getJ2().getMain().get(0);
-       Carte c2 = p.getJ2().getMain().get(1);
-       Carte c3 = p.getJ2().getMain().get(2);
-       Carte c4 = p.getJ2().getMain().get(3);
-       Carte c5 = p.getJ2().getMain().get(4);
-       Carte c6 = p.getJ2().getMain().get(5);
-       Carte c7 = p.getJ2().getMain().get(6);
-       Carte c8 = p.getJ2().getMain().get(7);
-       Carte c9 = p.getJ2().getMain().get(8);
-       Carte c10 = p.getJ2().getMain().get(9);
-       Carte c11 = p.getJ2().getMain().get(10);
-       Carte c12 = p.getJ2().getMain().get(11);
-       Carte c13 = p.getJ2().getMain().get(12);
-       
-
-       //System.out.println(c.getCheminImage());
-       //InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(c.getCheminImage());
-       //Image image1 = new Image(new File(c1.getCheminImage()).toURI().toString(), 125, 200, false, false);
-       Image image1 = new Image(new FileInputStream(c1.getCheminImage()));
-       /*Image image2 = new Image(new FileInputStream(c2.getCheminImage()));
-       //Image image2 = new Image(new File(c2.getCheminImage()).toURI().toString(), 100, 100, false, false);
-       /*Image image3 = new Image(new File(c3.getCheminImage()).toURI().toString(), 100, 100, false, false);
-       Image image4 = new Image(new File(c4.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image5 = new Image(new File(c5.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image6 = new Image(new File(c6.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image7 = new Image(new File(c7.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image8 = new Image(new File(c8.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image9 = new Image(new File(c9.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image10 = new Image(new File(c10.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image11 = new Image(new File(c11.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image12 = new Image(new File(c12.getCheminImage()).toURI().toString(), 100, 100, true, false);
-       Image image13 = new Image(new File(c13.getCheminImage()).toURI().toString(), 100, 100, true, false);*/
-       
-      /* Canvas cancarte1 = new Canvas();
-       GraphicsContext gc = cancarte1.getGraphicsContext2D();
-       gc.drawImage(image1, 100, 100);
-       gc.setFill(Color.WHITE);
-       gc.fillRect(0, 0, cancarte1.getWidth(), cancarte1.getHeight());
-       cartesJ2.getChildren().add(cancarte1);*/
-       
-      /* ImageView selectedImage1 = new ImageView();
-       selectedImage1.setImage(image1);
-       Pane paneimage1 = new Pane(selectedImage1);
-       cartesJ2.getChildren().add(paneimage1);
-       Button B = new Button("mom");
-       cartesJ2.getChildren().add(B);
-       /*ImageView selectedImage2 = new ImageView();
-       selectedImage1.setImage(image2);
-       Pane paneimage2 = new Pane(selectedImage2);
-       cartesJ2.getChildren().add(paneimage2);
-      /* ImageView selectedImage3 = new ImageView();
-       selectedImage1.setImage(image3);
-       cartesJ2.getChildren().add(selectedImage3);
-       ImageView selectedImage4 = new ImageView();
-       selectedImage1.setImage(image4);
-       cartesJ2.getChildren().add(selectedImage4);
-       ImageView selectedImage5 = new ImageView();
-       selectedImage1.setImage(image5);
-       cartesJ2.getChildren().add(selectedImage5);
-       ImageView selectedImage6 = new ImageView();
-       selectedImage1.setImage(image6);
-       cartesJ2.getChildren().add(selectedImage6);
-       ImageView selectedImage7 = new ImageView();
-       selectedImage1.setImage(image7);
-       cartesJ2.getChildren().add(selectedImage7);
-       ImageView selectedImage8 = new ImageView();
-       selectedImage1.setImage(image8);
-       cartesJ2.getChildren().add(selectedImage8);
-       ImageView selectedImage9 = new ImageView();
-       selectedImage1.setImage(image9);
-       cartesJ2.getChildren().add(selectedImage9);
-       ImageView selectedImage10 = new ImageView();
-       selectedImage1.setImage(image10);
-       cartesJ2.getChildren().add(selectedImage10);
-       ImageView selectedImage11 = new ImageView();
-       selectedImage1.setImage(image11);
-       cartesJ2.getChildren().add(selectedImage11);
-       ImageView selectedImage12 = new ImageView();
-       selectedImage1.setImage(image12);
-       cartesJ2.getChildren().add(selectedImage12);
-       ImageView selectedImage13 = new ImageView();
-       selectedImage1.setImage(image13);
-       cartesJ2.getChildren().add(selectedImage13);
-       /*Canvas cancarte = new Canvas();
-       GraphicsContext gc = cancarte.getGraphicsContext2D();
-       gc.setFill(Color.GOLD);
-       gc.fillRect(0, 0, 100, 100);
-       gc.drawImage(image1, 0, 100);*/
-       
-       
-       /*ArrayList<Carte> carteJ2 = p.getJ2().getMain();
-       ArrayList<Canvas> paneJ2 = new ArrayList();
-       
-       Iterator MainJ2 = carteJ2.iterator();
-       while (MainJ2.hasNext()){
-           Carte i = (Carte)MainJ2.next();
-           InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(i.getCheminImage());
-           Image img = new Image(in);
-           Canvas cancarte = new Canvas();
-           GraphicsContext gc = cancarte.getGraphicsContext2D();
-           gc.setFill(Color.GOLD);
-           gc.fillRect(0, 0, 100, 100);
-           gc.drawImage(img, 100, 100);
-           //Pane pane = new Pane(cancarte);
-           paneJ2.add(cancarte);
-            }
-       
-       Iterator AfficherMain = paneJ2.iterator();
-       while (AfficherMain.hasNext()){
-           cartesJ2.getChildren().add((Canvas)AfficherMain.next());
-            }*/
+       //cartes//       
+       HBox MainJ2 = getHBMain(p.getJ2().getMain());
+       cartesJ2.getChildren().add(MainJ2);
        //espace du coter droit des cartes du joueur 2 //
        Canvas canvideJ2D = new Canvas();
        Pane panevideJ2D = new Pane(canvideJ2D);
        cartesJ2.getChildren().add(panevideJ2D);
        ////////////////////
-       
-       
+       Canvas canCentre = new Canvas();
+       Pane paneCentre = new Pane(canCentre);
+       VBox.setVgrow(paneCentre, Priority.ALWAYS);
+       Canvas canCentre2 = new Canvas();
+       Pane paneCentre2 = new Pane(canCentre2);
+       VBox.setVgrow(paneCentre2, Priority.ALWAYS);
        ////////////////////
        //cartes Joueur 1 //
        HBox cartesJ1 = new HBox();
-       
        //espace du coter gauche des cartes du joueur 1//
        Canvas canvideJ1G = new Canvas();
        Pane panevideJ1G = new Pane(canvideJ1G);
-       
-       
-       
-       
+       //cartes du Joueur1//
+       HBox mainJ1 = getHBMain(p.getJ1().getMain());
+       cartesJ1.getChildren().add(mainJ1);
        //espace du coter droit des cartes du joueur 1//
        Canvas canvideJ1D = new Canvas();
        Pane panevideJ1D = new Pane(canvideJ1D);
        cartesJ1.getChildren().add(panevideJ1G);
-       
-       
        ////////////////////
-       
-       
-       
-       
        ////////////////////////////
-       //Partie Gauche du plateau//
-       VBox partieG = new VBox();
-       partieG.getChildren().add(cartesJ2);
+       //Partie Centrale du plateau//
+       HBox partieCentrale = new HBox();
+       VBox defausse = centreDeffause();
+       VBox carteJouer = centre2();
+       VBox carteAGagner = centreCarteAGagner();       
        
-       partieG.getChildren().add(cartesJ1);
+       Canvas canCentre4 = new Canvas();
+       Pane paneCentre4 = new Pane(canCentre4);
+       HBox.setHgrow(paneCentre4, Priority.ALWAYS);
+       
+       
+       Canvas canCentre5 = new Canvas();
+       Pane paneCentre5 = new Pane(canCentre5);
+       HBox.setHgrow(paneCentre5, Priority.ALWAYS);    
+               
+       Canvas canCentre6 = new Canvas();
+       Pane paneCentre6 = new Pane(canCentre6);
+       HBox.setHgrow(paneCentre6, Priority.ALWAYS);        
+       
+       Canvas canCentre7 = new Canvas();
+       Pane paneCentre7 = new Pane(canCentre7);
+       HBox.setHgrow(paneCentre7, Priority.ALWAYS);   
+       Canvas canCentre8 = new Canvas();
+       Pane paneCentre8 = new Pane(canCentre7);
+       HBox.setHgrow(paneCentre8, Priority.ALWAYS);   
+       Canvas canCentre9 = new Canvas();
+       Pane paneCentre9 = new Pane(canCentre9);
+       HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
+       
+       partieCentrale.getChildren().add(paneCentre4);   
+       partieCentrale.getChildren().add(paneCentre8);
+       partieCentrale.getChildren().add(defausse);
+       partieCentrale.getChildren().add(paneCentre6);
+       partieCentrale.getChildren().add(carteJouer);
+       partieCentrale.getChildren().add(paneCentre7);
+       partieCentrale.getChildren().add(carteAGagner);
+       partieCentrale.getChildren().add(paneCentre9);
+       partieCentrale.getChildren().add(paneCentre5);
+       
+       VBox partieC = new VBox();
+       partieC.getChildren().add(cartesJ2);
+       partieC.getChildren().add(paneCentre);
+       partieC.getChildren().add(partieCentrale);
+       partieC.getChildren().add(paneCentre2);
+       partieC.getChildren().add(cartesJ1);
        ////////////////////////////
        
        ////////////////////////
        //plateau final de jeu//
        HBox jeu = new HBox();
-       jeu.getChildren().add(partieG);
+       jeu.getChildren().add(partieC);
        ////////////////////////
        Scene s = new Scene(jeu, x , y);
        return s;
    }
    
    
+   public HBox getHBMain(ArrayList<Carte> ar){
+       HBox mainJoueur = new HBox();
+       for(int i = 0; i<ar.size();i++){
+           AnchorPane pane = new AnchorPane();
+           Image image1=null;
+           try{image1 = new Image(new File(ar.get(i).getCheminImage()).toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+           ImageView imageSelected = new ImageView();
+           imageSelected.setImage(image1);
+           pane.getChildren().add(imageSelected);
+           pane.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);  
+           mainJoueur.getChildren().add(pane);
+       }
+       return mainJoueur;
+    }
    
-    
-    
-    
+       
+      EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
+         @Override 
+         public void handle(MouseEvent e) { 
+             p.getJ1().getMain().remove(0);
+             System.out.println(p.getJ1().getMain().get(0).getCheminImage());
+            try{ primary.setScene(creerjeu(1920,1020));}catch(FileNotFoundException ex){}
+             
+         }
+            }; 
+       
+       
+   public VBox centreDeffause(){
+       Canvas canpousse = new Canvas(0,70);
+       Pane panepousse = new Pane(canpousse);
+       VBox carte = new VBox();
+       AnchorPane pane = new AnchorPane();
+       Image image1=null;
+       try{image1 = new Image(new File("ressources/images/Ch2.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+       ImageView imageSelected = new ImageView();
+       imageSelected.setImage(image1);
+       pane.getChildren().add(imageSelected);
+       carte.getChildren().add(panepousse);
+       carte.getChildren().add(pane);
+       return carte;
+    }
+   
+   
+   public VBox centreCarteAGagner(){
+       Canvas canpousse = new Canvas(0,70);
+       Pane panepousse = new Pane(canpousse);
+       VBox carte = new VBox();
+       AnchorPane pane = new AnchorPane();
+       Image image1=null;
+       try{image1 = new Image(new File(p.getCarteEnJeu().getCheminImage()).toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+       ImageView imageSelected = new ImageView();
+       imageSelected.setImage(image1);
+       pane.getChildren().add(imageSelected);
+       carte.getChildren().add(panepousse);
+       carte.getChildren().add(pane);
+       return carte;
+    }
+   
+   
+   
+   
+   public VBox centre2(){
+       VBox cartes = new VBox();
+       Canvas canpousse = new Canvas(0,40);
+       Pane panepousse = new Pane(canpousse);
+       
+       
+       AnchorPane pane1 = new AnchorPane();
+       Image image1=null;
+       try{image1 = new Image(new File("ressources/images/CarteJouerJ2.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+       ImageView imageSelected = new ImageView();
+       imageSelected.setImage(image1);
+       pane1.getChildren().add(imageSelected);
+       AnchorPane pane2 = new AnchorPane();
+       Image image2=null;
+       try{image2 = new Image(new File("ressources/images/CarteJouerJ1.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+       ImageView imageSelected2 = new ImageView();
+       imageSelected2.setImage(image1);
+       pane2.getChildren().add(imageSelected2);
+       cartes.getChildren().add(pane1);
+       cartes.getChildren().add(panepousse);
+       cartes.getChildren().add(pane2);
+       
+       return cartes;
+    }
+   
+   
+   
+   
+   
+   
+   
 }

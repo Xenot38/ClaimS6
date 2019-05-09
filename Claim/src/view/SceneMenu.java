@@ -7,12 +7,19 @@ package view;
 
 import static controler.Launcher.hauteur;
 import static controler.Launcher.largeur;
+import java.io.File;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -30,6 +37,17 @@ public class SceneMenu {
     
     
     public Scene creerMenu(){
+        BackgroundImage myBI = null;
+       try{  myBI= new BackgroundImage(new Image(new File("ressources/images/Claim.png").toURI().toString(), largeur, hauteur, false, true),
+        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+        BackgroundSize.DEFAULT);}
+       catch(Exception e){
+           System.out.println("lol ça n'a pas charger mdr");
+       }
+        //then you set to your node
+        
+        
+        
         Canvas can_thon = new Canvas();
         Pane esp1 = new Pane(can_thon);
 
@@ -86,8 +104,10 @@ public class SceneMenu {
         VBox.setVgrow(esp2, Priority.ALWAYS);
         VBox.setVgrow(esp3, Priority.ALWAYS);
 
+        boiteScene.setBackground(new Background(myBI));
         // Contenu de la fenêtre
         Scene s = new Scene(boiteScene, largeur, hauteur);
+        
         return s;
     }
     
