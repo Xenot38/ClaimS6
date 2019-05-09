@@ -1,4 +1,4 @@
-/*package model;
+package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,6 +18,8 @@ public class JoueurIAFacile  extends JoueurIA{
     @Override
     public int chooseCardPhase1(Plateau p, Boolean b) {
         
+        int indice;
+        
         // on récupère notre main
         ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
                 
@@ -29,7 +31,7 @@ public class JoueurIAFacile  extends JoueurIA{
                 
                 //on recupere la carte de plus forte puissance
                 //si plusieurs égales, on choisis aléatoirement parmi celles-ci
-                return getindex(getCarteMaxForce(main));
+                indice = getindex(getCarteMaxForce(main));
                 
             //Si on est le deuxième joueur
             }else{
@@ -39,10 +41,10 @@ public class JoueurIAFacile  extends JoueurIA{
                 
                 //si on peut gagner
                 if(!cartesGagnante.isEmpty()){
-                    return getindex(getRandomCarte(cartesGagnante));
+                    indice = getindex(getCarteMinForce(cartesGagnante));
                 //si on ne peut que perdre
                 }else{
-                    return getindex(getRandomCarte(cartesJouable));
+                    indice = getindex(getRandomCarte(cartesJouable));
                 }
             }
             
@@ -50,7 +52,7 @@ public class JoueurIAFacile  extends JoueurIA{
         }else{
             //Si on est le leader
             if (!p.isJ1Courant()){
-                return getindex(getCarteMinForce(main));
+                indice = getindex(getCarteMinForce(main));
             //Si on est le deuxième joueur
             }else{
                 Carte carteJ1 = p.getCarteJ1();
@@ -59,13 +61,16 @@ public class JoueurIAFacile  extends JoueurIA{
             
                 //si on peut perdre
                 if(!cartesPerdante.isEmpty()){
-                    return getindex(getRandomCarte(cartesPerdante));
+                    indice =  getindex(getRandomCarte(cartesPerdante));
                 //si on ne peut que gagner
                 }else{
-                    return getindex(getRandomCarte(cartesJouable));
+                    indice = getindex(getRandomCarte(cartesJouable));
                 }
             }
         }
+        System.out.println("/////////////Test indice IA: "+indice);
+        return indice;
+        
     }
 
     @Override
@@ -87,7 +92,7 @@ public class JoueurIAFacile  extends JoueurIA{
                             
             //si on peut gagner
             if(!cartesGagnante.isEmpty()){
-                return getindex(getRandomCarte(cartesGagnante));
+                return getindex(getCarteMinForce(cartesGagnante));
             //si on ne peut que perdre
             }else{
                 return getindex(getRandomCarte(cartesJouable));
@@ -159,4 +164,4 @@ public class JoueurIAFacile  extends JoueurIA{
         int i = r.nextInt(maxs.size());
         return maxs.get(i); 
     }
-}*/
+}

@@ -54,7 +54,7 @@ public class ControleurJeu {
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
 
                         }else{
-                                plateauJeu.setCarteJ2(plateauJeu.getJ2().getMain().get(plateauJeu.getJ2().joue(plateauJeu)));
+                                plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(plateauJeu.getJ2().joue(plateauJeu)));
                                 System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
                                 int index = 0;
                                 while(plateauJeu.getCarteJ1()==null){

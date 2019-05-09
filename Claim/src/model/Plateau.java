@@ -46,7 +46,7 @@ public class Plateau {
                 }
                 switch (difficulte) {
                         case "facile":
-                                j2 = new JoueurHumain(mainTemp);
+                                j2 = new JoueurIAFacile(mainTemp);
                                 break;
                         case "moyen":
                                 j2 = new JoueurIAMoyen(mainTemp);
