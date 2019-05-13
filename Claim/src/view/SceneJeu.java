@@ -29,7 +29,7 @@ import javafx.scene.shape.Box;
 import javafx.stage.Stage;
 import model.Carte;
 import model.Plateau;
-
+import view.CarteView;
 /**
  *
  * @author kekae
@@ -143,13 +143,16 @@ public class SceneJeu {
    public HBox getHBMain(ArrayList<Carte> ar){
        HBox mainJoueur = new HBox();
        for(int i = 0; i<ar.size();i++){
-           AnchorPane pane = new AnchorPane();
+           /*AnchorPane pane = new AnchorPane();
            Image image1=null;
            try{image1 = new Image(new File(ar.get(i).getCheminImage()).toURI().toString(), 200, 175, true, true);}catch(Exception e){}
            ImageView imageSelected = new ImageView();
            imageSelected.setImage(image1);
            pane.getChildren().add(imageSelected);
-           pane.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);  
+           pane.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);  */
+           CarteView cr = new CarteView(ar.get(i).getCheminImage());
+           AnchorPane pane = cr.getPane();
+           
            mainJoueur.getChildren().add(pane);
        }
        return mainJoueur;
