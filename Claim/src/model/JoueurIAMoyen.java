@@ -8,12 +8,14 @@ import java.util.Random;
 public class JoueurIAMoyen  extends JoueurIA{
     
     private ArrayList<Carte> cartes;
+    private ArrayList<Carte> cartesRetirees;
     private ArrayList<ArrayList<Integer>> grilleMatchUp;
 	
     public JoueurIAMoyen(ArrayList<Carte> main, ArrayList<Carte> pioche) {
             super(main);
             cartes = pioche;
             initGrille();
+            cartesRetirees = new ArrayList();
             creerGrille(cartes);
             afficheGrille();
     }
@@ -33,7 +35,11 @@ public class JoueurIAMoyen  extends JoueurIA{
 
     @Override
     public Boolean winCard(Plateau p) {
-        return p.getCarteEnJeu().getForce() > 4;
+        //calcul win rate de la carte en jeu;
+        Carte c = p.getCarteEnJeu();
+        int score = getScore(c);
+        System.out.println("Score Carte en jeu: " + score);
+        return wantCard(score);
     }
 
     @Override
@@ -186,7 +192,29 @@ public class JoueurIAMoyen  extends JoueurIA{
     }
     
     private void updateGrille(Plateau p) {
+        //on enlève toutes les cartes de la défausse, des piles de scores et de notre pile partisans
+        System.out.println("_______DebutUpdateGrille________");
         
+        ArrayList<Carte> defausse = (ArrayList<Carte>)p.getDefausse().clone();
+        ArrayList<Carte> pilePartisans = (ArrayList<Carte>)p.getJ2().getCartesPartisans().clone();
+        ArrayList<Carte> pileScoreJ1 = (ArrayList<Carte>)p.getJ1().getCartesScore().clone();
+        ArrayList<Carte> pileScoreJ2 = (ArrayList<Carte>)p.getJ2().getCartesScore().clone();
+        
+        defausse.addAll(pilePartisans);
+        defausse.addAll(pileScoreJ1);
+        defausse.addAll(pileScoreJ2);
+        
+        Iterator<Carte> it = defausse.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if(!estRetiree(c)){
+                removeCarte(cartes,c);
+                cartesRetirees.add(c);
+                System.out.println("La carte " + c.getFaction() + " " +c.getForce() + " est retirée");
+            }
+        }
+        
+        System.out.println("_______FinUpdateGrille________");
     }
 
     private void creerGrille(ArrayList<Carte> cartes) {
@@ -227,5 +255,114 @@ public class JoueurIAMoyen  extends JoueurIA{
             } 
             System.out.println("\n");
         }
+    }
+
+    private boolean estRetiree(Carte c) {
+        boolean b = false;
+        Iterator<Carte> it = cartesRetirees.iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
+                b = true;
+                break;
+            }
+            
+        }return b;
+    }
+
+    private void removeCarte(ArrayList<Carte> cartes, Carte c) {
+        Iterator<Carte> it = cartes.iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            if(carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
+                it.remove();
+            }
+        }
+    }
+
+    private int getScore(Carte c) {
+        int indexCard = getIndexGrille(c);
+        
+        int wins1 = 0;
+        int wins2 = 0;
+        
+        for (int i = 0; i < cartes.size(); i++) {
+            for (int j = 0; j < cartes.size(); j++) {
+                
+                if(i != j){
+                    if(i == indexCard){
+                        wins1 += grilleMatchUp.get(i).get(j);
+                    }
+                    if(j == indexCard){
+                        wins2 += grilleMatchUp.get(i).get(j);
+                    }
+                }
+            }
+        }
+        
+        return wins1 * wins2;
+    }
+    
+    private boolean wantCard(int score){
+        ArrayList<Integer> winsAllCard1 = new ArrayList();
+        ArrayList<Integer> winsAllCard2 = new ArrayList();
+        
+        for (int i = 0; i < cartes.size(); i++) {
+            int winCard = 0;
+            for (int j = 0; j < cartes.size(); j++) {
+                winCard += grilleMatchUp.get(i).get(j);
+            }
+            winsAllCard1.add(winCard);
+        }
+        
+        for (int j = 0; j < cartes.size(); j++) {
+            int winCard = 0;
+            for (int i = 0; i < cartes.size(); i++) {
+                winCard += grilleMatchUp.get(i).get(j);
+            }
+            winsAllCard2.add(winCard);
+        }
+        
+        int somme = 0;
+        
+        Iterator<Integer> it = winsAllCard1.iterator();
+        while (it.hasNext()) {
+            Integer winCurrent = it.next();
+            somme += winCurrent;
+        }
+        
+        float moyenne1 = somme/winsAllCard1.size();
+        
+        somme = 0;
+        
+        it = winsAllCard2.iterator();
+        while (it.hasNext()) {
+            Integer winCurrent = it.next();
+            somme += winCurrent;
+        }
+        
+        float moyenne2 = somme/winsAllCard2.size();
+        
+        System.out.println("Score moyen: " + moyenne1 * moyenne2);
+        return score > (moyenne1 * moyenne2);
+
+        
+    }
+
+    private int getIndexGrille(Carte c) {
+        int i = 0;
+        boolean carteTrouve = false;
+        Iterator<Carte> it = cartes.iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            if(carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
+                carteTrouve = true;
+                break;
+            }
+            if(!carteTrouve){
+                i++;
+            }
+        }
+        return i;
     }
 }
