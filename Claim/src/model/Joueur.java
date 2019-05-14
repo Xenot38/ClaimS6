@@ -196,5 +196,49 @@ public abstract class Joueur {
     public int joue(Plateau p) {
         return 0;
     }
-
+    
+    public void rangerMain() {
+                ArrayList<Carte> temp = (ArrayList<Carte>) main.clone();
+                main.clear();
+                for(int i = 0; i < 5;i++){
+                        Faction fCourante = Faction.Chevaliers;
+                        switch(i){
+                                case(0):
+                                        fCourante = Faction.Chevaliers;
+                                break;
+                                case(1):
+                                        fCourante = Faction.Doppelgangers;
+                                break;
+                                case(2):
+                                        fCourante = Faction.Gobelins;
+                                break;
+                                case(3):
+                                        fCourante = Faction.MortsVivants;
+                                break;
+                                case(4):
+                                        fCourante = Faction.Nains;
+                                break;
+                        }
+                        Iterator<Carte> ite = temp.iterator();
+                        ArrayList<Carte> cartesFaction = new ArrayList<>();
+                        while(ite.hasNext()){
+                                Carte cTemp = ite.next();
+                                if(cTemp.getFaction() == fCourante){
+                                        cartesFaction.add(cTemp);
+                                }
+                        }
+                        while(cartesFaction.size()>0){
+                                Iterator<Carte> iteFaction = cartesFaction.iterator();
+                                Carte carteHaute = new Carte(Faction.Chevaliers,-1,"");
+                                while(iteFaction.hasNext()){
+                                        Carte cTemp = iteFaction.next();
+                                        if(cTemp.getForce()>carteHaute.getForce()){
+                                                carteHaute = cTemp;
+                                        }
+                                }
+                                cartesFaction.remove(carteHaute);
+                                main.add(carteHaute);
+                        }
+                }
+    }
 }
