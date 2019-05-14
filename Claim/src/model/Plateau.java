@@ -47,6 +47,7 @@ public class Plateau {
                         mainTemp.add(pioche.pop());
                 }
                 j1 = new JoueurHumain((ArrayList<Carte>) mainTemp.clone());
+                j1.rangerMain();
                 mainTemp.clear();
                 for (int i = 0; i < 13; i++) {
                         mainTemp.add(pioche.pop());
