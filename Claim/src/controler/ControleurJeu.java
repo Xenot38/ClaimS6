@@ -15,7 +15,7 @@ public class ControleurJeu {
         Plateau plateauJeu;
         
         public ControleurJeu() {
-                this.plateauJeu = new Plateau("facile");
+                this.plateauJeu = new Plateau("moyen");
         }
         
         public void lancerJeu(){
