@@ -39,7 +39,12 @@ public class JoueurIAMoyen  extends JoueurIA{
         Carte c = p.getCarteEnJeu();
         int score = getScore(c);
         System.out.println("Score Carte en jeu: " + score);
-        return wantCard(score);
+        boolean w = wantCard(score);
+        if(c.getFaction() != Faction.Nains){
+            return w;
+        }else{
+            return !w;
+        }
     }
 
     @Override
@@ -294,12 +299,12 @@ public class JoueurIAMoyen  extends JoueurIA{
                         wins1 += grilleMatchUp.get(i).get(j);
                     }
                     if(j == indexCard){
-                        wins2 += grilleMatchUp.get(i).get(j);
+                        wins2 += 1-grilleMatchUp.get(i).get(j);
                     }
                 }
             }
         }
-        
+        System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
         return wins1 * wins2;
     }
     
@@ -310,7 +315,9 @@ public class JoueurIAMoyen  extends JoueurIA{
         for (int i = 0; i < cartes.size(); i++) {
             int winCard = 0;
             for (int j = 0; j < cartes.size(); j++) {
-                winCard += grilleMatchUp.get(i).get(j);
+                if(i!=j){
+                    winCard += grilleMatchUp.get(i).get(j);
+                }
             }
             winsAllCard1.add(winCard);
         }
@@ -318,7 +325,9 @@ public class JoueurIAMoyen  extends JoueurIA{
         for (int j = 0; j < cartes.size(); j++) {
             int winCard = 0;
             for (int i = 0; i < cartes.size(); i++) {
-                winCard += grilleMatchUp.get(i).get(j);
+                if(i!=j){
+                    winCard += 1-grilleMatchUp.get(i).get(j);
+                }
             }
             winsAllCard2.add(winCard);
         }
