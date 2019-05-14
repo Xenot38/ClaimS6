@@ -32,7 +32,9 @@ public class CarteView {
     public AnchorPane getPane(){
         return this.pane;
     }
-    
+    public void SetImage(ImageView im){
+           pane.getChildren().add(im);
+    }
     
     
     
