@@ -12,6 +12,8 @@ import javafx.scene.image.Image ;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -46,13 +48,14 @@ public class SceneJeu {
    ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
    int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
    int[] refMain2 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
+   HBox Main1;
+   HBox Main2;
    
    
    
-   
-   public SceneJeu(Plateau plateau,Stage pr){
+   public SceneJeu(Plateau plateau){
        this.p = plateau;
-       primary = pr;
+       
    }
    
    public Scene creerjeu(int x,int y) throws FileNotFoundException{
@@ -161,33 +164,83 @@ public class SceneJeu {
                arMain2.add(cr);
            }else{
                arMain1.add(cr);
-           }
-          // AnchorPane pane = cr.getPane();
-          cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+               if(p.isJ1Courant()){
+                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
        @Override 
         public void handle(MouseEvent e) { 
-            if (a == 0){
-                
-                carteJouerJoueur2.getPane().getChildren().clear();
-                carteJouerJoueur2.SetImage((ImageView) arMain2.get(test).getPane().getChildren().get(0));
-                
-            }else{
+           
                for(int i = test+1;i<13; i++){
-                   refMain1[i]=refMain1[i-1];
+                   refMain1[i]=refMain1[i]-1;
                }
-                System.err.println(refMain1[test]);
+               
+                   System.out.println(refMain1[test]);
+               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
                carteJouerJoueur1.getPane().getChildren().clear();
                carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
-            }
-            
+               coupIAJoue1();
+               
+               p.calculPli();
+           
         } 
-        
     });
+           }else{
+                coupIAJoue1();
+                cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+       @Override 
+        public void handle(MouseEvent e) { 
+           
+               for(int i = test+1;i<13; i++){
+                   refMain1[i]=refMain1[i]-1;
+               }
+               
+                   System.out.println(refMain1[test]);
+               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
+               carteJouerJoueur1.getPane().getChildren().clear();
+               carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
+               coupIAJoue1();
+               
+               p.calculPli();
+           
+        } 
+    });
+               }
+           }
+          // AnchorPane pane = cr.getPane();
+        
            mainJoueur.getChildren().add(cr.getPane());
        }
        return mainJoueur;
     }
    
+   
+    public void coupIAJoue2(){
+                System.out.println("////////////////////");
+                System.out.println(p.getJ2().joue(p));
+                int a = p.getJ2().joue(p);
+                System.out.println(p.getJ2().choisirCarte(a).getForce());
+                p.setCarteJ2(p.getJ2().choisirCarte(a));
+               carteJouerJoueur2.getPane().getChildren().clear();
+               carteJouerJoueur2.SetImage((ImageView) arMain2.get(refMain2[a]).getPane().getChildren().get(0));
+               for (int i = a; i< 13;i++){
+                   refMain2[i] = refMain2[i]+1;
+               }
+               if(!p.isJ1Courant()){
+                   coupIAJoue1();
+               }
+            }
+    
+    
+    public void coupIAJoue1(){
+        int a = p.getJ2().joue(p);
+                System.out.println(p.getJ2().choisirCarte(a).getForce());
+                p.setCarteJ2(p.getJ2().choisirCarte(a));
+               carteJouerJoueur2.getPane().getChildren().clear();
+               carteJouerJoueur2.SetImage((ImageView) arMain2.get(refMain2[a]).getPane().getChildren().get(0));
+               for (int i = a; i< 13;i++){
+                   refMain2[i] = refMain2[i]+1;
+               }
+    }
+                
    
    
        
