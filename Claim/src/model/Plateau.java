@@ -12,9 +12,11 @@ public class Plateau {
         private Joueur j1;
         private Joueur j2;
         private ArrayList<Coup> historique;
+        private Stack<Coup> contreHistorique;
         private Carte carteJ1;
         private Carte carteJ2;
         private Carte carteEnJeu;
+        private Carte carteEnJeuPerdant;
         private Stack<Carte> pioche;
         private ArrayList<Carte> defausse;
         private ArrayList<Integer> score;
@@ -26,6 +28,7 @@ public class Plateau {
                 j1Courant = true;
                 fini = false;
                 historique = new ArrayList<Coup>();
+                contreHistorique = new Stack<Coup>();
                 defausse = new ArrayList<Carte>();
                 score = new ArrayList<Integer>();
                 for (int i = 0; i < 5; i++) {
@@ -63,24 +66,27 @@ public class Plateau {
                                 j2 = new JoueurIADifficile(mainTemp);
                                 break;
                 }
+                j2.rangerMain();
         }
 
-        public Plateau(boolean j1Courant, Joueur j1, Joueur j2, ArrayList<Coup> historique, Carte carteJ1,
-                Carte carteJ2, Carte carteEnJeu, Stack<Carte> pioche, ArrayList<Carte> defausse, ArrayList<Integer> score, int phase, boolean fini) {
-                super();
-                this.phase = phase;
+        public Plateau(boolean j1Courant, Joueur j1, Joueur j2, ArrayList<Coup> historique, Stack<Coup> contreHistorique, Carte carteJ1, Carte carteJ2, Carte carteEnJeu, Carte carteEnJeuPerdant, Stack<Carte> pioche, ArrayList<Carte> defausse, ArrayList<Integer> score, int phase, boolean fini) {
                 this.j1Courant = j1Courant;
                 this.j1 = j1;
                 this.j2 = j2;
                 this.historique = historique;
+                this.contreHistorique = contreHistorique;
                 this.carteJ1 = carteJ1;
                 this.carteJ2 = carteJ2;
                 this.carteEnJeu = carteEnJeu;
+                this.carteEnJeuPerdant = carteEnJeuPerdant;
                 this.pioche = pioche;
                 this.defausse = defausse;
                 this.score = score;
+                this.phase = phase;
                 this.fini = fini;
         }
+
+
 
         public void calculPli()/*Calcule le pli en cours, prenant en compte les spécificités des factions. Appelle gagnePli, qui gère la fin du pli*/ {
                 Carte c1;
@@ -108,16 +114,21 @@ public class Plateau {
         }
 
         public void gagnePli(Carte cG, Carte cP)/*gère les fins de plis. cG = carte gagnante, cP = carte perdante*/ {
+                boolean prioCoup = j1Courant;
                 if (cG == carteJ1) {//victoire du J1
                         if (phase == 1) {                                       //Pendant la phase 1, les morts vivants vont directement dans le score du gagnant et non dans la défausse
                                 j1.gagnerPartisan(carteEnJeu);
-                                j2.gagnerPartisan(pioche.pop());
+                                j2.gagnerPartisan(carteEnJeuPerdant);
                                 j1Courant = true;
                                 if (cG.getFaction() == Faction.MortsVivants) {
                                         j1.gagnerCarte(cG);
+                                }else{
+                                        defausse.add(cG);
                                 }
                                 if (cP.getFaction() == Faction.MortsVivants) {
                                         j1.gagnerCarte(cP);
+                                }else{
+                                        defausse.add(cP);
                                 }
                         } else {                                                //Pendant la phase 2, les Nains vont dans le score du perdant et non du gagnant.
                                 if (cG.getFaction() == Faction.Nains) {
@@ -135,13 +146,17 @@ public class Plateau {
                 } else {//victoire du J2
                         if (phase == 1) {                                       //comme ci-dessus
                                 j2.gagnerPartisan(carteEnJeu);
-                                j1.gagnerPartisan(pioche.pop());
+                                j1.gagnerPartisan(carteEnJeuPerdant);
                                 j1Courant = true;                              
                                 if (cG.getFaction() == Faction.MortsVivants) {
                                         j2.gagnerCarte(cG);
+                                }else{
+                                        defausse.add(cG);
                                 }
                                 if (cP.getFaction() == Faction.MortsVivants) {
                                         j2.gagnerCarte(cP);
+                                }else{
+                                        defausse.add(cP);                                        
                                 }
                         } else {                                                //comme ci-dessus
                                 if (cG.getFaction() == Faction.Nains) {
@@ -159,14 +174,13 @@ public class Plateau {
 
                 }
                 //A la fin de chaque pli, on reset les cartes jouées et les cartes en jeu, no enregistre le pli dans l'historique et l'on vérifie que la phase n'est pas finie
-                stockagePliHistorique();
-                carteJ1 = null;
-                carteJ2 = null;
                 if (j1.getMain().isEmpty() && phase == 1) {             //Si la phase 1 est finie, la liste des partisans est transférée dans la main du joueur.
                         j1.setMain(j1.getCartesPartisans());
                         j1.setCartesPartisans(null);
+                        j1.rangerMain();
                         j2.setMain(j2.getCartesPartisans());
                         j2.setCartesPartisans(null);
+                        j2.rangerMain();
                         phase = 2;
                 }if(j1.getMain().isEmpty() && phase == 2){              //Si la phase 2 est finie, on calcule le score des 2 joueurs pour déterminer un gagnant.
                         fini = true;
@@ -196,6 +210,12 @@ public class Plateau {
                         }
                        
                 }
+                contreHistorique.clear();       //On vide le contre historique car il n'est plus synchronisé avec le reste du jeu
+                stockagePliHistorique(prioCoup);
+                carteJ1 = null;
+                carteJ2 = null;
+                carteEnJeu = null;
+                carteEnJeuPerdant = null;
         }
 
         public ArrayList<Integer> calculerScore(){//renvoie un tableau de booleains représentant l'affiliation des différentes factions dans l'ordre Chevaliers-Doppelgangers-Gobelins-Morts_Vivants-Nains
@@ -314,16 +334,153 @@ public class Plateau {
                 }
         }
         
-        public void stockagePliHistorique() {                                   //gestion de l'historique
+        public void stockagePliHistorique(boolean prioCoup) {                                   //gestion de l'historique
                 Coup co;
                 if (carteEnJeu != null) {
-                        co = new Coup(carteJ1, carteJ2, j1Courant);
+                        co = new Coup(carteJ1, carteJ2, carteEnJeu, carteEnJeuPerdant, j1Courant, prioCoup);
                 } else {
-                        co = new Coup(carteJ1, carteJ2, carteEnJeu, j1Courant);
+                        co = new Coup(carteJ1, carteJ2, j1Courant, prioCoup);
                 }
                 historique.add(co);
         }
 
+        public void annuler(){
+                if (historique.size()<1){
+                                System.out.println("Il n'y pas de coups dans l'historique, on ne peut pas remonter plus haut.");
+                }else{
+                        Coup coupPrecedent = historique.get(historique.size()-1);
+                        if(phase == 1){
+                                j1.getMain().add(coupPrecedent.getCarteJ1());
+                                defausse.remove(coupPrecedent.getCarteJ1());
+                                j2.getMain().add(coupPrecedent.getCarteJ2());
+                                defausse.remove(coupPrecedent.getCarteJ2());
+                                carteEnJeu = coupPrecedent.getCarteEnJeu();
+                                carteEnJeuPerdant = coupPrecedent.getCarteEnJeuPerdant();
+                                if(coupPrecedent.isVictoireJ1()){
+                                        j1.getCartesPartisans().remove(coupPrecedent.getCarteEnJeu());
+                                        j2.getCartesPartisans().remove(coupPrecedent.getCarteEnJeuPerdant());
+                                }else{
+                                        j2.getCartesPartisans().remove(coupPrecedent.getCarteEnJeu());
+                                        j1.getCartesPartisans().remove(coupPrecedent.getCarteEnJeuPerdant());
+                                }
+                        }else{
+                                if (j1.getMain().size()==13){           //Si l'on doit revenir a la phase 1
+                                        phase  = 1;
+                                        j1.setCartesPartisans((ArrayList<Carte>)j1.getMain().clone());
+                                        j1.getMain().clear();
+                                        j1.getMain().add(coupPrecedent.getCarteJ1());
+                                        j2.setCartesPartisans((ArrayList<Carte>)j2.getMain().clone());
+                                        j2.getMain().clear();
+                                        j2.getMain().add(coupPrecedent.getCarteJ2());
+                                        if(coupPrecedent.isVictoireJ1()){
+                                                j1.getCartesPartisans().remove(coupPrecedent.getCarteEnJeu());
+                                                j2.getCartesPartisans().remove(coupPrecedent.getCarteEnJeuPerdant());
+                                        }else{
+                                                j2.getCartesPartisans().remove(coupPrecedent.getCarteEnJeu());
+                                                j1.getCartesPartisans().remove(coupPrecedent.getCarteEnJeuPerdant());
+                                        }                                 
+                                }else{                                  //Si l'on reste dans la phase 2
+                                        j1.getCartesScore().remove(coupPrecedent.getCarteJ1());
+                                        j1.getMain().add(coupPrecedent.getCarteJ1());
+                                        j2.getCartesScore().remove(coupPrecedent.getCarteJ2());
+                                        j2.getMain().add(coupPrecedent.getCarteJ2());
+                                        
+                                }
+                        }
+                        if(coupPrecedent.getCarteJ1().getFaction() == Faction.MortsVivants){
+                                j1.getCartesScore().remove(coupPrecedent.getCarteJ1());
+                                j2.getCartesScore().remove(coupPrecedent.getCarteJ1());                                
+                        }
+                        if(coupPrecedent.getCarteJ2().getFaction() == Faction.MortsVivants){
+                                j1.getCartesScore().remove(coupPrecedent.getCarteJ2());
+                                j2.getCartesScore().remove(coupPrecedent.getCarteJ2());                                
+                        }
+                        contreHistorique.add(coupPrecedent);
+                        historique.remove(coupPrecedent);
+                        j1Courant = coupPrecedent.isPrioJ1();
+                        j1.rangerMain();
+                        j2.rangerMain();
+                }
+        }
+        
+        public void refaire(){
+                if(contreHistorique.size()>0){
+                        Coup coupRefait = contreHistorique.pop();
+                        if(phase == 1){
+                                j1.getMain().remove(coupRefait.getCarteJ1());
+                                if(coupRefait.getCarteJ1().getFaction()==Faction.MortsVivants){         //Gestion de la mise dans la pile score des morts vivants (carteJ1)
+                                        if(coupRefait.isVictoireJ1()){
+                                                j1.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }else{
+                                                j2.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }
+                                }else{
+                                        defausse.add(coupRefait.getCarteJ1());                                                
+                                }
+                                j2.getMain().remove(coupRefait.getCarteJ2());
+                                if(coupRefait.getCarteJ2().getFaction()==Faction.MortsVivants){         //Gestion de la mise dans la pile sore des morts vivants (carteJ2)
+                                        if(coupRefait.isVictoireJ1()){
+                                                j1.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }else{
+                                                j2.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }
+                                }else{
+                                        defausse.add(coupRefait.getCarteJ2());                                                
+                                }
+                                if(coupRefait.isVictoireJ1()){
+                                        j1.getCartesPartisans().add(coupRefait.getCarteEnJeu());
+                                        j2.getCartesPartisans().add(coupRefait.getCarteEnJeuPerdant());
+                                }else{
+                                        j2.getCartesPartisans().add(coupRefait.getCarteEnJeu());
+                                        j1.getCartesPartisans().add(coupRefait.getCarteEnJeuPerdant());
+                                }
+                                if(j1.getMain().size()==0){
+                                        
+                                        j1.setMain((ArrayList<Carte>)j1.getCartesPartisans().clone());
+                                        j1.getCartesPartisans().clear();
+                                        j2.setMain((ArrayList<Carte>)j2.getCartesPartisans().clone());
+                                        j2.getCartesPartisans().clear();
+                                }
+                        }else{
+                                j1.getMain().remove(coupRefait.getCarteJ1());
+                                j2.getMain().remove(coupRefait.getCarteJ2());
+                                if(coupRefait.isVictoireJ1()){
+                                        if(coupRefait.getCarteJ1().getFaction()==Faction.Nains){
+                                                j2.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }else{
+                                                j1.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }
+                                        if(coupRefait.getCarteJ2().getFaction()==Faction.Nains){
+                                                j2.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }else{
+                                                j1.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }
+                                }else{
+                                        if(coupRefait.getCarteJ1().getFaction()==Faction.Nains){
+                                                j1.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }else{
+                                                j2.getCartesScore().add(coupRefait.getCarteJ1());
+                                        }
+                                        if(coupRefait.getCarteJ1().getFaction()==Faction.Nains){
+                                                j1.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }else{
+                                                j2.getCartesScore().add(coupRefait.getCarteJ2());
+                                        }
+                                }
+                        }
+                        j1Courant = coupRefait.isVictoireJ1();
+                        j1.rangerMain();
+                        j2.rangerMain();
+                        if(contreHistorique.size()>0){
+                                carteEnJeu = contreHistorique.peek().getCarteEnJeu();
+                                carteEnJeuPerdant = contreHistorique.peek().getCarteEnJeuPerdant();
+                        }
+                        historique.add(coupRefait);                        
+                }else{
+                        System.out.println("Le contre historique est vide, on ne peut pas rejouer de coup.");
+                }
+        }
+        
         public Stack<Carte> genereCartes() {                                    //Génère toutes les cartes du jeu
                 Stack<Carte> cartes = new Stack<Carte>();
                 //ajout des chevaliers
@@ -484,6 +641,14 @@ public class Plateau {
                 this.fini = fini;
         }
 
+        public Carte getCarteEnJeuPerdant() {
+                return carteEnJeuPerdant;
+        }
+
+        public void setCarteEnJeuPerdant(Carte carteEnJeuPerdant) {
+                this.carteEnJeuPerdant = carteEnJeuPerdant;
+        }
+        
     private ArrayList<Carte> genereCartesArrayList() {
         ArrayList<Carte> cartes = new ArrayList();
         //ajout des chevaliers
@@ -546,6 +711,4 @@ public class Plateau {
 
         return cartes;
     }
-
-
 }

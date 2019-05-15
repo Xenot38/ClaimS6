@@ -5,21 +5,27 @@ public class Coup {
 	private Carte carteJ1;
 	private Carte carteJ2;
 	private Carte carteEnJeu;
+        private Carte carteEnJeuPerdant;
 	private boolean victoireJ1;
+        private boolean prioJ1;
 	
-	public Coup(Carte c1,Carte c2,boolean vic) {                    //Durant la phase 2, il n'y a pas de carte a gagner, il faut donc un constructeur sans carteEnJeu
+	public Coup(Carte c1,Carte c2,boolean vic, boolean pJ1) {                    //Durant la phase 2, il n'y a pas de carte a gagner, il faut donc un constructeur sans carteEnJeu
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = null;
+                carteEnJeuPerdant = null;
 		victoireJ1 = vic;
+                prioJ1 = pJ1;
 	}
 	
-	public Coup(Carte c1,Carte c2, Carte cej, boolean vic) {
+	public Coup(Carte c1,Carte c2, Carte cej,Carte cejp, boolean vic, boolean pJ1) {
 		carteJ1 = c1;
 		carteJ1 = c1;
 		carteJ2 = c2;
 		carteEnJeu = cej;
+                carteEnJeuPerdant = cejp;
 		victoireJ1 = vic;
+                prioJ1 = pJ1;
 	}
 
 	public Carte getCarteJ1() {
@@ -46,6 +52,22 @@ public class Coup {
 		this.carteEnJeu = carteEnJeu;
 	}
 
+        public Carte getCarteEnJeuPerdant() {
+                return carteEnJeuPerdant;
+        }
+
+        public void setCarteEnJeuPerdant(Carte carteEnJeuPerdant) {
+                this.carteEnJeuPerdant = carteEnJeuPerdant;
+        }
+
+        public boolean isPrioJ1() {
+                return prioJ1;
+        }
+
+        public void setPrioJ1(boolean prioJ1) {
+                this.prioJ1 = prioJ1;
+        }
+        
 	public boolean isVictoireJ1() {
 		return victoireJ1;
 	}
