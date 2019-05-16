@@ -159,12 +159,16 @@ public class ControllerEnver{
     
     public void CoupIA(){
         int a = p.getJ2().joue(p);
+        System.out.println("///////"+a+"/////////////////////");
         p.setCarteJ2(p.getJ2().choisirCarte(a));
+        
         jeu.carteJouerJoueur2.getPane().getChildren().clear();
+        System.out.println("///////"+jeu.refMain2[a]+"/////////////////////");
+        System.out.println("///////"+p.getJ2().getMain().size()+"/////////////////////");
         jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
-        for (int i = a; i< 13;i++){
-            jeu.refMain2[i] = jeu.refMain2[i]+1;
-        }
+        for(int j = a; j < jeu.refMain2.length - 1; j++){
+                    jeu.refMain2[j] = jeu.refMain2[j+1];
+                }
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -196,10 +200,14 @@ public class ControllerEnver{
         System.out.println("///////"+a+"/////////////////////");
         p.setCarteJ2(p.getJ2().choisirCarte(a)); 
         jeu.carteJouerJoueur2.getPane().getChildren().clear();
+        System.out.println("///////"+jeu.refMain2[a]+"/////////////////////");
+        System.out.println("///////"+p.getJ2().getMain().size()+"/////////////////////");
         jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
-        for (int i = a; i< 13;i++){
-            jeu.refMain2[i] = jeu.refMain2[i]+1;
-        }
+        
+        for(int j = a; j < jeu.refMain2.length - 1; j++){
+                    jeu.refMain2[j] = jeu.refMain2[j+1];
+                }
+        
         setJ1joue(true);
     }
     
