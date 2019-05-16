@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class Joueur {
+public abstract class Joueur implements Serializable{
 	
 	ArrayList<Carte> main;
 	ArrayList<Carte> cartesScore;

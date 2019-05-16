@@ -1,6 +1,8 @@
 package model;
 
-public class Carte {
+import java.io.Serializable;
+
+public class Carte implements Serializable{
 	private Faction faction;
 	private int force;
 	private String cheminImage;

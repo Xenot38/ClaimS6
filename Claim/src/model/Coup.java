@@ -1,6 +1,8 @@
 package model;
 
-public class Coup {
+import java.io.Serializable;
+
+public class Coup implements Serializable{
 
 	private Carte carteJ1;
 	private Carte carteJ2;
