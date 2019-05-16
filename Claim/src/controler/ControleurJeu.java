@@ -39,17 +39,26 @@ public class ControleurJeu {
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
                         } 
-                        /*System.out.println("\n\n[Main joueur 2]");
+                        System.out.println("\n\n[Main joueur 2]");
                         iter = plateauJeu.getJ2().getMain().iterator();
                         nbCarte = 0;
                         while(iter.hasNext()){
                                 Carte maCarte = iter.next();
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
-                        }*/
+                        }
                         if(plateauJeu.getPhase() == 1){
-                            System.out.println("\n\n[Pile Partisans]");
+                            System.out.println("\n\n[Pile Partisans Joueur 1]");
                             iter = plateauJeu.getJ1().getCartesPartisans().iterator();
+                            while(iter.hasNext()){
+                                    Carte maCarte = iter.next();
+                                    System.out.println(": " + maCarte.affichePropCarte());
+                            }
+                        }
+                        
+                        if(plateauJeu.getPhase() == 1){
+                            System.out.println("\n\n[Pile Partisans Joueur 2 (IA]");
+                            iter = plateauJeu.getJ2().getCartesPartisans().iterator();
                             while(iter.hasNext()){
                                     Carte maCarte = iter.next();
                                     System.out.println(": " + maCarte.affichePropCarte());
