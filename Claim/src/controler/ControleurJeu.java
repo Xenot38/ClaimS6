@@ -39,17 +39,26 @@ public class ControleurJeu {
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
                         } 
-                        /*System.out.println("\n\n[Main joueur 2]");
+                        System.out.println("\n\n[Main joueur 2]");
                         iter = plateauJeu.getJ2().getMain().iterator();
                         nbCarte = 0;
                         while(iter.hasNext()){
                                 Carte maCarte = iter.next();
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
-                        }*/
+                        }
                         if(plateauJeu.getPhase() == 1){
-                            System.out.println("\n\n[Pile Partisans]");
+                            System.out.println("\n\n[Pile Partisans Joueur 1]");
                             iter = plateauJeu.getJ1().getCartesPartisans().iterator();
+                            while(iter.hasNext()){
+                                    Carte maCarte = iter.next();
+                                    System.out.println(": " + maCarte.affichePropCarte());
+                            }
+                        }
+                        
+                        if(plateauJeu.getPhase() == 1){
+                            System.out.println("\n\n[Pile Partisans Joueur 2 (IA]");
+                            iter = plateauJeu.getJ2().getCartesPartisans().iterator();
                             while(iter.hasNext()){
                                     Carte maCarte = iter.next();
                                     System.out.println(": " + maCarte.affichePropCarte());
@@ -106,6 +115,7 @@ public class ControleurJeu {
                                         System.out.println("Vous avez joué " + plateauJeu.getCarteJ1().affichePropCarte());
                                 }
                                 plateauJeu.calculPli();
+                                autoSauvegarder(plateauJeu);
                         }
                 }
         } 
@@ -123,6 +133,31 @@ public class ControleurJeu {
                 String nomFichier = sc.nextLine();
                 chemin = chemin + sep + nomFichier;
                 System.out.println("Le fichier a pour chemin " + chemin);
+                File file = new File(chemin);
+                try {
+                        file.createNewFile();
+                        FileOutputStream fos = new FileOutputStream(chemin);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(p);
+                        oos.close();
+                }
+                catch(Exception e) {
+                        System.out.println("Impossible de créer ce fichier");
+                }
+        }
+        
+        public void autoSauvegarder(Plateau p){
+                String sep = java.io.File.separator;
+                String home = System.getProperty("user.home");
+                String chemin = home + sep + "SauvegardesClaim";
+                if (!Files.exists(Paths.get(chemin))) {
+                        new File(chemin).mkdirs();
+                        System.out.println("Le dossier " + chemin + " a été créé");   
+                }
+
+
+                String nomFichier = "autoSave";
+                chemin = chemin + sep + nomFichier;
                 File file = new File(chemin);
                 try {
                         file.createNewFile();

@@ -150,10 +150,10 @@ public abstract class Joueur implements Serializable{
             }
             //si c'est la cas, on ajoute aux cartes gagnantes les cartes chevalier 
             if(mainCompleteDoppel){
-                //if(carteJouables.isEmpty()){
+                if(carteJouables.isEmpty()){
                     System.out.println("test7");
                     cartesGagnantes.addAll(cartesChevalier);
-                //}
+                }
             }
             return cartesGagnantes;
         }
@@ -215,9 +215,9 @@ public abstract class Joueur implements Serializable{
             }
             //si oui on ajoute toutes les cartes des autres factions
             if(mainCompleteDoppel){
-                if(carteJ1.getFaction() != Faction.Doppelgangers){
+                if(carteJouables.isEmpty()){
                     cartesPerdantes.addAll(autresCartes);
-                }
+                }                
             }
             return cartesPerdantes;
         }
