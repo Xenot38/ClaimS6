@@ -32,19 +32,7 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage primaryStage) throws FileNotFoundException {
             primaryStage.setTitle("Claim");
-            
             ControllerEnver con= new ControllerEnver(primaryStage);
             con.afficher();
-                
-            /*    SceneMenu Menu = new SceneMenu();
-                SceneOptionPartie optionPartie = new SceneOptionPartie();               
-                SceneJeu jeu = new SceneJeu(p);
-                Scene s =jeu.creerjeu(1900,1000);   
-                //Scene s = optionPartie.creerOptionPartie(450, 250);
-                //Scene s = Menu.creerMenu();
-		
-		primaryStage.setScene(s);
-		// On affiche la fenêtre (donne leur taille aux objets graphiques)
-		primaryStage.show();*/
 		}
 }
