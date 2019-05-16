@@ -98,20 +98,30 @@ public abstract class Joueur {
         ArrayList<Carte> autresCartes = new ArrayList();
         ArrayList<Carte> cartesGagnantes = new ArrayList();
         ArrayList<Carte> cartesChevalier = new ArrayList();
+        ArrayList<Carte> carteDoppel = new ArrayList();
         
         while(it.hasNext()){
             Carte c = it.next();
             //si notre carte est de la même fac ou est un doppel, elle est jouable
-            if(c.getFaction() == carteJ1.getFaction() || c.getFaction() == Faction.Doppelgangers){
+            if(c.getFaction() == carteJ1.getFaction()){
                 carteJouables.add(c);
                 //si sa force est supérieure , elle est gagnante
                 if(c.getForce() > carteJ1.getForce()){
+                    System.out.println("Carte Gagnante: "+c.getFaction()+c.getForce());
+                    cartesGagnantes.add(c);
+                }
+            }else if(c.getFaction() == Faction.Doppelgangers){
+                carteDoppel.add(c);
+                //si sa force est supérieure , elle est gagnante
+                if(c.getForce() > carteJ1.getForce()){
+                    System.out.println("Carte gagante: "+c.getFaction()+c.getForce());
                     cartesGagnantes.add(c);
                 }
             }else{
                 //si la fac n'est pas compatible mais que l'adversaire est un gobelin
                 // et que l'on a un chevalier, on l'ajoute
                 if(carteJ1.getFaction() == Faction.Gobelins && c.getFaction() == Faction.Chevaliers){
+                    System.out.println("Carte Autre: "+c.getFaction()+c.getForce());
                     cartesChevalier.add(c);
                 }
                 autresCartes.add(c);                
@@ -121,8 +131,10 @@ public abstract class Joueur {
         // ( qui sont soit vide soit pleins si gobelin)
         if (cartesGagnantes.isEmpty()){
             if(carteJouables.isEmpty()) {
+                System.out.println("test5");
                 return cartesChevalier;
             }else{
+                System.out.println("test6");
                 return cartesGagnantes;
             }
         }else{
@@ -137,7 +149,10 @@ public abstract class Joueur {
             }
             //si c'est la cas, on ajoute aux cartes gagnantes les cartes chevalier 
             if(mainCompleteDoppel){
-                cartesGagnantes.addAll(cartesChevalier);
+                //if(carteJouables.isEmpty()){
+                    System.out.println("test7");
+                    cartesGagnantes.addAll(cartesChevalier);
+                //}
             }
             return cartesGagnantes;
         }
@@ -148,20 +163,30 @@ public abstract class Joueur {
         ArrayList<Carte> carteJouables = new ArrayList();
         ArrayList<Carte> autresCartes = new ArrayList();
         ArrayList<Carte> cartesPerdantes = new ArrayList();
+        ArrayList<Carte> cartesDoppel = new ArrayList();
         
         while(it.hasNext()){
             Carte c = it.next();
             //si notre carte est de la même fac ou est un doppel, elle est jouable
-            if(c.getFaction() == carteJ1.getFaction() || c.getFaction() == Faction.Doppelgangers){
+            if(c.getFaction() == carteJ1.getFaction()){
                 carteJouables.add(c);
                 //si sa force est inférieure , elle est perdante
-                if(c.getForce() < carteJ1.getForce()){
+                if(c.getForce() <= carteJ1.getForce()){
+                    cartesPerdantes.add(c);
+                    System.out.println("Carte perdante: "+c.getFaction()+c.getForce());
+                }
+            }else if(c.getFaction() == Faction.Doppelgangers){
+                cartesDoppel.add(c);
+                //si sa force est inférieure , elle est perdante
+                if(c.getForce() <= carteJ1.getForce()){
+                    System.out.println("Carte perdante: "+c.getFaction()+c.getForce());
                     cartesPerdantes.add(c);
                 }
             }else{
                 //si on est pas dans le cas gobelin(Leader) et chevalier(2eme)
                 if(!(carteJ1.getFaction() == Faction.Gobelins && c.getFaction() == Faction.Chevaliers)){
-                    autresCartes.add(c);                
+                    autresCartes.add(c);
+                    System.out.println("Carte Autre: "+c.getFaction()+c.getForce());
                 }
             }
         }
@@ -171,8 +196,10 @@ public abstract class Joueur {
         // qui sont les cartes non compatibles avec la faction( qui sont donc perdantes )
         if (cartesPerdantes.isEmpty()){
             if(carteJouables.isEmpty()){
-                return autresCartes;
+                System.out.println("test5");
+                return this.getMain();
             }else{
+                System.out.println("test6");
                 return cartesPerdantes;
             }
         }else{
@@ -187,7 +214,9 @@ public abstract class Joueur {
             }
             //si oui on ajoute toutes les cartes des autres factions
             if(mainCompleteDoppel){
-                cartesPerdantes.addAll(autresCartes);
+                if(carteJ1.getFaction() != Faction.Doppelgangers){
+                    cartesPerdantes.addAll(autresCartes);
+                }
             }
             return cartesPerdantes;
         }

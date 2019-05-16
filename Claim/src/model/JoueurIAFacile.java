@@ -28,22 +28,24 @@ public class JoueurIAFacile  extends JoueurIA{
             
             //Si on est le leader
             if (!p.isJ1Courant()){
-                
+                System.out.println("Leader et veut la carte");
                 //on recupere la carte de plus forte puissance
                 //si plusieurs égales, on choisis aléatoirement parmi celles-ci
                 indice = getindex(getCarteMaxForce(main));
-                
             //Si on est le deuxième joueur
             }else{
+                System.out.println("Pas Leader et veut la carte");
                 Carte carteJ1 = p.getCarteJ1();
                 ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
                 ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
                 
                 //si on peut gagner
                 if(!cartesGagnante.isEmpty()){
+                System.out.println("carte gagnantes pas empty");
                     indice = getindex(getCarteMinForce(cartesGagnante));
                 //si on ne peut que perdre
                 }else{
+                    System.out.println("carte gagnantes empty");
                     indice = getindex(getCarteMinForce(cartesJouable));
                 }
             }
