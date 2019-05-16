@@ -27,7 +27,11 @@ public class JoueurIAMoyen  extends JoueurIA{
     
     @Override
         public int joue(Plateau p) {
-            System.out.println();
+            
+            ArrayList<Integer> arr = new ArrayList();
+            arr.add(1);
+            arr.add(1);
+            arr.add(1);
             
             int indice;
             if(p.getPhase()==1){
@@ -118,6 +122,7 @@ public class JoueurIAMoyen  extends JoueurIA{
                 //si on peut perdre
                 if(!cartesPerdante.isEmpty()){
                     System.out.println("test3");
+                    
                     indice =  getindex(getCarteMinForce(cartesPerdante));
                 //si on ne peut que gagner
                 }else{
