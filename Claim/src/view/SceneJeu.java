@@ -40,16 +40,15 @@ import view.CarteView;
 public class SceneJeu {
     
    public Plateau p;
-   Stage primary;
-   CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png");
-   CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
-   CarteView centreCarteAGagner = null;
-   ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
-   ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
-   int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
-   int[] refMain2 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
-   HBox Main1;
-   HBox Main2;
+   public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png");
+   public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
+   public CarteView centreCarteAGagner = null;
+   public ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
+   public ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
+   public int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
+   public int[] refMain2 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
+   public  HBox Main1;
+   public  HBox Main2;
    
    
    
@@ -70,8 +69,7 @@ public class SceneJeu {
        HBox.setHgrow(panevideJ2G, Priority.ALWAYS);
        cartesJ2.getChildren().add(panevideJ2G);
        //cartes//       
-       HBox MainJ2 = getHBMain(p.getJ2().getMain(),0);
-       cartesJ2.getChildren().add(MainJ2);
+       cartesJ2.getChildren().add(Main2);
        //espace du coter droit des cartes du joueur 2 //
        Canvas canvideJ2D = new Canvas();
        Pane panevideJ2D = new Pane(canvideJ2D);
@@ -90,8 +88,7 @@ public class SceneJeu {
        Canvas canvideJ1G = new Canvas();
        Pane panevideJ1G = new Pane(canvideJ1G);
        //cartes du Joueur1//
-       HBox mainJ1 = getHBMain(p.getJ1().getMain(),1);
-       cartesJ1.getChildren().add(mainJ1);
+       cartesJ1.getChildren().add(Main1);
        //espace du coter droit des cartes du joueur 1//
        Canvas canvideJ1D = new Canvas();
        Pane panevideJ1D = new Pane(canvideJ1D);
@@ -155,64 +152,6 @@ public class SceneJeu {
    }
    
    
-   public HBox getHBMain(ArrayList<Carte> ar, int a){
-       HBox mainJoueur = new HBox();
-       for(int i = 0; i<ar.size();i++){
-           final int test = i;
-           CarteView cr = new CarteView(ar.get(i).getCheminImage());
-           if (a ==0){
-               arMain2.add(cr);
-           }else{
-               arMain1.add(cr);
-               if(p.isJ1Courant()){
-                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-       @Override 
-        public void handle(MouseEvent e) { 
-           
-               for(int i = test+1;i<13; i++){
-                   refMain1[i]=refMain1[i]-1;
-               }
-               
-                   System.out.println(refMain1[test]);
-               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
-               carteJouerJoueur1.getPane().getChildren().clear();
-               carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
-               coupIAJoue1();
-               
-               p.calculPli();
-           
-        } 
-    });
-           }else{
-                coupIAJoue1();
-                cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-       @Override 
-        public void handle(MouseEvent e) { 
-           
-               for(int i = test+1;i<13; i++){
-                   refMain1[i]=refMain1[i]-1;
-               }
-               
-                   System.out.println(refMain1[test]);
-               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
-               carteJouerJoueur1.getPane().getChildren().clear();
-               carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
-               coupIAJoue1();
-               
-               p.calculPli();
-           
-        } 
-    });
-               }
-           }
-          // AnchorPane pane = cr.getPane();
-        
-           mainJoueur.getChildren().add(cr.getPane());
-       }
-       return mainJoueur;
-    }
-   
-   
     public void coupIAJoue2(){
                 System.out.println("////////////////////");
                 System.out.println(p.getJ2().joue(p));
@@ -241,20 +180,7 @@ public class SceneJeu {
                }
     }
                 
-   
-   
-       
-      EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
-         @Override 
-         public void handle(MouseEvent e) { 
-             p.getJ1().getMain().remove(0);
-             System.out.println(p.getJ1().getMain().get(0).getCheminImage());
-            try{ primary.setScene(creerjeu(1920,1020));}catch(FileNotFoundException ex){}
-             
-         }
-            }; 
-       
-       
+     
    public VBox centreDeffause(){
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
@@ -275,12 +201,6 @@ public class SceneJeu {
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
        VBox carte = new VBox();
-       /*AnchorPane pane = new AnchorPane();
-       Image image1=null;
-       try{image1 = new Image(new File(p.getCarteEnJeu().getCheminImage()).toURI().toString(), 200, 175, true, true);}catch(Exception e){}
-       ImageView imageSelected = new ImageView();
-       imageSelected.setImage(image1);
-       pane.getChildren().add(imageSelected);*/
        centreCarteAGagner = new CarteView(p.getCarteEnJeu().getCheminImage());
        carte.getChildren().add(panepousse);
        carte.getChildren().add(centreCarteAGagner.getPane());

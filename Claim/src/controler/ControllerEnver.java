@@ -13,14 +13,23 @@ package controler;
 
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.PauseTransition;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Carte;
 import model.Plateau;
 import view.CarteView;
@@ -36,13 +45,15 @@ public class ControllerEnver{
     public SceneCharger charger;
     public SceneMenu menu;
     public SceneOptionPartie option;
-    int choixScene = 1;
+    int choixScene = 4;
+    boolean J1joue = true ;
     public Scene scene;
     Stage stage;
     
     public ControllerEnver(Stage s){
         p= new Plateau("facile");
         p.setCarteEnJeu(p.getPioche().pop());
+        p.setCarteEnJeuPerdant(p.getPioche().pop());
         stage = s;
         menu = new SceneMenu();
         option = new SceneOptionPartie();               
@@ -68,6 +79,7 @@ public class ControllerEnver{
                 stage.show();
             break;
             case 4:
+                setupJeu();
                 scene = jeu.creerjeu(1900,1000);
                 stage.setScene(scene);
                 stage.show();
@@ -77,8 +89,8 @@ public class ControllerEnver{
     
     
     public void setupJeu(){
-        
-        
+        jeu.Main1 = getHBMain(p.getJ1().getMain(),1);
+        jeu.Main2 = getHBMain(p.getJ2().getMain(),0);
         
     }
     public void setupMenu(){
@@ -95,56 +107,192 @@ public class ControllerEnver{
            final int test = i;
            CarteView cr = new CarteView(ar.get(i).getCheminImage());
            if (a ==0){
-               arMain2.add(cr);
+               jeu.arMain2.add(cr);
            }else{
-               arMain1.add(cr);
-               if(p.isJ1Courant()){
-                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandlerEventHandler<MouseEventMouseEvent>() {
-       @Override 
-        public void handle(MouseEvent e) { 
-           
-               for(int i = test+1;i<13; i++){
-                   refMain1[i]=refMain1[i]-1;
+               jeu.arMain1.add(cr);
+                cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                    @Override 
+                    public void handle(MouseEvent e) { 
+                        if(J1joue){
+                            for(int i = test+1;i<13; i++){
+                                jeu.refMain1[i]=jeu.refMain1[i]-1;
+                            }
+                            p.setCarteJ1(p.getJ1().choisirCarte(jeu.refMain1[test]));
+                            jeu.carteJouerJoueur1.getPane().getChildren().clear();
+                            jeu.carteJouerJoueur1.SetImage((ImageView) jeu.arMain1.get(test).getPane().getChildren().get(0));
+                            J1joue = false;
+                            if(p.isJ1Courant()){
+                            gestionTour();}else{
+                                Task<Void> sleeper = new Task<Void>() {
+                                @Override
+                                protected Void call() throws Exception {
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                    return null;
+                                        }
+                                     };
+                            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                                @Override
+                                public void handle(WorkerStateEvent event) {
+                                    resetTour();
+                                    p.calculPli();
+                                if(p.isJ1Courant()){
+                                    setJ1joue(true);
+                                }
+                                    }
+                                });
+                                new Thread(sleeper).start();
+                                
+                            }
+                            
+                            
+                        }         
+                    } 
+                });
                }
-               
-                   System.out.println(refMain1[test]);
-               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
-               carteJouerJoueur1.getPane().getChildren().clear();
-               carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
-               coupIAJoue1();
-               
-               p.calculPli();
-           
-        } 
-    });
-           }else{
-                coupIAJoue1();
-                cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandlerEventHandler<MouseEventMouseEvent>() {
-       @Override 
-        public void handle(MouseEvent e) { 
-           
-               for(int i = test+1;i<13; i++){
-                   refMain1[i]=refMain1[i]-1;
-               }
-               
-                   System.out.println(refMain1[test]);
-               p.setCarteJ1(p.getJ1().choisirCarte(refMain1[test]));
-               carteJouerJoueur1.getPane().getChildren().clear();
-               carteJouerJoueur1.SetImage((ImageView) arMain1.get(test).getPane().getChildren().get(0));
-               coupIAJoue1();
-               
-               p.calculPli();
-           
-        } 
-    });
-               }
-           }
-          // AnchorPane pane = cr.getPane();
-        
            mainJoueur.getChildren().add(cr.getPane());
-       }
+           }
        return mainJoueur;
     }
     
+    public void CoupIA(){
+        int a = p.getJ2().joue(p);
+        System.out.println("///////"+a+"/////////////////////");
+        p.setCarteJ2(p.getJ2().choisirCarte(a));
+        
+        jeu.carteJouerJoueur2.getPane().getChildren().clear();
+        System.out.println("///////"+jeu.refMain2[a]+"/////////////////////");
+        System.out.println("///////"+p.getJ2().getMain().size()+"/////////////////////");
+        jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
+        for(int j = a; j < jeu.refMain2.length - 1; j++){
+                    jeu.refMain2[j] = jeu.refMain2[j+1];
+                }
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+                return null;
+                    }
+                 };
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                    p.calculPli();
+                    resetTour();
+                    if(p.isJ1Courant()){
+                        setJ1joue(true);
+                    }else{
+                        gestionTour();
+                    }
+                }
+        });
+        new Thread(sleeper).start();
+            
+        }
+    
+    public void CoupIA2(){
+        int a = p.getJ2().joue(p);
+        System.out.println("///////"+a+"/////////////////////");
+        p.setCarteJ2(p.getJ2().choisirCarte(a)); 
+        jeu.carteJouerJoueur2.getPane().getChildren().clear();
+        System.out.println("///////"+jeu.refMain2[a]+"/////////////////////");
+        System.out.println("///////"+p.getJ2().getMain().size()+"/////////////////////");
+        jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
+        
+        for(int j = a; j < jeu.refMain2.length - 1; j++){
+                    jeu.refMain2[j] = jeu.refMain2[j+1];
+                }
+        
+        setJ1joue(true);
+    }
+    
+    
+    
+    public void gestionTour(){
+        if(p.isJ1Courant()){
+            Task<Void> sleeper = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    return null;
+                        }
+                     };
+            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    CoupIA();
+                }
+            });
+            new Thread(sleeper).start();
+        }else{
+            Task<Void> sleeper = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    return null;
+                        }
+                     };
+            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    CoupIA2();
+                }
+            });
+            new Thread(sleeper).start();
+        }       
+    }
+    
+    public void resetTour(){
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+                return null;
+                    }
+                 };
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                jeu.carteJouerJoueur1.getPane().getChildren().clear();
+                Image image1=null;
+                try{image1 = new Image(new File("ressources/images/CarteJouerJ1.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){System.out.println("pas trouver");}
+                ImageView imageSelected1 = new ImageView();
+                imageSelected1.setImage(image1);
+                jeu.carteJouerJoueur1.SetImage(imageSelected1);
+
+
+                jeu.carteJouerJoueur2.getPane().getChildren().clear();
+                Image image2=null;
+                try{image2 = new Image(new File("ressources/images/CarteJouerJ2.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){System.out.println("pas trouver");}
+                ImageView imageSelected2 = new ImageView();
+                imageSelected2.setImage(image2);
+                jeu.carteJouerJoueur2.SetImage(imageSelected2);
+                
+                
+                
+                p.setCarteEnJeu(p.getPioche().pop());
+                p.setCarteEnJeuPerdant(p.getPioche().pop());
+                }
+            });
+            new Thread(sleeper).start();
+            
+    }
+    public void setJ1joue(boolean b){
+        J1joue = b;
+    }
     
 }
