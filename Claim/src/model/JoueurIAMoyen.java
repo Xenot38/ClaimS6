@@ -3,6 +3,8 @@ package model;
 import model.Plateau;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -73,7 +75,7 @@ public class JoueurIAMoyen extends JoueurIA {
         Carte c = p.getCarteEnJeu();
         int score = getScore(c);
         System.out.println("Score Carte en jeu: " + score);
-        boolean w = wantCard(score);
+        boolean w = wantCardMediane(score);
         if (c.getFaction() != Faction.Nains) {
             return w;
         } else {
@@ -654,6 +656,61 @@ public class JoueurIAMoyen extends JoueurIA {
 
         System.out.println("Score moyen: " + moyenne1 * moyenne2);
         return score > (moyenne1 + 1) * (moyenne2 + 1);
+
+    }
+
+    private boolean wantCardMediane(int score) {
+        ArrayList<Integer> winsAllCard1 = new ArrayList();
+        ArrayList<Integer> winsAllCard2 = new ArrayList();
+
+        ArrayList<Integer> arrayIndexGrilleMain = new ArrayList();
+
+        Iterator<Carte> it = this.getMain().iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            arrayIndexGrilleMain.add(getIndexGrille(carte));
+        }
+
+        for (int i = 0; i < cartes.size(); i++) {
+            int winCard = 0;
+            for (int j = 0; j < cartes.size(); j++) {
+                if (i != j) {
+                    if (!arrayListContains(arrayIndexGrilleMain, j)) {
+                        winCard += grilleMatchUp.get(i).get(j);
+                    }
+                }
+            }
+            winsAllCard1.add(winCard);
+        }
+
+        for (int j = 0; j < cartes.size(); j++) {
+            int winCard = 0;
+            for (int i = 0; i < cartes.size(); i++) {
+                if (i != j) {
+                    if (!arrayListContains(arrayIndexGrilleMain, i)) {
+                        winCard += 1 - grilleMatchUp.get(i).get(j);
+                    }
+                }
+            }
+            winsAllCard2.add(winCard);
+        }
+
+        int somme = 0;
+
+        ArrayList<Integer> scores = new ArrayList();
+        int index = 0;
+        Iterator<Integer> it2 = winsAllCard1.iterator();
+        while (it2.hasNext()) {
+            int score1 = it2.next();
+            int score2 = winsAllCard2.get(index);
+            scores.add(score1 * score2);
+            index ++;
+        }
+
+        Collections.sort(scores);
+       
+        
+        return score > scores.get(grilleMatchUp.size()/2);
 
     }
 
