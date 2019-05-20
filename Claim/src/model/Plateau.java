@@ -767,4 +767,16 @@ public class Plateau implements Serializable{
 
         return cartes;
     }
+    
+    public boolean containsCard(ArrayList<Carte> cartes, Carte carte){
+        boolean b =false;
+        Iterator<Carte> it = cartes.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if(c.getFaction() == carte.getFaction() && c.getForce() == carte.getForce()){
+                b = true;
+            }
+        }
+        return b;
+    }
 }
