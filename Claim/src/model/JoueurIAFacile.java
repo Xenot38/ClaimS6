@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class JoueurIAFacile  extends JoueurIA{
 	
-    public JoueurIAFacile(ArrayList<Carte> main) {
-            super(main);
+    public JoueurIAFacile(ArrayList<Carte> main, boolean isJ1) {
+            super(main, isJ1);
     }
 
     @Override
@@ -20,53 +20,107 @@ public class JoueurIAFacile  extends JoueurIA{
         
         int indice;
         
-        // on récupère notre main
-        ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
-                
+        
         //Si on veut la carte
         if (b){
             
-            //Si on est le leader
-            if (!p.isJ1Courant()){
-                System.out.println("Leader et veut la carte");
-                //on recupere la carte de plus forte puissance
-                //si plusieurs égales, on choisis aléatoirement parmi celles-ci
-                indice = getindex(getCarteMaxForce(main));
-            //Si on est le deuxième joueur
-            }else{
-                System.out.println("Pas Leader et veut la carte");
-                Carte carteJ1 = p.getCarteJ1();
-                ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
-                ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
+            //si on est le joueur 2
+            if(!getIsJ1()){
                 
-                //si on peut gagner
-                if(!cartesGagnante.isEmpty()){
-                System.out.println("carte gagnantes pas empty");
-                    indice = getindex(getCarteMinForce(cartesGagnante));
-                //si on ne peut que perdre
+                // on récupère notre main
+                ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
+                
+                
+                //Si on est le leader
+                if (!p.isJ1Courant()){
+                    System.out.println("Leader et veut la carte");
+                    //on recupere la carte de plus forte puissance
+                    //si plusieurs égales, on choisis aléatoirement parmi celles-ci
+                    indice = getindex(getCarteMaxForce(main));
+                //Si on est le deuxième joueur
                 }else{
-                    System.out.println("carte gagnantes empty");
-                    indice = getindex(getCarteMinForce(cartesJouable));
+                    System.out.println("Pas Leader et veut la carte");
+                    Carte carteJ1 = p.getCarteJ1();
+                    ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
+                    ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
+
+                    //si on peut gagner
+                    if(!cartesGagnante.isEmpty()){
+                    System.out.println("carte gagnantes pas empty");
+                        indice = getindex(getCarteMinForce(cartesGagnante));
+                    //si on ne peut que perdre
+                    }else{
+                        System.out.println("carte gagnantes empty");
+                        indice = getindex(getCarteMinForce(cartesJouable));
+                    }
+                }
+            }else{
+                //si on est le joueur 1
+                // on récupère notre main
+                ArrayList<Carte> main = (ArrayList<Carte>)p.getJ1().getMain().clone();
+                //Si on est le leader
+                if (p.isJ1Courant()){
+                    System.out.println("Leader et veut la carte");
+                    //on recupere la carte de plus forte puissance
+                    //si plusieurs égales, on choisis aléatoirement parmi celles-ci
+                    indice = getindex(getCarteMaxForce(main));
+                //Si on est le deuxième joueur
+                }else{
+                    System.out.println("Pas Leader et veut la carte");
+                    Carte carteJ2 = p.getCarteJ2();
+                    ArrayList<Carte> cartesJouable = p.getJ1().getCartesJouable(carteJ2);
+                    ArrayList<Carte> cartesGagnante = p.getJ1().getCartesGagnante(carteJ2);
+
+                    //si on peut gagner
+                    if(!cartesGagnante.isEmpty()){
+                    System.out.println("carte gagnantes pas empty");
+                        indice = getindex(getCarteMinForce(cartesGagnante));
+                    //si on ne peut que perdre
+                    }else{
+                        System.out.println("carte gagnantes empty");
+                        indice = getindex(getCarteMinForce(cartesJouable));
+                    }
                 }
             }
-            
         //Si on ne veut pas la carte
         }else{
-            //Si on est le leader
-            if (!p.isJ1Courant()){
-                indice = getindex(getCarteMinForce(main));
-            //Si on est le deuxième joueur
-            }else{
-                Carte carteJ1 = p.getCarteJ1();
-                ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
-                ArrayList<Carte> cartesPerdante = p.getJ2().getCartesPerdante(carteJ1);
-            
-                //si on peut perdre
-                if(!cartesPerdante.isEmpty()){
-                    indice =  getindex(getCarteMinForce(cartesPerdante));
-                //si on ne peut que gagner
+            //si on est le joueur 2
+            if(!getIsJ1()){
+                //Si on est le leader
+                if (!p.isJ1Courant()){
+                    indice = getindex(getCarteMinForce(main));
+                //Si on est le deuxième joueur
                 }else{
-                    indice = getindex(getCarteMinForce(cartesJouable));
+                    Carte carteJ1 = p.getCarteJ1();
+                    ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
+                    ArrayList<Carte> cartesPerdante = p.getJ2().getCartesPerdante(carteJ1);
+
+                    //si on peut perdre
+                    if(!cartesPerdante.isEmpty()){
+                        indice =  getindex(getCarteMinForce(cartesPerdante));
+                    //si on ne peut que gagner
+                    }else{
+                        indice = getindex(getCarteMinForce(cartesJouable));
+                    }
+                }
+            }else{
+                //si on est le joueur 1
+                //Si on est le leader
+                if (p.isJ1Courant()){
+                    indice = getindex(getCarteMinForce(main));
+                //Si on est le deuxième joueur
+                }else{
+                    Carte carteJ2 = p.getCarteJ2();
+                    ArrayList<Carte> cartesJouable = p.getJ1().getCartesJouable(carteJ2);
+                    ArrayList<Carte> cartesPerdante = p.getJ1().getCartesPerdante(carteJ2);
+
+                    //si on peut perdre
+                    if(!cartesPerdante.isEmpty()){
+                        indice =  getindex(getCarteMinForce(cartesPerdante));
+                    //si on ne peut que gagner
+                    }else{
+                        indice = getindex(getCarteMinForce(cartesJouable));
+                    }
                 }
             }
         }
@@ -77,26 +131,56 @@ public class JoueurIAFacile  extends JoueurIA{
     @Override
     public int chooseCardPhase2(Plateau p) {
         
-        // on récupère notre main
-        ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
-         
-        //si on est le leader
-        if(!p.isJ1Courant()){
-            return getindex(getCarteMaxForce(main));
+        //si on est le joueur 2
+        if(!getIsJ1()){
             
-        //si on est deuxième joueur
+            // on récupère notre main
+            ArrayList<Carte> main = (ArrayList<Carte>)p.getJ2().getMain().clone();
+         
+        
+            //si on est le leader
+            if(!p.isJ1Courant()){
+                return getindex(getCarteMaxForce(main));
+
+            //si on est deuxième joueur
+            }else{
+
+                Carte carteJ1 = p.getCarteJ1();
+                ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
+                ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
+
+                //si on peut gagner
+                if(!cartesGagnante.isEmpty()){
+                    return getindex(getCarteMinForce(cartesGagnante));
+                //si on ne peut que perdre
+                }else{
+                    return getindex(getCarteMinForce(cartesJouable));
+                }
+            }
         }else{
             
-            Carte carteJ1 = p.getCarteJ1();
-            ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
-            ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
-                            
-            //si on peut gagner
-            if(!cartesGagnante.isEmpty()){
-                return getindex(getCarteMinForce(cartesGagnante));
-            //si on ne peut que perdre
+            // on récupère notre main
+            ArrayList<Carte> main = (ArrayList<Carte>)p.getJ1().getMain().clone();
+            
+            //si on est joueur 1
+            //si on est le leader
+            if(p.isJ1Courant()){
+                return getindex(getCarteMaxForce(main));
+
+            //si on est deuxième joueur
             }else{
-                return getindex(getCarteMinForce(cartesJouable));
+
+                Carte carteJ2 = p.getCarteJ2();
+                ArrayList<Carte> cartesJouable = p.getJ1().getCartesJouable(carteJ2);
+                ArrayList<Carte> cartesGagnante = p.getJ1().getCartesGagnante(carteJ2);
+
+                //si on peut gagner
+                if(!cartesGagnante.isEmpty()){
+                    return getindex(getCarteMinForce(cartesGagnante));
+                //si on ne peut que perdre
+                }else{
+                    return getindex(getCarteMinForce(cartesJouable));
+                }
             }
         }
     }

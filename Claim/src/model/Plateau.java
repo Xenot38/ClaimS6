@@ -49,7 +49,7 @@ public class Plateau implements Serializable{
                 for (int i = 0; i < 13; i++) {
                         mainTemp.add(pioche.pop());
                 }
-                j1 = new JoueurHumain((ArrayList<Carte>) mainTemp.clone());
+                j1 = new JoueurIAMoyen((ArrayList<Carte>) mainTemp.clone(), true, piocheTemp);
                 j1.rangerMain();
                 mainTemp.clear();
                 for (int i = 0; i < 13; i++) {
@@ -57,13 +57,13 @@ public class Plateau implements Serializable{
                 }
                 switch (difficulte) {
                         case "facile":
-                                j2 = new JoueurIAFacile(mainTemp);
+                                j2 = new JoueurIAFacile(mainTemp, false);
                                 break;
                         case "moyen":
-                                j2 = new JoueurIAMoyen(mainTemp, piocheTemp);
+                                j2 = new JoueurIAMoyen(mainTemp, false, piocheTemp);
                                 break;
                         case "difficile":
-                                j2 = new JoueurIADifficile(mainTemp);
+                                j2 = new JoueurIADifficile(mainTemp, false);
                                 break;
                 }
                 j2.rangerMain();
@@ -88,7 +88,8 @@ public class Plateau implements Serializable{
 
 
 
-        public void calculPli()/*Calcule le pli en cours, prenant en compte les spécificités des factions. Appelle gagnePli, qui gère la fin du pli*/ {
+        public int calculPli()/*Calcule le pli en cours, prenant en compte les spécificités des factions. Appelle gagnePli, qui gère la fin du pli*/ {
+                int res = -2;
                 Carte c1;
                 Carte c2;
                 if (j1Courant) {
@@ -100,20 +101,22 @@ public class Plateau implements Serializable{
                 }
                 if (c1.getFaction() == c2.getFaction() || c2.getFaction() == Faction.Doppelgangers) {
                         if (c1.getForce() >= c2.getForce()) {
-                                gagnePli(c1, c2);
+                                res = gagnePli(c1, c2);
                         } else {
-                                gagnePli(c2, c1);
+                                res = gagnePli(c2, c1);
                         }
                 } else {
                         if (c1.getFaction() == Faction.Gobelins && c2.getFaction() == Faction.Chevaliers) {
-                                gagnePli(c2, c1);
+                                res = gagnePli(c2, c1);
                         } else {
-                                gagnePli(c1, c2);
+                                res = gagnePli(c1, c2);
                         }
                 }
+                return res;
         }
 
-        public void gagnePli(Carte cG, Carte cP)/*gère les fins de plis. cG = carte gagnante, cP = carte perdante*/ {
+        public int gagnePli(Carte cG, Carte cP)/*gère les fins de plis. cG = carte gagnante, cP = carte perdante*/ {
+                int res = -2;
                 boolean prioCoup = j1Courant;
                 if (cG == carteJ1) {//victoire du J1
                         if (phase == 1) {                                       //Pendant la phase 1, les morts vivants vont directement dans le score du gagnant et non dans la défausse
@@ -202,11 +205,14 @@ public class Plateau implements Serializable{
                                 }   
                         }
                         if(scoreJ1>scoreJ2){
-                                System.out.println("Vous avez gagné !");
+                                System.out.println("Victoire J1");
+                                res = 1;
                         }else if(scoreJ1 == scoreJ2){
                                 System.out.println("Egalité !");
+                                res = -1;
                         }else{
-                                System.out.println("Vous avez perdu !");
+                                System.out.println("Victoire J2");
+                                res = 0;
                         }
                        
                 }
@@ -216,6 +222,8 @@ public class Plateau implements Serializable{
                 carteJ2 = null;
                 carteEnJeu = null;
                 carteEnJeuPerdant = null;
+                
+                return res;
         }
 
         public ArrayList<Integer> calculerScore(){//renvoie un tableau de booleains représentant l'affiliation des différentes factions dans l'ordre Chevaliers-Doppelgangers-Gobelins-Morts_Vivants-Nains

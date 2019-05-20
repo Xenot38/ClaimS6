@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public abstract class JoueurIA extends Joueur{
 
-	public JoueurIA(ArrayList<Carte> mainDebut) {
-		super(mainDebut);
+	public JoueurIA(ArrayList<Carte> mainDebut,boolean isJ1) {
+		super(mainDebut, isJ1);
 	}
         
         @Override

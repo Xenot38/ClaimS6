@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class JoueurHumain extends Joueur{	
 	
-	public JoueurHumain(ArrayList<Carte> premiereMain){
-		super(premiereMain);		
+	public JoueurHumain(ArrayList<Carte> premiereMain, boolean  isJ1){
+		super(premiereMain, isJ1);		
 	}
         @Override
         public int joue(Plateau p){
