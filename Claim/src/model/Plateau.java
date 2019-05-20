@@ -49,6 +49,52 @@ public class Plateau implements Serializable{
                 for (int i = 0; i < 13; i++) {
                         mainTemp.add(pioche.pop());
                 }
+                j1 = new JoueurHumain((ArrayList<Carte>) mainTemp.clone(), true);
+                j1.rangerMain();
+                mainTemp.clear();
+                for (int i = 0; i < 13; i++) {
+                        mainTemp.add(pioche.pop());
+                }
+                switch (difficulte) {
+                        case "facile":
+                                j2 = new JoueurIAFacile(mainTemp, false);
+                                break;
+                        case "moyen":
+                                j2 = new JoueurIAMoyen(mainTemp, false, piocheTemp);
+                                break;
+                        case "difficile":
+                                j2 = new JoueurIADifficile(mainTemp, false);
+                                break;
+                }
+                j2.rangerMain();
+        }
+        
+        public Plateau(String difficulte, boolean IAvsIA) {
+                phase = 1;
+                j1Courant = true;
+                fini = false;
+                historique = new ArrayList<Coup>();
+                contreHistorique = new Stack<Coup>();
+                defausse = new ArrayList<Carte>();
+                score = new ArrayList<Integer>();
+                for (int i = 0; i < 5; i++) {
+                        score.add(0);
+                }
+                carteJ1 = null;
+                carteJ2 = null;
+                carteEnJeu = null;
+                pioche = genereCartes();
+                
+                //Pour l'IA Moyenne
+                ArrayList<Carte> piocheTemp = genereCartesArrayList();
+                
+                
+                
+                Collections.shuffle(pioche);
+                ArrayList<Carte> mainTemp = new ArrayList<Carte>();
+                for (int i = 0; i < 13; i++) {
+                        mainTemp.add(pioche.pop());
+                }
                 j1 = new JoueurIAMoyen((ArrayList<Carte>) mainTemp.clone(), true, piocheTemp);
                 j1.rangerMain();
                 mainTemp.clear();
@@ -68,6 +114,8 @@ public class Plateau implements Serializable{
                 }
                 j2.rangerMain();
         }
+        
+        
 
         public Plateau(boolean j1Courant, Joueur j1, Joueur j2, ArrayList<Coup> historique, Stack<Coup> contreHistorique, Carte carteJ1, Carte carteJ2, Carte carteEnJeu, Carte carteEnJeuPerdant, Stack<Carte> pioche, ArrayList<Carte> defausse, ArrayList<Integer> score, int phase, boolean fini) {
                 this.j1Courant = j1Courant;
