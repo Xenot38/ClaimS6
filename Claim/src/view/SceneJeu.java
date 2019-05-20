@@ -43,6 +43,7 @@ public class SceneJeu {
    public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png");
    public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
    public CarteView centreCarteAGagner = null;
+   public CarteView Defausse = new CarteView("ressources/images/Defausse.png");
    public ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
    public ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
    public int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
@@ -73,6 +74,7 @@ public class SceneJeu {
        //espace du coter droit des cartes du joueur 2 //
        Canvas canvideJ2D = new Canvas();
        Pane panevideJ2D = new Pane(canvideJ2D);
+       HBox.setHgrow(panevideJ2D, Priority.ALWAYS);
        cartesJ2.getChildren().add(panevideJ2D);
        ////////////////////
        Canvas canCentre = new Canvas();
@@ -87,12 +89,16 @@ public class SceneJeu {
        //espace du coter gauche des cartes du joueur 1//
        Canvas canvideJ1G = new Canvas();
        Pane panevideJ1G = new Pane(canvideJ1G);
+       HBox.setHgrow(panevideJ1G, Priority.ALWAYS);
+        cartesJ1.getChildren().add(panevideJ1G);
        //cartes du Joueur1//
        cartesJ1.getChildren().add(Main1);
        //espace du coter droit des cartes du joueur 1//
        Canvas canvideJ1D = new Canvas();
        Pane panevideJ1D = new Pane(canvideJ1D);
-       cartesJ1.getChildren().add(panevideJ1G);
+       HBox.setHgrow(panevideJ1D, Priority.ALWAYS);
+       cartesJ1.getChildren().add(panevideJ1D);
+       
        ////////////////////
        ////////////////////////////
        //Partie Centrale du plateau//
@@ -144,55 +150,27 @@ public class SceneJeu {
        
        ////////////////////////
        //plateau final de jeu//
-       HBox jeu = new HBox();
-       jeu.getChildren().add(partieC);
+      // HBox jeu = new HBox();
+       //jeu.getChildren().add(partieC);
        ////////////////////////
-       Scene s = new Scene(jeu, x , y);
+       Scene s = new Scene(partieC, x , y);
        return s;
    }
-   
-   
-    public void coupIAJoue2(){
-                System.out.println("////////////////////");
-                System.out.println(p.getJ2().joue(p));
-                int a = p.getJ2().joue(p);
-                System.out.println(p.getJ2().choisirCarte(a).getForce());
-                p.setCarteJ2(p.getJ2().choisirCarte(a));
-               carteJouerJoueur2.getPane().getChildren().clear();
-               carteJouerJoueur2.SetImage((ImageView) arMain2.get(refMain2[a]).getPane().getChildren().get(0));
-               for (int i = a; i< 13;i++){
-                   refMain2[i] = refMain2[i]+1;
-               }
-               if(!p.isJ1Courant()){
-                   coupIAJoue1();
-               }
-            }
-    
-    
-    public void coupIAJoue1(){
-        int a = p.getJ2().joue(p);
-                System.out.println(p.getJ2().choisirCarte(a).getForce());
-                p.setCarteJ2(p.getJ2().choisirCarte(a));
-               carteJouerJoueur2.getPane().getChildren().clear();
-               carteJouerJoueur2.SetImage((ImageView) arMain2.get(refMain2[a]).getPane().getChildren().get(0));
-               for (int i = a; i< 13;i++){
-                   refMain2[i] = refMain2[i]+1;
-               }
-    }
                 
      
    public VBox centreDeffause(){
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
        VBox carte = new VBox();
-       AnchorPane pane = new AnchorPane();
+       /*AnchorPane pane = new AnchorPane();
        Image image1=null;
-       try{image1 = new Image(new File("ressources/images/Ch2.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
+       try{image1 = new Image(new File("ressources/images/Defausse.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
        ImageView imageSelected = new ImageView();
        imageSelected.setImage(image1);
-       pane.getChildren().add(imageSelected);
+       pane.getChildren().add(imageSelected);*/
        carte.getChildren().add(panepousse);
-       carte.getChildren().add(pane);
+       carte.getChildren().add(Defausse.getPane());
+      // carte.getChildren().add(pane);
        return carte;
     }
    
