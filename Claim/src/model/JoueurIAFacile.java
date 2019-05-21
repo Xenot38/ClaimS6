@@ -74,11 +74,11 @@ public class JoueurIAFacile  extends JoueurIA{
                     //si on peut gagner
                     if(!cartesGagnante.isEmpty()){
                     System.out.println("carte gagnantes pas empty");
-                        indice = getindex(getCarteMinForce(cartesGagnante));
+                        indice = getindex(getRandomCarte(cartesGagnante));
                     //si on ne peut que perdre
                     }else{
                         System.out.println("carte gagnantes empty");
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                        indice = getindex(getRandomCarte(cartesJouable));
                     }
                 }
             }
@@ -97,10 +97,10 @@ public class JoueurIAFacile  extends JoueurIA{
 
                     //si on peut perdre
                     if(!cartesPerdante.isEmpty()){
-                        indice =  getindex(getCarteMinForce(cartesPerdante));
+                        indice =  getindex(getRandomCarte(cartesPerdante));
                     //si on ne peut que gagner
                     }else{
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                        indice = getindex(getRandomCarte(cartesJouable));
                     }
                 }
             }else{
@@ -116,10 +116,10 @@ public class JoueurIAFacile  extends JoueurIA{
 
                     //si on peut perdre
                     if(!cartesPerdante.isEmpty()){
-                        indice =  getindex(getCarteMinForce(cartesPerdante));
+                        indice =  getindex(getRandomCarte(cartesPerdante));
                     //si on ne peut que gagner
                     }else{
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                        indice = getindex(getRandomCarte(cartesJouable));
                     }
                 }
             }
@@ -151,10 +151,10 @@ public class JoueurIAFacile  extends JoueurIA{
 
                 //si on peut gagner
                 if(!cartesGagnante.isEmpty()){
-                    return getindex(getCarteMinForce(cartesGagnante));
+                    return getindex(getRandomCarte(cartesGagnante));
                 //si on ne peut que perdre
                 }else{
-                    return getindex(getCarteMinForce(cartesJouable));
+                    return getindex(getRandomCarte(cartesJouable));
                 }
             }
         }else{
@@ -176,10 +176,10 @@ public class JoueurIAFacile  extends JoueurIA{
 
                 //si on peut gagner
                 if(!cartesGagnante.isEmpty()){
-                    return getindex(getCarteMinForce(cartesGagnante));
+                    return getindex(getRandomCarte(cartesGagnante));
                 //si on ne peut que perdre
                 }else{
-                    return getindex(getCarteMinForce(cartesJouable));
+                    return getindex(getRandomCarte(cartesJouable));
                 }
             }
         }

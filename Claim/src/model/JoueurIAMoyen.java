@@ -31,6 +31,14 @@ public class JoueurIAMoyen extends JoueurIA {
         creerGrille(cartes);
         coefsFactions = new ArrayList(Arrays.asList(1,1,1,1,1));
 
+        /*
+        //Affichage des scores de chaques cartes au début de la partie
+        Iterator<Carte> it = cartes.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            System.out.println(c.getFaction() + " " + c.getForce() + "=>" + getScoreCarteMain(c));
+        }*/
+        
         //afficheGrille();
         /*J1HasFactions = new ArrayList();
         for (int i = 0; i < 5; i++) {
@@ -163,17 +171,26 @@ public class JoueurIAMoyen extends JoueurIA {
                     Carte carteJ1 = p.getCarteJ1();
                     ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
                     ArrayList<Carte> cartesPerdante = p.getJ2().getCartesPerdante(carteJ1);
+                    ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
+                    
+                    if(carteJ1.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()){
+                        indice = getindex(getCarteMinForce(cartesGagnante));
+                        
+                    }else{
+                         //si on peut perdre
+                        if (!cartesPerdante.isEmpty()) {
+                            System.out.println("test3");
 
-                    //si on peut perdre
-                    if (!cartesPerdante.isEmpty()) {
-                        System.out.println("test3");
-
-                        indice = getindex(getCarteMinForce(cartesPerdante));
-                        //si on ne peut que gagner
-                    } else {
-                        System.out.println("test4");
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                            indice = getindex(getCarteMinForce(cartesPerdante));
+                            //si on ne peut que gagner
+                        } else {
+                            System.out.println("test4");
+                            indice = getindex(getCarteMinForce(cartesJouable));
+                        }
                     }
+                    
+
+                   
                 }
             } else {
                 //Si on est le joueur 1
@@ -187,16 +204,23 @@ public class JoueurIAMoyen extends JoueurIA {
                     Carte carteJ2 = p.getCarteJ2();
                     ArrayList<Carte> cartesJouable = p.getJ1().getCartesJouable(carteJ2);
                     ArrayList<Carte> cartesPerdante = p.getJ1().getCartesPerdante(carteJ2);
+                    ArrayList<Carte> cartesGagnante = p.getJ1().getCartesGagnante(carteJ2);
 
-                    //si on peut perdre
-                    if (!cartesPerdante.isEmpty()) {
-                        System.out.println("test3");
+                    
+                    if(carteJ2.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()){
+                        indice = getindex(getCarteMinForce(cartesGagnante));
+                       
+                    }else{
+                        //si on peut perdre
+                        if (!cartesPerdante.isEmpty()) {
+                            System.out.println("test3");
 
-                        indice = getindex(getCarteMinForce(cartesPerdante));
-                        //si on ne peut que gagner
-                    } else {
-                        System.out.println("test4");
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                            indice = getindex(getCarteMinForce(cartesPerdante));
+                            //si on ne peut que gagner
+                        } else {
+                            System.out.println("test4");
+                            indice = getindex(getCarteMinForce(cartesJouable));
+                        }
                     }
                 }
             }
@@ -497,11 +521,13 @@ public class JoueurIAMoyen extends JoueurIA {
     }
 
     private void removeCarte(ArrayList<Carte> cartes, Carte c) {
+        boolean alreadyRetired = false;
         Iterator<Carte> it = cartes.iterator();
-        while (it.hasNext()) {
+        while (it.hasNext() && !alreadyRetired) {
             Carte carte = it.next();
             if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()) {
                 it.remove();
+                alreadyRetired = true;
             }
         }
     }
@@ -547,7 +573,16 @@ public class JoueurIAMoyen extends JoueurIA {
                 }
             }
         }
-        return ((wins1 + 1)) * ((wins2 + 1));
+        int mult1 = 1;
+        int mult2 = 1;
+        switch(c.getFaction()){
+            case Chevaliers: mult1 = 6; mult2 = 4; break;
+            case Doppelgangers: mult1 = 2; mult2 = 8; break;
+            case Gobelins: mult1 = 8; mult2 = 2; break;
+            case MortsVivants: mult1 = 8; mult2 = 2; break;
+            case Nains: mult1 = 2; mult2 = 8; break;
+        }
+        return ((wins1 + 1)*mult1) * ((wins2 + 1)*mult2) * (1+c.getForce()/2);
     }
 
     private int getScore(Carte c) {
@@ -573,20 +608,20 @@ public class JoueurIAMoyen extends JoueurIA {
                         //if((arrayListContains(arrayIndexGrilleMain, i) && !arrayListContains(arrayIndexGrilleMain, j)) || (!arrayListContains(arrayIndexGrilleMain, i) && arrayListContains(arrayIndexGrilleMain, j))){
                         if (!arrayListContains(arrayIndexGrilleMain, j)) {
                             int win = grilleMatchUp.get(i).get(j);
-                            /*if(win == 1){
-                                //System.out.println("Victoire 1: " + cartes.get(j).getFaction() + cartes.get(j).getForce());
-                                System.out.println("V1: " + j);
-                            }*/
+                            if(win == 1){
+                                System.out.println("Victoire 1: " + cartes.get(j).getFaction() + cartes.get(j).getForce());
+                                //System.out.println("V1: " + j);
+                            }
                             wins1 += win;
                         }
                     }
                     if (j == indexCard) {
                         if (!arrayListContains(arrayIndexGrilleMain, i)) {
                             int win = grilleMatchUp.get(i).get(j);
-                            /*if(win == 0){
-                                //System.out.println("Victoire 2:" + cartes.get(i).getFaction() + cartes.get(i).getForce());
-                                System.out.println("V2: " + i);
-                            }*/
+                            if(win == 0){
+                                System.out.println("Victoire 2:" + cartes.get(i).getFaction() + cartes.get(i).getForce());
+                                //System.out.println("V2: " + i);
+                            }
                             wins2 += 1 - win;
                         }
                     }
@@ -594,8 +629,17 @@ public class JoueurIAMoyen extends JoueurIA {
                 }
             }
         }
+        int mult1 = 1;
+        int mult2 = 1;
+        switch(c.getFaction()){
+            case Chevaliers: mult1 = 6; mult2 = 4; break;
+            case Doppelgangers: mult1 = 2; mult2 = 8; break;
+            case Gobelins: mult1 = 8; mult2 = 2; break;
+            case MortsVivants: mult1 = 8; mult2 = 2; break;
+            case Nains: mult1 = 2; mult2 = 8; break;
+        }
         System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
-        return (wins1 + 1) * (wins2 + 1);
+        return (wins1 + 1)*mult1 * (wins2 + 1)*mult2 * (1+c.getForce()/2);
     }
 
     private boolean wantCard(int score) {
@@ -660,7 +704,7 @@ public class JoueurIAMoyen extends JoueurIA {
     }
 
     private boolean wantCardMediane(int score) {
-        ArrayList<Integer> winsAllCard1 = new ArrayList();
+        /*ArrayList<Integer> winsAllCard1 = new ArrayList();
         ArrayList<Integer> winsAllCard2 = new ArrayList();
 
         ArrayList<Integer> arrayIndexGrilleMain = new ArrayList();
@@ -694,6 +738,8 @@ public class JoueurIAMoyen extends JoueurIA {
             }
             winsAllCard2.add(winCard);
         }
+        
+        
 
         int somme = 0;
 
@@ -705,6 +751,13 @@ public class JoueurIAMoyen extends JoueurIA {
             int score2 = winsAllCard2.get(index);
             scores.add(score1 * score2);
             index ++;
+        }*/
+        
+        ArrayList<Integer> scores = new ArrayList();
+        Iterator<Carte> it = cartes.iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            scores.add(getScoreCarteMain(carte));
         }
 
         Collections.sort(scores);
@@ -803,13 +856,15 @@ public class JoueurIAMoyen extends JoueurIA {
     }
 
     private int getIndexMinScoreUndead(ArrayList<Carte> main) {
+        System.out.println(main.size() +"||||||||||||||||||||||||||");
         int scoreMin = getScore(getMain().get(0));
         int i = 0;
         ArrayList<Integer> victoryCardsIndex = new ArrayList();
+        victoryCardsIndex.add(0);
         Iterator<Carte> it = main.iterator();
-
+        Carte c = it.next();
         while (it.hasNext()) {
-            Carte c = it.next();
+            c = it.next();
             int score = getScoreCarteMain(c);
             if (score < scoreMin) {
                 victoryCardsIndex.clear();

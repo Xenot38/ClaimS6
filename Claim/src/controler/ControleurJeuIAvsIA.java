@@ -30,7 +30,7 @@ public class ControleurJeuIAvsIA {
             int victoiresJ1 = 0;
             int victoiresJ2 = 0;
             int nbEgalite = 0;
-            int nbPartie = 500;
+            int nbPartie = 1000;
             for (int i = 0; i < nbPartie; i++) {
                 
                 while(!plateauJeu.isFini()){
