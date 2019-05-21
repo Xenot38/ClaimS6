@@ -82,7 +82,7 @@ public class JoueurIAMoyen extends JoueurIA {
         //calcul win rate de la carte en jeu;
         Carte c = p.getCarteEnJeu();
         int score = getScore(c);
-        System.out.println("Score Carte en jeu: " + score);
+        //System.out.println("Score Carte en jeu: " + score);
         boolean w = wantCardMediane(score);
         if (c.getFaction() != Faction.Nains) {
             return w;
@@ -160,7 +160,7 @@ public class JoueurIAMoyen extends JoueurIA {
                 //Si on est le leader
                 if (!p.isJ1Courant()) {
 
-                    indice = getIndexMinScoreUndead(main);
+                    indice = getIndexMinScore(main);
 
                     //Si on est le deuxième joueur
                 } else {
@@ -191,7 +191,7 @@ public class JoueurIAMoyen extends JoueurIA {
                 //Si on est le leader
                 if (p.isJ1Courant()) {
 
-                    indice = getIndexMinScoreUndead(main);
+                    indice = getIndexMinScore(main);
 
                     //Si on est le deuxième joueur
                 } else {
@@ -654,7 +654,7 @@ public class JoueurIAMoyen extends JoueurIA {
             case MortsVivants: mult1 = 8; mult2 = 2; break;
             case Nains: mult1 = 2; mult2 = 8; break;
         }
-        System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
+        //System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
         return (wins1 + 1)*mult1 * (wins2 + 1)*mult2 * (1+c.getForce()/2);
     }
 
@@ -714,7 +714,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
         float moyenne2 = somme / winsAllCard2.size();
 
-        System.out.println("Score moyen: " + moyenne1 * moyenne2);
+        //System.out.println("Score moyen: " + moyenne1 * moyenne2);
         return score > (moyenne1 + 1) * (moyenne2 + 1);
 
     }
@@ -871,7 +871,7 @@ public class JoueurIAMoyen extends JoueurIA {
         }
     }
 
-    private int getIndexMinScoreUndead(ArrayList<Carte> main) {
+    private int getIndexMinScore(ArrayList<Carte> main) {
         //System.out.println(main.size() +"||||||||||||||||||||||||||");
         int scoreMin = getScore(getMain().get(0));
         int i = 0;
