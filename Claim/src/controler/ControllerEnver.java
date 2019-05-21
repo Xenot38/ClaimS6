@@ -110,7 +110,10 @@ public class ControllerEnver {
                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent e) {
-                        if (J1joue) {
+                        
+                        
+                        if (J1joue && p.containsCard(p.getJ1().getCartesJouable(p.getCarteJ2()),p.getJ1().getMain().get(jeu.refMain1[test]))) {
+                            
                             for (int i = test + 1; i < 13; i++) {
                                 jeu.refMain1[i] = jeu.refMain1[i] - 1;
                             }
@@ -180,7 +183,7 @@ public class ControllerEnver {
             gestionTour();
         }
 
-        setJ1joue(true);
+       // setJ1joue(true);
     }
 
     public void gestionTour() {
@@ -232,6 +235,11 @@ public class ControllerEnver {
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
+                
+                jeu.Defausse.getPane().getChildren().clear();
+                jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur2.getPane().getChildren().get(0));
+                
+                
                 jeu.carteJouerJoueur1.getPane().getChildren().clear();
                 Image image1 = null;
                 try {

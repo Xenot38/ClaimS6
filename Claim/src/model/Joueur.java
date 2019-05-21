@@ -85,6 +85,9 @@ public abstract class Joueur implements Serializable {
     }
 
     public ArrayList<Carte> getCartesJouable(Carte carteJ1) {
+        if (carteJ1 == null){
+            return this.getMain();
+        }
         Iterator<Carte> it = getMain().iterator();
         ArrayList<Carte> carteJouables = new ArrayList();
         ArrayList<Carte> carteDoppel = new ArrayList();
