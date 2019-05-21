@@ -242,16 +242,28 @@ public class JoueurIAMoyen extends JoueurIA {
             if (!p.isJ1Courant()) {
                 Carte carteNainMinJ1 = getCarteNainMin(p.getJ1().getMain());
                 Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
-
-                if (carteNainMinJ2 != null) {
-                    if ((carteNainMinJ1 == null) || (carteNainMinJ1 != null && carteNainMinJ2.getForce() < carteNainMinJ1.getForce())) {
-                        indice = getindex(carteNainMinJ2);
-                    } else {
+                Carte carteDoppelMinJ1 = carteDoppelMin(p.getJ1().getMain());
+                
+                if(carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ1 != null){
+                    
+                    if(carteNainMinJ2.getForce() < carteNainMinJ1.getForce() && carteNainMinJ2.getForce() < carteDoppelMinJ1.getForce()){
+                        
+                        Random r = new Random();
+                        int i = r.nextInt(2);
+                        
+                        if(i == 0){
+                            indice = getindex(carteNainMinJ2);
+                        }else{
+                            updateGrillePhase2(p);
+                            //indice = getindex(getCarteMaxForce(main));
+                            indice = getIndexMaxScore(main);
+                        }
+                    }else{
                         updateGrillePhase2(p);
                         //indice = getindex(getCarteMaxForce(main));
                         indice = getIndexMaxScore(main);
                     }
-                } else {
+                }else {
                     updateGrillePhase2(p);
                     //indice = getindex(getCarteMaxForce(main));
                     indice = getIndexMaxScore(main);
@@ -298,20 +310,32 @@ public class JoueurIAMoyen extends JoueurIA {
             //si on est le leader
             if (p.isJ1Courant()) {
                 Carte carteNainMinJ1 = getCarteNainMin(p.getJ1().getMain());
-                Carte carteNainMinJ2 = getCarteNainMin(p.getJ1().getMain());
-
-                if (carteNainMinJ1 != null) {
-                    if ((carteNainMinJ2 == null) || (carteNainMinJ2 != null && carteNainMinJ2.getForce() < carteNainMinJ1.getForce())) {
-                        indice = getindex(carteNainMinJ2);
-                    } else {
+                Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
+                Carte carteDoppelMinJ2 = carteDoppelMin(p.getJ2().getMain());
+                
+                if(carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ2 != null){
+                    
+                    if(carteNainMinJ1.getForce() < carteNainMinJ2.getForce() && carteNainMinJ1.getForce() < carteDoppelMinJ2.getForce()){
+                        
+                        Random r = new Random();
+                        int i = r.nextInt(2);
+                        
+                        if(i == 0){
+                            indice = getindex(carteNainMinJ1);
+                        }else{
+                            updateGrillePhase2(p);
+                            //indice = getindex(getCarteMaxForce(main));
+                            indice = getIndexMaxScore(main);
+                        }
+                    }else{
                         updateGrillePhase2(p);
                         //indice = getindex(getCarteMaxForce(main));
-                        indice = getIndexMinScoreUndead(main);
+                        indice = getIndexMaxScore(main);
                     }
-                } else {
+                }else {
                     updateGrillePhase2(p);
                     //indice = getindex(getCarteMaxForce(main));
-                    indice = getIndexMinScoreUndead(main);
+                    indice = getIndexMaxScore(main);
                 }
 
                 //si on est deuxième joueur
@@ -1001,6 +1025,24 @@ public class JoueurIAMoyen extends JoueurIA {
             break;
         }
         return indice;
+    }
+
+    private Carte carteDoppelMin(ArrayList<Carte> main) {
+        int forceMin = 10;
+        Carte carteDoppelMin = null;
+        ArrayList<Carte> mainAdversaire = (ArrayList<Carte>) main.clone();
+
+        Iterator<Carte> it = mainAdversaire.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if (c.getFaction() == Faction.Doppelgangers) {
+                if (c.getForce() < forceMin) {
+                    carteDoppelMin = c;
+                    forceMin = c.getForce();
+                }
+            }
+        }
+        return carteDoppelMin;
     }
 
 }
