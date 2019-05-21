@@ -61,18 +61,18 @@ public class JoueurIAMoyen extends JoueurIA {
             //afficheGrille();
             //Phase1
             Boolean winCard = winCard(p);
-            if (winCard) {
+            /*if (winCard) {
                 System.out.println("je veux la carte");
             } else {
                 System.out.println("je ne veux pas la carte");
-            }
+            }*/
             indice = chooseCardPhase1(p, winCard);
-            System.out.println("Indice: " + indice);
+            //System.out.println("Indice: " + indice);
             return indice;
         } else {
             //Phase2
             indice = chooseCardPhase2(p);
-            System.out.println("Indice: " + indice);
+            //System.out.println("Indice: " + indice);
             return indice;
         }
     }
@@ -82,7 +82,7 @@ public class JoueurIAMoyen extends JoueurIA {
         //calcul win rate de la carte en jeu;
         Carte c = p.getCarteEnJeu();
         int score = getScore(c);
-        System.out.println("Score Carte en jeu: " + score);
+        //System.out.println("Score Carte en jeu: " + score);
         boolean w = wantCardMediane(score);
         if (c.getFaction() != Faction.Nains) {
             return w;
@@ -119,11 +119,9 @@ public class JoueurIAMoyen extends JoueurIA {
 
                     //si on peut gagner
                     if (!cartesGagnante.isEmpty()) {
-                        System.out.println("test");
                         indice = getindex(getCarteMinForce(cartesGagnante));
                         //si on ne peut que perdre
                     } else {
-                        System.out.println("test2");
                         indice = getindex(getCarteMinForce(cartesJouable));
                     }
                 }
@@ -147,11 +145,9 @@ public class JoueurIAMoyen extends JoueurIA {
 
                     //si on peut gagner
                     if (!cartesGagnante.isEmpty()) {
-                        System.out.println("test");
                         indice = getindex(getCarteMinForce(cartesGagnante));
                         //si on ne peut que perdre
                     } else {
-                        System.out.println("test2");
                         indice = getindex(getCarteMinForce(cartesJouable));
                     }
                 }
@@ -164,7 +160,7 @@ public class JoueurIAMoyen extends JoueurIA {
                 //Si on est le leader
                 if (!p.isJ1Courant()) {
 
-                    indice = getIndexMinScoreUndead(main);
+                    indice = getIndexMinScore(main);
 
                     //Si on est le deuxième joueur
                 } else {
@@ -179,12 +175,10 @@ public class JoueurIAMoyen extends JoueurIA {
                     }else{
                          //si on peut perdre
                         if (!cartesPerdante.isEmpty()) {
-                            System.out.println("test3");
 
                             indice = getindex(getCarteMinForce(cartesPerdante));
                             //si on ne peut que gagner
                         } else {
-                            System.out.println("test4");
                             indice = getindex(getCarteMinForce(cartesJouable));
                         }
                     }
@@ -197,7 +191,7 @@ public class JoueurIAMoyen extends JoueurIA {
                 //Si on est le leader
                 if (p.isJ1Courant()) {
 
-                    indice = getIndexMinScoreUndead(main);
+                    indice = getIndexMinScore(main);
 
                     //Si on est le deuxième joueur
                 } else {
@@ -213,12 +207,10 @@ public class JoueurIAMoyen extends JoueurIA {
                     }else{
                         //si on peut perdre
                         if (!cartesPerdante.isEmpty()) {
-                            System.out.println("test3");
 
                             indice = getindex(getCarteMinForce(cartesPerdante));
                             //si on ne peut que gagner
                         } else {
-                            System.out.println("test4");
                             indice = getindex(getCarteMinForce(cartesJouable));
                         }
                     }
@@ -633,7 +625,7 @@ public class JoueurIAMoyen extends JoueurIA {
                         if (!arrayListContains(arrayIndexGrilleMain, j)) {
                             int win = grilleMatchUp.get(i).get(j);
                             if(win == 1){
-                                System.out.println("Victoire 1: " + cartes.get(j).getFaction() + cartes.get(j).getForce());
+                                //System.out.println("Victoire 1: " + cartes.get(j).getFaction() + cartes.get(j).getForce());
                                 //System.out.println("V1: " + j);
                             }
                             wins1 += win;
@@ -643,7 +635,7 @@ public class JoueurIAMoyen extends JoueurIA {
                         if (!arrayListContains(arrayIndexGrilleMain, i)) {
                             int win = grilleMatchUp.get(i).get(j);
                             if(win == 0){
-                                System.out.println("Victoire 2:" + cartes.get(i).getFaction() + cartes.get(i).getForce());
+                                //System.out.println("Victoire 2:" + cartes.get(i).getFaction() + cartes.get(i).getForce());
                                 //System.out.println("V2: " + i);
                             }
                             wins2 += 1 - win;
@@ -662,7 +654,7 @@ public class JoueurIAMoyen extends JoueurIA {
             case MortsVivants: mult1 = 8; mult2 = 2; break;
             case Nains: mult1 = 2; mult2 = 8; break;
         }
-        System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
+        //System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
         return (wins1 + 1)*mult1 * (wins2 + 1)*mult2 * (1+c.getForce()/2);
     }
 
@@ -722,7 +714,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
         float moyenne2 = somme / winsAllCard2.size();
 
-        System.out.println("Score moyen: " + moyenne1 * moyenne2);
+        //System.out.println("Score moyen: " + moyenne1 * moyenne2);
         return score > (moyenne1 + 1) * (moyenne2 + 1);
 
     }
@@ -879,8 +871,8 @@ public class JoueurIAMoyen extends JoueurIA {
         }
     }
 
-    private int getIndexMinScoreUndead(ArrayList<Carte> main) {
-        System.out.println(main.size() +"||||||||||||||||||||||||||");
+    private int getIndexMinScore(ArrayList<Carte> main) {
+        //System.out.println(main.size() +"||||||||||||||||||||||||||");
         int scoreMin = getScore(getMain().get(0));
         int i = 0;
         ArrayList<Integer> victoryCardsIndex = new ArrayList();
@@ -900,7 +892,7 @@ public class JoueurIAMoyen extends JoueurIA {
             i++;
         }
         Random r = new Random();
-        System.out.println(victoryCardsIndex.size() + "////////////");
+        //System.out.println(victoryCardsIndex.size() + "////////////");
         int indice = r.nextInt(victoryCardsIndex.size());
         return victoryCardsIndex.get(indice);
     }
