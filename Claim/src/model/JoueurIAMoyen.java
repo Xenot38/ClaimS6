@@ -61,18 +61,18 @@ public class JoueurIAMoyen extends JoueurIA {
             //afficheGrille();
             //Phase1
             Boolean winCard = winCard(p);
-            if (winCard) {
+            /*if (winCard) {
                 System.out.println("je veux la carte");
             } else {
                 System.out.println("je ne veux pas la carte");
-            }
+            }*/
             indice = chooseCardPhase1(p, winCard);
-            System.out.println("Indice: " + indice);
+            //System.out.println("Indice: " + indice);
             return indice;
         } else {
             //Phase2
             indice = chooseCardPhase2(p);
-            System.out.println("Indice: " + indice);
+            //System.out.println("Indice: " + indice);
             return indice;
         }
     }

@@ -125,21 +125,21 @@ public abstract class Joueur implements Serializable {
                 carteJouables.add(c);
                 //si sa force est supérieure , elle est gagnante
                 if (c.getForce() > carteJ1.getForce()) {
-                    System.out.println("Carte Gagnante: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte Gagnante: " + c.getFaction() + c.getForce());
                     cartesGagnantes.add(c);
                 }
             } else if (c.getFaction() == Faction.Doppelgangers) {
                 carteDoppel.add(c);
                 //si sa force est supérieure , elle est gagnante
                 if (c.getForce() > carteJ1.getForce()) {
-                    System.out.println("Carte gagante: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte gagante: " + c.getFaction() + c.getForce());
                     cartesGagnantes.add(c);
                 }
             } else {
                 //si la fac n'est pas compatible mais que l'adversaire est un gobelin
                 // et que l'on a un chevalier, on l'ajoute
                 if (carteJ1.getFaction() == Faction.Gobelins && c.getFaction() == Faction.Chevaliers) {
-                    System.out.println("Carte Autre: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte Autre: " + c.getFaction() + c.getForce());
                     cartesChevalier.add(c);
                 }
                 autresCartes.add(c);
@@ -149,10 +149,10 @@ public abstract class Joueur implements Serializable {
         // ( qui sont soit vide soit pleins si gobelin)
         if (cartesGagnantes.isEmpty()) {
             if (carteJouables.isEmpty()) {
-                System.out.println("test5");
+                //System.out.println("test5");
                 return cartesChevalier;
             } else {
-                System.out.println("test6");
+                //System.out.println("test6");
                 return cartesGagnantes;
             }
         } else {
@@ -168,7 +168,7 @@ public abstract class Joueur implements Serializable {
             //si c'est la cas, on ajoute aux cartes gagnantes les cartes chevalier 
             if (mainCompleteDoppel) {
                 if (carteJouables.isEmpty()) {
-                    System.out.println("test7");
+                    //System.out.println("test7");
                     cartesGagnantes.addAll(cartesChevalier);
                 }
             }
@@ -191,20 +191,20 @@ public abstract class Joueur implements Serializable {
                 //si sa force est inférieure , elle est perdante
                 if (c.getForce() <= carteJ1.getForce()) {
                     cartesPerdantes.add(c);
-                    System.out.println("Carte perdante: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte perdante: " + c.getFaction() + c.getForce());
                 }
             } else if (c.getFaction() == Faction.Doppelgangers) {
                 cartesDoppel.add(c);
                 //si sa force est inférieure , elle est perdante
                 if (c.getForce() <= carteJ1.getForce()) {
-                    System.out.println("Carte perdante: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte perdante: " + c.getFaction() + c.getForce());
                     cartesPerdantes.add(c);
                 }
             } else {
                 //si on est pas dans le cas gobelin(Leader) et chevalier(2eme)
                 if (!(carteJ1.getFaction() == Faction.Gobelins && c.getFaction() == Faction.Chevaliers)) {
                     autresCartes.add(c);
-                    System.out.println("Carte Autre: " + c.getFaction() + c.getForce());
+                    //System.out.println("Carte Autre: " + c.getFaction() + c.getForce());
                 }
             }
         }
@@ -213,10 +213,10 @@ public abstract class Joueur implements Serializable {
         // qui sont les cartes non compatibles avec la faction( qui sont donc perdantes )
         if (cartesPerdantes.isEmpty()) {
             if (carteJouables.isEmpty()) {
-                System.out.println("test5");
+                //System.out.println("test5");
                 return this.getMain();
             } else {
-                System.out.println("test6");
+                //System.out.println("test6");
                 return cartesPerdantes;
             }
         } else {
