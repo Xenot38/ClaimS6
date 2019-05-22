@@ -6,6 +6,8 @@
 package view;
 
 import controler.ControllerEnver;
+import static controler.Launcher.hauteur;
+import static controler.Launcher.largeur;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +26,11 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -63,6 +70,13 @@ public class SceneJeu {
    
    public Scene creerjeu(int x,int y) throws FileNotFoundException{
        ////////////////////////////
+       BackgroundImage myBI = null;
+       try{  myBI= new BackgroundImage(new Image(new File("ressources/images/bg.png").toURI().toString(), 1900, 1000, false, true),
+        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+        BackgroundSize.DEFAULT);}
+       catch(Exception e){
+           System.out.println("lol ça n'a pas charger mdr");
+       }
        // historique //
        /*Canvas canHistorique = new Canvas(400,900);
        Pane panehi1 = new Pane(canHistorique);*/
@@ -171,7 +185,10 @@ public class SceneJeu {
       // HBox jeu = new HBox();
        //jeu.getChildren().add(partieC);
        ////////////////////////
+       partieC.setBackground(new Background(myBI));
+       
        Scene s = new Scene(partieC, x , y);
+       
        return s;
    }
                 
