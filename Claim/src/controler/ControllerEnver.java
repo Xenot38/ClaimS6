@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Carte;
+import model.Faction;
 import model.Plateau;
 import view.CarteView;
 import view.SceneCharger;
@@ -238,8 +239,18 @@ public class ControllerEnver {
             public void handle(WorkerStateEvent event) {
                 
                 if(p.getPhase()==1){
-                    jeu.Defausse.getPane().getChildren().clear();
-                    jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur2.getPane().getChildren().get(0));
+                    if(p.getCarteJ2().getFaction() == Faction.MortsVivants ){
+                        if (p.getCarteJ1().getFaction() == Faction.MortsVivants){
+                            
+                        }else{
+                            jeu.Defausse.getPane().getChildren().clear();
+                            jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur1.getPane().getChildren().get(0));}
+                    }else {
+                            jeu.Defausse.getPane().getChildren().clear();
+                            jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur2.getPane().getChildren().get(0));
+                        
+                    }
+                    
                 }
                     
                     
@@ -302,21 +313,13 @@ public class ControllerEnver {
     
     
     public void setupJeuPhase2(){
-        jeu.arMain1.clear();
-        jeu.arMain2.clear();
-        jeu.Main1.getChildren().clear();
-        jeu.Main1 = getHBMain(p.getJ1().getMain(), 1);
-        System.out.println("remplissage main 1");
-        jeu.Main2.getChildren().clear();
-        jeu.Main2 = getHBMain(p.getJ2().getMain(), 0);
-        System.out.println("remplissage main 2");
         for (int i =0; i<13;i++){
+            jeu.centreCarteAGagner.getPane().getChildren().clear();
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage()));
+            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage()));
             jeu.refMain1[i]=i;
             jeu.refMain2[i]=i;
-            
         }
-        System.out.println("taille = "+(jeu.refMain1.length -1));
-        System.out.println("taille = "+(jeu.refMain2.length -1));
     }
 
 }
