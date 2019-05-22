@@ -780,4 +780,45 @@ public class Plateau implements Serializable{
         return b;
     }
     
+    public int getNBCartesScore(boolean isJ1 ,Faction f){
+        int nbCartes = 0;
+        
+        ArrayList<Carte> cartesScores = new ArrayList();
+        
+        if(isJ1){
+            cartesScores = getJ1().getCartesScore();
+        }else{
+            cartesScores = getJ2().getCartesScore();
+        }
+        
+        Iterator<Carte> it = cartesScores.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if(c.getFaction() == f){
+                nbCartes++;
+            }
+        }
+        return nbCartes;
+    }
+    
+    public int getMaxCartesScore(boolean isJ1 ,Faction f){
+        int maxCartes = 0;
+        
+        ArrayList<Carte> cartesScores = new ArrayList();
+        
+        if(isJ1){
+            cartesScores = getJ1().getCartesScore();
+        }else{
+            cartesScores = getJ2().getCartesScore();
+        }
+        
+        Iterator<Carte> it = cartesScores.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if(c.getFaction() == f && c.getForce() > maxCartes){
+                maxCartes = c.getForce();
+            }
+        }
+        return maxCartes;
+    }
 }
