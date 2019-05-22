@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Carte;
+import model.Faction;
 import model.Plateau;
 import view.CarteView;
 import view.SceneCharger;
@@ -102,6 +103,7 @@ public class ControllerEnver {
         HBox mainJoueur = new HBox();
         for (int i = 0; i < ar.size(); i++) {
             final int test = i;
+
             CarteView cr = new CarteView(ar.get(i).getCheminImage());
             if (a == 0) {
                 jeu.arMain2.add(cr);
@@ -236,46 +238,56 @@ public class ControllerEnver {
             @Override
             public void handle(WorkerStateEvent event) {
                 
-                jeu.Defausse.getPane().getChildren().clear();
-                jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur2.getPane().getChildren().get(0));
-                
-                
-                jeu.carteJouerJoueur1.getPane().getChildren().clear();
-                Image image1 = null;
-                try {
-                    image1 = new Image(new File("ressources/images/CarteJouerJ1.png").toURI().toString(), 200, 175, true, true);
-                } catch (Exception e) {
-                    System.out.println("pas trouver");
+                if(p.getPhase()==1){
+                    if(p.getCarteJ2().getFaction() == Faction.MortsVivants ){
+                        if (p.getCarteJ1().getFaction() == Faction.MortsVivants){
+                            
+                        }else{
+                            jeu.Defausse.getPane().getChildren().clear();
+                            jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur1.getPane().getChildren().get(0));}
+                    }else {
+                            jeu.Defausse.getPane().getChildren().clear();
+                            jeu.Defausse.SetImage((ImageView) jeu.carteJouerJoueur2.getPane().getChildren().get(0));
+                        
+                    }
+                    
                 }
-                ImageView imageSelected1 = new ImageView();
-                imageSelected1.setImage(image1);
+                    
+                    
+                jeu.carteJouerJoueur1.getPane().getChildren().clear();
+                ImageView imageSelected1 = creerImageView("ressources/images/CarteJouerJ1.png");
                 jeu.carteJouerJoueur1.SetImage(imageSelected1);
 
                 jeu.carteJouerJoueur2.getPane().getChildren().clear();
-                Image image2 = null;
-                try {
-                    image2 = new Image(new File("ressources/images/CarteJouerJ2.png").toURI().toString(), 200, 175, true, true);
-                } catch (Exception e) {
-                    System.out.println("pas trouver");
-                }
-                ImageView imageSelected2 = new ImageView();
-                imageSelected2.setImage(image2);
+                ImageView imageSelected2 = creerImageView("ressources/images/CarteJouerJ2.png");
                 jeu.carteJouerJoueur2.SetImage(imageSelected2);
-
-                p.calculPli();
-                p.setCarteEnJeu(p.getPioche().pop());
-                p.setCarteEnJeuPerdant(p.getPioche().pop());
-                Image image3 = null;
-                try {
-                    image3 = new Image(new File(p.getCarteEnJeu().getCheminImage()).toURI().toString(), 200, 175, true, true);
-                } catch (Exception e) {
-                    System.out.println("pas trouver");
+                
+                if(p.getPhase()==1){
+                    ImageView im1 = creerImageView(p.getCarteEnJeu().getCheminImage());
+                    ImageView im2 = creerImageView(p.getCarteEnJeuPerdant().getCheminImage());
+                    p.calculPli();
+                    jeu.PartisanJ1.getPane().getChildren().clear();
+                    jeu.PartisanJ2.getPane().getChildren().clear();
+                    if(p.getPhase() == 2){
+                        setupJeuPhase2();
+                        System.out.println(" passage phase 2");
+                    }else{
+                        if(p.isJ1Courant()){
+                            jeu.PartisanJ1.SetImage(im1);
+                            jeu.PartisanJ2.SetImage(im2);
+                        }else{
+                            jeu.PartisanJ2.SetImage(im1);
+                            jeu.PartisanJ1.SetImage(im2);}
+                            p.setCarteEnJeu(p.getPioche().pop());
+                            p.setCarteEnJeuPerdant(p.getPioche().pop());
+                            ImageView imageSelected3 = creerImageView(p.getCarteEnJeu().getCheminImage());                
+                            jeu.centreCarteAGagner.getPane().getChildren().clear();
+                            jeu.centreCarteAGagner.SetImage(imageSelected3);
+                    
+                    }
+                }else{
+                    p.calculPli();
                 }
-                ImageView imageSelected3 = new ImageView();
-                imageSelected3.setImage(image3);
-                jeu.centreCarteAGagner.getPane().getChildren().clear();
-                jeu.centreCarteAGagner.SetImage(imageSelected3);
-
                 gestionTour();
             }
         });
@@ -285,6 +297,29 @@ public class ControllerEnver {
 
     public void setJ1joue(boolean b) {
         J1joue = b;
+    }
+    
+    public ImageView creerImageView(String s){
+        Image im = null;
+        try{
+        im = new Image(new File(s).toURI().toString(), 200, 175, true, true);
+        } catch (Exception e) {
+            System.out.println("pas trouver");
+        }
+        ImageView imageSelected = new ImageView();
+        imageSelected.setImage(im);
+        return imageSelected;
+    }
+    
+    
+    public void setupJeuPhase2(){
+        for (int i =0; i<13;i++){
+            jeu.centreCarteAGagner.getPane().getChildren().clear();
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage()));
+            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage()));
+            jeu.refMain1[i]=i;
+            jeu.refMain2[i]=i;
+        }
     }
 
 }

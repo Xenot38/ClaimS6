@@ -20,7 +20,7 @@ public class CarteView {
     
     public CarteView(String s){
         Image image1=null;
-        try{image1 = new Image(new File(s).toURI().toString(), 200, 175, true, true);}catch(Exception e){System.out.println("pas trouver");}
+        try{image1 = new Image(new File(s).toURI().toString(), 180, 175, true, true);}catch(Exception e){System.out.println("pas trouver");}
         ImageView imageSelected = new ImageView();
         imageSelected.setImage(image1);
         pane = new AnchorPane();

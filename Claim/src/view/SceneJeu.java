@@ -5,6 +5,7 @@
  */
 package view;
 
+import controler.ControllerEnver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,14 +45,16 @@ public class SceneJeu {
    public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
    public CarteView centreCarteAGagner = null;
    public CarteView Defausse = new CarteView("ressources/images/Defausse.png");
+   public CarteView PartisanJ1 = new CarteView("ressources/images/PartisantJ1.png");
+   public CarteView PartisanJ2 = new CarteView("ressources/images/PartisantJ2.png");
    public ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
    public ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
    public int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
    public int[] refMain2 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
    public  HBox Main1;
    public  HBox Main2;
-   
-   
+
+  
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -59,16 +62,19 @@ public class SceneJeu {
    }
    
    public Scene creerjeu(int x,int y) throws FileNotFoundException{
+       ////////////////////////////
+       // historique //
+       /*Canvas canHistorique = new Canvas(400,900);
+       Pane panehi1 = new Pane(canHistorique);*/
        
-
        ////////////////////
        //cartes Joueur 2 //
        HBox cartesJ2 = new HBox();   
        //espace du coter gauche des cartes du joueur 2//
-       Canvas canvideJ2G = new Canvas();
-       Pane panevideJ2G = new Pane(canvideJ2G);
-       HBox.setHgrow(panevideJ2G, Priority.ALWAYS);
-       cartesJ2.getChildren().add(panevideJ2G);
+       Canvas canvideJ2G1 = new Canvas();
+       Pane panevideJ2G1 = new Pane(canvideJ2G1);
+       HBox.setHgrow(panevideJ2G1, Priority.ALWAYS);
+       cartesJ2.getChildren().add(panevideJ2G1);
        //cartes//       
        cartesJ2.getChildren().add(Main2);
        //espace du coter droit des cartes du joueur 2 //
@@ -76,6 +82,12 @@ public class SceneJeu {
        Pane panevideJ2D = new Pane(canvideJ2D);
        HBox.setHgrow(panevideJ2D, Priority.ALWAYS);
        cartesJ2.getChildren().add(panevideJ2D);
+       //carte partisan J2//
+       cartesJ2.getChildren().add(PartisanJ2.getPane());
+       // espacevide //
+       Canvas canvideJ2D2 = new Canvas(40,10);
+       Pane panevideJ2D2 = new Pane(canvideJ2D2);
+       cartesJ2.getChildren().add(panevideJ2D2);
        ////////////////////
        Canvas canCentre = new Canvas();
        Pane paneCentre = new Pane(canCentre);
@@ -98,7 +110,12 @@ public class SceneJeu {
        Pane panevideJ1D = new Pane(canvideJ1D);
        HBox.setHgrow(panevideJ1D, Priority.ALWAYS);
        cartesJ1.getChildren().add(panevideJ1D);
-       
+       //carte partisan J1//
+       cartesJ1.getChildren().add(PartisanJ1.getPane());
+       // espacevide //
+       Canvas canvideJ1D2 = new Canvas(40,10);
+       Pane panevideJ1D2 = new Pane(canvideJ1D2);
+       cartesJ1.getChildren().add(panevideJ1D2);
        ////////////////////
        ////////////////////////////
        //Partie Centrale du plateau//
@@ -130,6 +147,7 @@ public class SceneJeu {
        Pane paneCentre9 = new Pane(canCentre9);
        HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
        
+
        partieCentrale.getChildren().add(paneCentre4);   
        partieCentrale.getChildren().add(paneCentre8);
        partieCentrale.getChildren().add(defausse);
@@ -162,15 +180,8 @@ public class SceneJeu {
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
        VBox carte = new VBox();
-       /*AnchorPane pane = new AnchorPane();
-       Image image1=null;
-       try{image1 = new Image(new File("ressources/images/Defausse.png").toURI().toString(), 200, 175, true, true);}catch(Exception e){}
-       ImageView imageSelected = new ImageView();
-       imageSelected.setImage(image1);
-       pane.getChildren().add(imageSelected);*/
        carte.getChildren().add(panepousse);
        carte.getChildren().add(Defausse.getPane());
-      // carte.getChildren().add(pane);
        return carte;
     }
    
