@@ -12,16 +12,7 @@ public class JoueurIAMoyen extends JoueurIA {
 
     private ArrayList<Carte> cartes;
     private ArrayList<Carte> cartesRetirees;
-    //private ArrayList<Boolean> J1HasFactions;
     private ArrayList<ArrayList<Integer>> grilleMatchUp;
-    private ArrayList<Integer> coefsFactions;
-    /*
-    Nains : 0 
-    Chevaliers : 1
-    Doppelgangers : 2
-    Gobelins : 3
-    MortsVivants : 4
-    */
 
     public JoueurIAMoyen(ArrayList<Carte> main, boolean isJ1, ArrayList<Carte> pioche) {
         super(main, isJ1);
@@ -29,30 +20,14 @@ public class JoueurIAMoyen extends JoueurIA {
         initGrille();
         cartesRetirees = new ArrayList();
         creerGrille(cartes);
-        coefsFactions = new ArrayList(Arrays.asList(1,1,1,1,1));
-
-        /*
-        //Affichage des scores de chaques cartes au début de la partie
-        Iterator<Carte> it = cartes.iterator();
-        while (it.hasNext()) {
-            Carte c = it.next();
-            System.out.println(c.getFaction() + " " + c.getForce() + "=>" + getScoreCarteMain(c));
-        }*/
+       
         
         //afficheGrille();
-        /*J1HasFactions = new ArrayList();
-        for (int i = 0; i < 5; i++) {
-            J1HasFactions.add(true);
-        } */
+        
     }
 
     @Override
     public int joue(Plateau p) {
-
-        ArrayList<Integer> arr = new ArrayList();
-        arr.add(1);
-        arr.add(1);
-        arr.add(1);
 
         int indice;
         if (p.getPhase() == 1) {
@@ -998,27 +973,6 @@ public class JoueurIAMoyen extends JoueurIA {
         return carteNainMin;
     }
     
-    private int getIndexfactions(Faction faction){
-        int indice = -1;
-        switch(faction){
-            case Nains:indice = 0; 
-            break;
-            
-            case Chevaliers:indice = 1;
-            break;
-            
-            case Doppelgangers:indice = 2;
-            break;
-            
-            case Gobelins:indice = 3;
-            break;
-            
-            case MortsVivants:indice = 4;
-            break;
-        }
-        return indice;
-    }
-
     private Carte carteDoppelMin(ArrayList<Carte> main) {
         int forceMin = 10;
         Carte carteDoppelMin = null;
