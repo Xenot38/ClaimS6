@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -31,12 +32,16 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import static javafx.scene.paint.Color.BLUE;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import model.Carte;
 import model.Plateau;
@@ -60,8 +65,18 @@ public class SceneJeu {
    public int[] refMain2 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
    public  HBox Main1;
    public  HBox Main2;
-
-  
+   public GridPane score = new GridPane();
+   public GridPane chevalierGrid = new GridPane();
+   public Label chevalierScore = new Label("0");
+   public GridPane mortVivantGrid = new GridPane();
+   public Label mortVivantScore = new Label("0");
+   public GridPane nainGrid = new GridPane();
+   public Label nainScore = new Label("0");
+   public GridPane doppelGangerGrid = new GridPane();
+   public Label doppelGangerScore = new Label("0");
+   public GridPane gobelinGrid = new GridPane();
+   public Label gobelinScore = new Label("0");
+   
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -155,11 +170,80 @@ public class SceneJeu {
        Pane paneCentre7 = new Pane(canCentre7);
        HBox.setHgrow(paneCentre7, Priority.ALWAYS);   
        Canvas canCentre8 = new Canvas();
-       Pane paneCentre8 = new Pane(canCentre7);
+       Pane paneCentre8 = new Pane(canCentre8);
        HBox.setHgrow(paneCentre8, Priority.ALWAYS);   
        Canvas canCentre9 = new Canvas();
        Pane paneCentre9 = new Pane(canCentre9);
        HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
+       
+       
+       for(int i =0;i<8 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            score.add(p, 0, i);
+        }
+       ImageView imChevalier = ControllerEnver.creerImageView("IconeCh.png",20,20);
+       /*chevalierGrid.add(imChevalier,0,0);
+       chevalierGrid.add(chevalierScore,1,0);*/
+       score.add(imChevalier, 0, 8);
+       score.add(chevalierScore, 0, 9);
+       
+       
+       for(int i =0;i<10 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            score.add(p, 1, i);
+        }
+       
+       for(int i =0;i<10 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            score.add(p, 2, i);
+        }
+       
+       for(int i =0;i<10 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            score.add(p, 3, i);
+        }
+       
+       for(int i =0;i<14 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            score.add(p, 4, i);
+        }
+       
+       
+       
+       
+       
+       
+       
        
 
        partieCentrale.getChildren().add(paneCentre4);   
@@ -170,7 +254,9 @@ public class SceneJeu {
        partieCentrale.getChildren().add(paneCentre7);
        partieCentrale.getChildren().add(carteAGagner);
        partieCentrale.getChildren().add(paneCentre9);
+       partieCentrale.getChildren().add(score);
        partieCentrale.getChildren().add(paneCentre5);
+       
        
        VBox partieC = new VBox();
        partieC.getChildren().add(cartesJ2);

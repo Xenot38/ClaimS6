@@ -12,9 +12,6 @@ package controler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.PauseTransition;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -22,10 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import model.Carte;
 import model.Faction;
 import model.Plateau;
@@ -255,16 +250,16 @@ public class ControllerEnver {
                     
                     
                 jeu.carteJouerJoueur1.getPane().getChildren().clear();
-                ImageView imageSelected1 = creerImageView("ressources/images/CarteJouerJ1.png");
+                ImageView imageSelected1 = creerImageView("ressources/images/CarteJouerJ1.png",200,175);
                 jeu.carteJouerJoueur1.SetImage(imageSelected1);
 
                 jeu.carteJouerJoueur2.getPane().getChildren().clear();
-                ImageView imageSelected2 = creerImageView("ressources/images/CarteJouerJ2.png");
+                ImageView imageSelected2 = creerImageView("ressources/images/CarteJouerJ2.png",200,175);
                 jeu.carteJouerJoueur2.SetImage(imageSelected2);
                 
                 if(p.getPhase()==1){
-                    ImageView im1 = creerImageView(p.getCarteEnJeu().getCheminImage());
-                    ImageView im2 = creerImageView(p.getCarteEnJeuPerdant().getCheminImage());
+                    ImageView im1 = creerImageView(p.getCarteEnJeu().getCheminImage(),200,175);
+                    ImageView im2 = creerImageView(p.getCarteEnJeuPerdant().getCheminImage(),200,175);
                     p.calculPli();
                     jeu.PartisanJ1.getPane().getChildren().clear();
                     jeu.PartisanJ2.getPane().getChildren().clear();
@@ -280,7 +275,7 @@ public class ControllerEnver {
                             jeu.PartisanJ1.SetImage(im2);}
                             p.setCarteEnJeu(p.getPioche().pop());
                             p.setCarteEnJeuPerdant(p.getPioche().pop());
-                            ImageView imageSelected3 = creerImageView(p.getCarteEnJeu().getCheminImage());                
+                            ImageView imageSelected3 = creerImageView(p.getCarteEnJeu().getCheminImage(),200,175);                
                             jeu.centreCarteAGagner.getPane().getChildren().clear();
                             jeu.centreCarteAGagner.SetImage(imageSelected3);
                     
@@ -299,10 +294,10 @@ public class ControllerEnver {
         J1joue = b;
     }
     
-    public ImageView creerImageView(String s){
+    public static ImageView creerImageView(String s,int a, int b){
         Image im = null;
         try{
-        im = new Image(new File(s).toURI().toString(), 200, 175, true, true);
+        im = new Image(new File(s).toURI().toString(), a, b, true, true);
         } catch (Exception e) {
             System.out.println("pas trouver");
         }
@@ -315,8 +310,8 @@ public class ControllerEnver {
     public void setupJeuPhase2(){
         for (int i =0; i<13;i++){
             jeu.centreCarteAGagner.getPane().getChildren().clear();
-            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage()));
-            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage()));
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),200,175));
+            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage(),200,175));
             jeu.refMain1[i]=i;
             jeu.refMain2[i]=i;
         }
