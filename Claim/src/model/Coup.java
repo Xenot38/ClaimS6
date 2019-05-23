@@ -29,7 +29,7 @@ public class Coup implements Serializable{
 		victoireJ1 = vic;
                 prioJ1 = pJ1;
 	}
-
+        
 	public Carte getCarteJ1() {
 		return carteJ1;
 	}
