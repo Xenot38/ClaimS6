@@ -51,4 +51,12 @@ public class Carte implements Serializable{
       
         return cCopie;
     }
+
+    boolean egal(Carte carte) {
+        if(carte == null){
+            return false;
+        }else{
+            return this.getFaction() == carte.getFaction() && this.getForce() == carte.getForce();
+        }
+    }
 }

@@ -64,6 +64,38 @@ public abstract class Joueur implements Serializable {
     
     public abstract Joueur copie();
 
+    public boolean egal(Joueur j) {
+        boolean mainEgale = true;
+        boolean pileScoreEgale = true;
+        //main
+        int i = 0;
+        Iterator<Carte> it = getMain().iterator();
+        while (it.hasNext() && mainEgale) {
+            Carte c = it.next();
+            if(c.getFaction() != j.getMain().get(i).getFaction() || c.getForce()!= j.getMain().get(i).getForce()){
+               mainEgale = false;
+            }
+            i++;
+        }
+        //score
+        if(mainEgale){
+            Iterator<Carte> it2 = getCartesScore().iterator();
+            while (it.hasNext() && mainEgale) {
+                Carte c = it.next();
+                if(c.getFaction() != j.getMain().get(i).getFaction() || c.getForce()!= j.getCartesScore().get(i).getForce()){
+                   pileScoreEgale = false;
+                }
+                i++;
+            }
+            if(pileScoreEgale){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 
     public Carte choisirCarte(int index, Carte cAdversaire) {// Si le joueur a perdu au tour précédent, il doit jouer de la même faction que son adversaire si il le peut, a moins de jouer doppelganger. Si il n'a aucune carte de la faction adverse, alors il peut jouer n'importe quelle carte.
         Carte cChoisie = main.get(index);

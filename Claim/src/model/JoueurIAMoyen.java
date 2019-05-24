@@ -1035,6 +1035,7 @@ public class JoueurIAMoyen extends JoueurIA {
     public void setGrilleMatchUp(ArrayList<ArrayList<Integer>> grilleMatchUp) {
         this.grilleMatchUp = grilleMatchUp;
     }
+    
 
     
 }

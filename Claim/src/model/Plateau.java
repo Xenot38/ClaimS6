@@ -833,24 +833,66 @@ public class Plateau implements Serializable{
     }
 
     boolean egal(Plateau pNewConfig) {
-        if(this.j1Courant == pNewConfig.isJ1Courant()&&
-                this.j1 == pNewConfig.getJ1()&&
-                this.j2 == pNewConfig.getJ2()&&
-                this.historique == pNewConfig.getHistorique()&&
-                this.contreHistorique == pNewConfig.getContreHistorique()&&
-                this.carteJ1 == pNewConfig.getCarteJ1()&&
-                this.carteJ2 == pNewConfig.getCarteJ2()&&
-                this.carteEnJeu == pNewConfig.getCarteEnJeu()&&
-                this.carteEnJeuPerdant == pNewConfig.getCarteEnJeuPerdant()&&
-                this.pioche == pNewConfig.getPioche()&&
-                this.defausse == pNewConfig.getDefausse()&&
-                this.score == pNewConfig.getScore()&&
-                this.phase == pNewConfig.getPhase()&&
-                this.fini == pNewConfig.isFini()){
-            return true;
+        if(this.j1Courant == pNewConfig.isJ1Courant() && this.j1.egal(pNewConfig.getJ1()) && this.j2.egal(pNewConfig.getJ2())){
+            if((this.carteJ1 == null && pNewConfig.getCarteJ1() == null)){
+                if((this.carteJ2 == null && pNewConfig.getCarteJ2() == null)){
+                    return true;
+                }else{
+                    if(this.carteJ2.egal(pNewConfig.getCarteJ2())){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            }else{
+                if(this.carteJ1.egal(pNewConfig.getCarteJ1())){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            
             
         }else{
             return false;
         }
     }
+
+    String hashString() {
+        //les 2 joueurs(les 2 piles scores / les 2 mains) / et les 2 cartes au milieux
+        String hashcode = "";
+        Iterator<Carte> it = getJ1().getMain().iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            hashcode+=c.getFaction().toString() + c.getForce();
+        }
+        it = getJ2().getMain().iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            hashcode+=c.getFaction().toString() + c.getForce();
+        }
+        it = getJ1().getCartesScore().iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            hashcode+=c.getFaction().toString() + c.getForce();
+        }
+        it = getJ2().getCartesScore().iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            hashcode+=c.getFaction().toString() + c.getForce();
+        }
+        if(getCarteJ1()==null){
+            hashcode+="null";
+        }else{
+            hashcode+=getCarteJ1().getFaction().toString() + getCarteJ1().getForce();
+        }
+        if(getCarteJ2()==null){
+            hashcode+="null";
+        }else{
+            hashcode+=getCarteJ2().getFaction().toString() + getCarteJ2().getForce();
+        }
+        return hashcode;
+    }
+
+   
 }

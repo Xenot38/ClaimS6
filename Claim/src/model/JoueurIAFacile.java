@@ -264,4 +264,38 @@ public class JoueurIAFacile  extends JoueurIA{
         int i = r.nextInt(maxs.size());
         return maxs.get(i); 
     }
+    
+    @Override
+    public boolean egal(Joueur j) {
+        boolean mainEgale = true;
+        boolean pileScoreEgale = true;
+        //main
+        int i = 0;
+        Iterator<Carte> it = getMain().iterator();
+        while (it.hasNext() && mainEgale) {
+            Carte c = it.next();
+            if(c.getFaction() != j.getMain().get(i).getFaction() || c.getForce()!= j.getMain().get(i).getForce()){
+               mainEgale = false;
+            }
+            i++;
+        }
+        //score
+        if(mainEgale){
+            Iterator<Carte> it2 = getCartesScore().iterator();
+            while (it.hasNext() && mainEgale) {
+                Carte c = it.next();
+                if(c.getFaction() != j.getMain().get(i).getFaction() || c.getForce()!= j.getCartesScore().get(i).getForce()){
+                   pileScoreEgale = false;
+                }
+                i++;
+            }
+            if(pileScoreEgale){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 }

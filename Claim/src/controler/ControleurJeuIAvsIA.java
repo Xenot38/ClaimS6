@@ -30,7 +30,7 @@ public class ControleurJeuIAvsIA {
             int victoiresJ1 = 0;
             int victoiresJ2 = 0;
             int nbEgalite = 0;
-            int nbPartie = 1;
+            int nbPartie = 100;
             for (int i = 0; i < nbPartie; i++) {
                 
                 while(!plateauJeu.isFini()){
@@ -115,7 +115,7 @@ public class ControleurJeuIAvsIA {
 
                                 }else{
                                         plateauJeu.setCarteJ2(plateauJeu.getJ2().choisirCarte(plateauJeu.getJ2().joue(plateauJeu)));
-                                        System.out.println("L'plateauJeuadversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
+                                        System.out.println("L'adversaire a joué " + plateauJeu.getCarteJ2().affichePropCarte());
                                         plateauJeu.setCarteJ1(plateauJeu.getJ1().choisirCarte(plateauJeu.getJ1().joue(plateauJeu)));
                                         System.out.println("Vous avez plateauJeujoué " + plateauJeu.getCarteJ1().affichePropCarte());
                                 }

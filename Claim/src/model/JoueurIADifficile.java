@@ -9,15 +9,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Stack;
-
+ 
 public class JoueurIADifficile extends JoueurIA {
 
+    private int pronfondeurMax = 6;
+    private int ttlConfigsPoids = 6;
     private ArrayList<Carte> cartes;
     private ArrayList<Carte> cartesRetirees;
     //private ArrayList<Boolean> J1HasFactions;
     private ArrayList<ArrayList<Integer>> grilleMatchUp;
     private ArrayList<Integer> coefsFactions;
-    public HashMap<Plateau, Integer> configsPoids;
+    public HashMap<String, Integer> configsPoids;
     public ArrayList<Plateau> configs;
     public ArrayList<Integer> poids;
 
@@ -69,8 +71,11 @@ public class JoueurIADifficile extends JoueurIA {
             return indice;
         } else {
             //Phase2
-            if (configsPoids.isEmpty()) {
+            if(ttlConfigsPoids==0){
                 creerConfigsPoids(p);
+                ttlConfigsPoids = pronfondeurMax;
+            }else{
+                ttlConfigsPoids--;
             }
             //indice = chooseCardPhase2(p);
             indice = getIndexMeilleurConfig(p, this.getMain());
@@ -1522,8 +1527,12 @@ public class JoueurIADifficile extends JoueurIA {
             i++;
         }
 
-        return poids.get(indice);
-        //return configsPoids.get(pNewConfig);
+        //return poids.get(indice);
+        if(configsPoids.get(pNewConfig.hashString()) == null){
+            return getScoreConf(pNewConfig);
+        }else{
+            return configsPoids.get(pNewConfig.hashString());
+        }
     }
 
     private void creerConfigsPoids(Plateau p) {
@@ -1566,11 +1575,11 @@ public class JoueurIADifficile extends JoueurIA {
         Iterator<Carte> it = cartesJouables.iterator();
         while (it.hasNext()) {
             Carte c = it.next();
-            workerMiniMax(plateau, isJ1, c, configsPoids, 6);
+            workerMiniMax(plateau, isJ1, c, configsPoids, pronfondeurMax);
         }
     }
 
-    private int workerMiniMax(Plateau p, boolean isJ1, Carte c, HashMap<Plateau, Integer> configsPoids, int ttl) {
+    private int workerMiniMax(Plateau p, boolean isJ1, Carte c, HashMap<String, Integer> configsPoids, int ttl) {
         //Partie création de la nouvelle configuration
         //on joue la carte c
 
@@ -1606,19 +1615,19 @@ public class JoueurIADifficile extends JoueurIA {
         if (pNewConfig.getJ1().getMain().size() == 0 && pNewConfig.getJ2().getMain().size() == 0) {
             int j1Victory = -1;
             if (aGagne(pNewConfig.getJ1().getCartesScore(), pNewConfig.getJ2().getCartesScore())) {
-                j1Victory = 1;
+                j1Victory = 100;
             } else {
                 j1Victory = 0;
             }
             if (isJ1) {
-                configs.add(pNewConfig);
-                poids.add(j1Victory);
-                //configsPoids.put(pNewConfig, j1Victory);
+                //configs.add(pNewConfig);
+                //poids.add(j1Victory);
+                configsPoids.put(pNewConfig.hashString(), j1Victory);
                 return j1Victory;
             } else {
-                configs.add(pNewConfig);
-                poids.add(1-j1Victory);
-                //configsPoids.put(pNewConfig, 1 - j1Victory);
+                //configs.add(pNewConfig);
+                //poids.add(1-j1Victory);
+                configsPoids.put(pNewConfig.hashString(), 1 - j1Victory);
                 return 1 - j1Victory;
             }
             //sinon
@@ -1677,21 +1686,23 @@ public class JoueurIADifficile extends JoueurIA {
                     if(pNewConfig == null){
                         System.out.println("test1");
                     }
-                    configs.add(pNewConfig);
-                    poids.add(scoreMax);
-                    //configsPoids.put(pNewConfig, scoreMax);
+                    //configs.add(pNewConfig);
+                    //poids.add(scoreMax);
+                    configsPoids.put(pNewConfig.hashString(), scoreMax);
                     return scoreMax;
                 } else {
                     if(pNewConfig == null){
                         System.out.println("test2");
                     }
-                    configs.add(pNewConfig);
-                    poids.add(scoreMin);
-                    //configsPoids.put(pNewConfig, scoreMin);
+                    //configs.add(pNewConfig);
+                    //poids.add(scoreMin);
+                    configsPoids.put(pNewConfig.hashString(), scoreMin);
                     return scoreMin;
                 }
             }else{
-                return 0;
+                int scoreConf = getScoreConf(pNewConfig);
+                configsPoids.put(pNewConfig.hashString(), scoreConf);
+                return scoreConf;
             }
 
         }
@@ -1757,11 +1768,11 @@ public class JoueurIADifficile extends JoueurIA {
         this.coefsFactions = coefsFactions;
     }
 
-    public HashMap<Plateau, Integer> getConfigsPoids() {
+    public HashMap<String, Integer> getConfigsPoids() {
         return configsPoids;
     }
 
-    public void setConfigsPoids(HashMap<Plateau, Integer> configsPoids) {
+    public void setConfigsPoids(HashMap<String, Integer> configsPoids) {
         this.configsPoids = configsPoids;
     }
 
@@ -1779,6 +1790,75 @@ public class JoueurIADifficile extends JoueurIA {
 
     public void setPoids(ArrayList<Integer> poids) {
         this.poids = poids;
+    }
+
+    public int getScoreConf(Plateau p) {
+        int scoreConf = 0;
+        
+        int factionsVotesJ1 = 0;
+        int factionsVotesJ2 = 0;
+                
+        ArrayList<Integer> nbCarteFactions1 = new ArrayList(Arrays.asList(0,0,0,0,0));
+        nbCarteFactions1.set(0,p.getNBCartesScore(true, Faction.Nains));
+        nbCarteFactions1.set(1,p.getNBCartesScore(true, Faction.Chevaliers));
+        nbCarteFactions1.set(2,p.getNBCartesScore(true, Faction.Doppelgangers));
+        nbCarteFactions1.set(3,p.getNBCartesScore(true, Faction.Gobelins));
+        nbCarteFactions1.set(4,p.getNBCartesScore(true, Faction.MortsVivants));
+        
+        ArrayList<Integer> nbCarteFactions2 = new ArrayList(Arrays.asList(0,0,0,0,0));
+        nbCarteFactions1.set(0,p.getNBCartesScore(false, Faction.Nains));
+        nbCarteFactions1.set(1,p.getNBCartesScore(false, Faction.Chevaliers));
+        nbCarteFactions1.set(2,p.getNBCartesScore(false, Faction.Doppelgangers));
+        nbCarteFactions1.set(3,p.getNBCartesScore(false, Faction.Gobelins));
+        nbCarteFactions1.set(4,p.getNBCartesScore(false, Faction.MortsVivants));
+        
+        ArrayList<Integer> forceCarteFactions1 = new ArrayList(Arrays.asList(0,0,0,0,0));
+        forceCarteFactions1.set(0,p.getMaxCartesScore(true, Faction.Nains));
+        forceCarteFactions1.set(1,p.getMaxCartesScore(true, Faction.Chevaliers));
+        forceCarteFactions1.set(2,p.getMaxCartesScore(true, Faction.Doppelgangers));
+        forceCarteFactions1.set(3,p.getMaxCartesScore(true, Faction.Gobelins));
+        forceCarteFactions1.set(4,p.getMaxCartesScore(true, Faction.MortsVivants));
+        
+        ArrayList<Integer> forceCarteFactions2 = new ArrayList(Arrays.asList(0,0,0,0,0));
+        forceCarteFactions2.set(0,p.getMaxCartesScore(false, Faction.Nains));
+        forceCarteFactions2.set(1,p.getMaxCartesScore(false, Faction.Chevaliers));
+        forceCarteFactions2.set(2,p.getMaxCartesScore(false, Faction.Doppelgangers));
+        forceCarteFactions2.set(3,p.getMaxCartesScore(false, Faction.Gobelins));
+        forceCarteFactions2.set(4,p.getMaxCartesScore(false, Faction.MortsVivants));
+        
+        
+        
+        Iterator<Integer> it = nbCarteFactions1.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            int nbCaFa = it.next();
+            if(nbCaFa > nbCarteFactions2.get(i)){
+                factionsVotesJ1++;
+            }else if(nbCaFa == nbCarteFactions2.get(i)){
+                if(forceCarteFactions1.get(i) > forceCarteFactions2.get(i)){
+                    factionsVotesJ1++;
+                }else if (forceCarteFactions1.get(i) < forceCarteFactions2.get(i)){
+                    factionsVotesJ2++;
+                }
+            }else{
+                factionsVotesJ2++;
+            }
+            i++;
+        }
+        
+        if(getIsJ1()){
+            scoreConf = (factionsVotesJ1 - factionsVotesJ2) *10;
+        }else{
+            scoreConf = (factionsVotesJ2 - factionsVotesJ1) *10;
+        }
+        
+        if(scoreConf > 100){
+            scoreConf = 100;
+        }else if (scoreConf<0){
+            scoreConf = 0;
+        }
+        
+        return scoreConf;
     }
 
     
