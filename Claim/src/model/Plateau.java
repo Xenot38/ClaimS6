@@ -95,7 +95,7 @@ public class Plateau implements Serializable{
                 for (int i = 0; i < 13; i++) {
                         mainTemp.add(pioche.pop());
                 }
-                j1 = new JoueurIAMoyen((ArrayList<Carte>) mainTemp.clone(), true, piocheTemp);
+                j1 = new JoueurIADifficile((ArrayList<Carte>) mainTemp.clone(), true, piocheTemp);
                 j1.rangerMain();
                 mainTemp.clear();
                 for (int i = 0; i < 13; i++) {
@@ -599,6 +599,16 @@ public class Plateau implements Serializable{
 
                 return cartes;
         }
+
+        public Stack<Coup> getContreHistorique() {
+            return contreHistorique;
+        }
+
+        public void setContreHistorique(Stack<Coup> contreHistorique) {
+            this.contreHistorique = contreHistorique;
+        }
+
+        
         
         public Joueur getJ1() {
                 return j1;
@@ -820,5 +830,27 @@ public class Plateau implements Serializable{
             }
         }
         return maxCartes;
+    }
+
+    boolean egal(Plateau pNewConfig) {
+        if(this.j1Courant == pNewConfig.isJ1Courant()&&
+                this.j1 == pNewConfig.getJ1()&&
+                this.j2 == pNewConfig.getJ2()&&
+                this.historique == pNewConfig.getHistorique()&&
+                this.contreHistorique == pNewConfig.getContreHistorique()&&
+                this.carteJ1 == pNewConfig.getCarteJ1()&&
+                this.carteJ2 == pNewConfig.getCarteJ2()&&
+                this.carteEnJeu == pNewConfig.getCarteEnJeu()&&
+                this.carteEnJeuPerdant == pNewConfig.getCarteEnJeuPerdant()&&
+                this.pioche == pNewConfig.getPioche()&&
+                this.defausse == pNewConfig.getDefausse()&&
+                this.score == pNewConfig.getScore()&&
+                this.phase == pNewConfig.getPhase()&&
+                this.fini == pNewConfig.isFini()){
+            return true;
+            
+        }else{
+            return false;
+        }
     }
 }

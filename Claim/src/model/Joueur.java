@@ -10,7 +10,7 @@ public abstract class Joueur implements Serializable {
     ArrayList<Carte> cartesScore;
     ArrayList<Carte> cartesPartisans;
     boolean isJ1;
-
+    
     public Joueur(ArrayList<Carte> mainDebut, boolean isJ1) {// Constructeur en début de partie
         main = mainDebut;
         cartesScore = new ArrayList<Carte>();
@@ -61,6 +61,9 @@ public abstract class Joueur implements Serializable {
     public Carte choisirCarte(int index) {// Si le joueur a gagné il peut choisir n'importe quelle carte
         return main.remove(index);
     }
+    
+    public abstract Joueur copie();
+
 
     public Carte choisirCarte(int index, Carte cAdversaire) {// Si le joueur a perdu au tour précédent, il doit jouer de la même faction que son adversaire si il le peut, a moins de jouer doppelganger. Si il n'a aucune carte de la faction adverse, alors il peut jouer n'importe quelle carte.
         Carte cChoisie = main.get(index);
@@ -287,4 +290,6 @@ public abstract class Joueur implements Serializable {
             }
         }
     }
+    
+    
 }

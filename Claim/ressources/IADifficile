@@ -12,3 +12,42 @@ IA Difficile:
 
 
 calcul score config = (nb vote faction - nb vote faction joueur ennemi) + () A reflechir
+
+
+
+
+
+
+miniMax:
+
+fonction de base:
+    
+    arrayDeConfig = [config,poids]
+
+    on recupere nos cartes jouables
+    pour chacune:
+        score = le score de la config si on joue la carte traité = worker(configDepart, c, arrayDeConfig) => on enregistre ca dans arrayDeConfig
+        si score > score max: indice = indice de la carte traité
+
+fonction worker(config, carte qu'on veut jouer, arrayDeConfig):
+
+    joue la carte(gestion score + main + joueur suivant) => on créer configCopie
+
+    si plus de cartes dans les mains des joueurs return 1 ou 0 si on a gagné ou perdu
+
+    sinon
+        joueur = le joueur suivant(par rapport a si on a gagne ou perdu)
+        on recupere les cartes jouables de joueur
+        pour chacune:
+            score = le score de la config si joueur joue la carte traité = worker(configCopie, c) => on enregistre ca dans arrayDeConfig
+            si on est joueur: on fait score > score max(on choisis notre meilleur choix)
+            sinon : on fait score < score min (on choisis le meilleur choix de l'adversaire = le pire choix pour nous)
+        
+        si on est joueur:
+                on return score max
+        sinon:
+                on return score min
+                
+            
+
+    

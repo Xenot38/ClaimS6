@@ -25,6 +25,27 @@ public class JoueurIAMoyen extends JoueurIA {
         //afficheGrille();
         
     }
+    
+    @Override
+    public JoueurIAMoyen copie(){
+        
+        ArrayList<Carte> mainCopie = (ArrayList<Carte>) main.clone();
+        ArrayList<Carte> cartesScore = (ArrayList<Carte>) this.cartesScore.clone();
+        boolean isJ1 = this.isJ1 == true;
+        ArrayList<ArrayList<Integer>> grilleMatchUp = (ArrayList<ArrayList<Integer>>) this.grilleMatchUp.clone();
+        ArrayList<Carte> cartes = (ArrayList<Carte>) this.cartes.clone();
+        ArrayList<Carte> cartesRetirees = (ArrayList<Carte>) this.cartesRetirees.clone();
+        
+        JoueurIAMoyen jCopie = new JoueurIAMoyen(this.main, this.isJ1,this.cartes);
+        jCopie.setCartes(cartes);
+        jCopie.setMain(mainCopie);
+        jCopie.setCartesScore(cartesScore);
+        jCopie.setIsJ1(isJ1);
+        jCopie.setGrilleMatchUp(grilleMatchUp);
+        jCopie.setCartesRetirees(cartesRetirees);
+        
+        return jCopie;
+    }
 
     @Override
     public int joue(Plateau p) {
@@ -991,4 +1012,29 @@ public class JoueurIAMoyen extends JoueurIA {
         return carteDoppelMin;
     }
 
+    public ArrayList<Carte> getCartes() {
+        return cartes;
+    }
+
+    public void setCartes(ArrayList<Carte> cartes) {
+        this.cartes = cartes;
+    }
+
+    public ArrayList<Carte> getCartesRetirees() {
+        return cartesRetirees;
+    }
+
+    public void setCartesRetirees(ArrayList<Carte> cartesRetirees) {
+        this.cartesRetirees = cartesRetirees;
+    }
+
+    public ArrayList<ArrayList<Integer>> getGrilleMatchUp() {
+        return grilleMatchUp;
+    }
+
+    public void setGrilleMatchUp(ArrayList<ArrayList<Integer>> grilleMatchUp) {
+        this.grilleMatchUp = grilleMatchUp;
+    }
+
+    
 }

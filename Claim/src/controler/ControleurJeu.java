@@ -22,7 +22,7 @@ public class ControleurJeu {
         Plateau plateauJeu;
         
         public ControleurJeu() {
-                this.plateauJeu = new Plateau("moyen");
+                this.plateauJeu = new Plateau("difficile");
         }
         
         public void lancerJeu() {
@@ -38,14 +38,14 @@ public class ControleurJeu {
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
                         } 
-                        /*System.out.println("\n\n[Main joueur 2]");
+                        System.out.println("\n\n[Main joueur 2]");
                         iter = plateauJeu.getJ2().getMain().iterator();
                         nbCarte = 0;
                         while(iter.hasNext()){
                                 Carte maCarte = iter.next();
                                 System.out.println(nbCarte + ": " + maCarte.affichePropCarte());
                                 nbCarte++;
-                        }*/
+                        }
                         if(plateauJeu.getPhase() == 1){
                             System.out.println("\n\n[Pile Partisans Joueur 1]");
                             iter = plateauJeu.getJ1().getCartesPartisans().iterator();
@@ -79,7 +79,7 @@ public class ControleurJeu {
                         }
                         System.out.println("\n\n");
                         
-                        /*System.out.println("Annuler le coup : A | Refaire le dernier coup : R | Sauvegarder : S | Charger : C | Autre : rien");
+                        System.out.println("Annuler le coup : A | Refaire le dernier coup : R | Sauvegarder : S | Charger : C | Autre : rien");
                         Scanner scanTemp = new Scanner(System.in);
                         String yn = scanTemp.nextLine();
                         //System.out.println(yn);
@@ -91,7 +91,7 @@ public class ControleurJeu {
                                 Sauvegarder(plateauJeu);
                         }else if(yn.equals("C")){
                                 plateauJeu = Charger();
-                        }else{*/
+                        }else{
                                 if(plateauJeu.getPhase() == 1){
                                         if(plateauJeu.getCarteEnJeu()==null){
                                                 plateauJeu.setCarteEnJeu(plateauJeu.getPioche().pop());
@@ -115,7 +115,7 @@ public class ControleurJeu {
                                 }
                                 plateauJeu.calculPli();
                                 autoSauvegarder(plateauJeu);
-                        ///}
+                        }
                 }
         } 
         public void Sauvegarder(Plateau p){

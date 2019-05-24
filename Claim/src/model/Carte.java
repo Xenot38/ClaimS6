@@ -43,4 +43,12 @@ public class Carte implements Serializable{
                 retour = retour.concat(Integer.toString(force));
                 return retour;
         }
+        
+    public Carte copie(){
+        
+
+        Carte cCopie = new Carte(getFaction(), getForce(),getCheminImage());
+      
+        return cCopie;
+    }
 }

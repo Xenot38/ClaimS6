@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Stack;
 
 public class JoueurIADifficile extends JoueurIA {
 
@@ -15,22 +17,27 @@ public class JoueurIADifficile extends JoueurIA {
     //private ArrayList<Boolean> J1HasFactions;
     private ArrayList<ArrayList<Integer>> grilleMatchUp;
     private ArrayList<Integer> coefsFactions;
+    public HashMap<Plateau, Integer> configsPoids;
+    public ArrayList<Plateau> configs;
+    public ArrayList<Integer> poids;
+
     /*
     Nains : 0 
     Chevaliers : 1
     Doppelgangers : 2
     Gobelins : 3
     MortsVivants : 4
-    */
-
+     */
     public JoueurIADifficile(ArrayList<Carte> main, boolean isJ1, ArrayList<Carte> pioche) {
         super(main, isJ1);
         cartes = pioche;
         initGrille();
         cartesRetirees = new ArrayList();
         creerGrille(cartes);
-        coefsFactions = new ArrayList(Arrays.asList(1,1,1,1,1));
-
+        coefsFactions = new ArrayList(Arrays.asList(1, 1, 1, 1, 1));
+        configsPoids = new HashMap();
+        configs = new ArrayList();
+        poids = new ArrayList();
         /*
         //Affichage des scores de chaques cartes au début de la partie
         Iterator<Carte> it = cartes.iterator();
@@ -38,13 +45,11 @@ public class JoueurIADifficile extends JoueurIA {
             Carte c = it.next();
             System.out.println(c.getFaction() + " " + c.getForce() + "=>" + getScoreCarteMain(c));
         }*/
-        
         //afficheGrille();
     }
 
     @Override
     public int joue(Plateau p) {
-
 
         int indice;
         if (p.getPhase() == 1) {
@@ -64,7 +69,11 @@ public class JoueurIADifficile extends JoueurIA {
             return indice;
         } else {
             //Phase2
-            indice = chooseCardPhase2(p);
+            if (configsPoids.isEmpty()) {
+                creerConfigsPoids(p);
+            }
+            //indice = chooseCardPhase2(p);
+            indice = getIndexMeilleurConfig(p, this.getMain());
             //System.out.println("Indice: " + indice);
             return indice;
         }
@@ -161,12 +170,12 @@ public class JoueurIADifficile extends JoueurIA {
                     ArrayList<Carte> cartesJouable = p.getJ2().getCartesJouable(carteJ1);
                     ArrayList<Carte> cartesPerdante = p.getJ2().getCartesPerdante(carteJ1);
                     ArrayList<Carte> cartesGagnante = p.getJ2().getCartesGagnante(carteJ1);
-                    
-                    if(carteJ1.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()){
+
+                    if (carteJ1.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()) {
                         indice = getindex(getCarteMinForce(cartesGagnante));
-                        
-                    }else{
-                         //si on peut perdre
+
+                    } else {
+                        //si on peut perdre
                         if (!cartesPerdante.isEmpty()) {
 
                             indice = getindex(getCarteMinForce(cartesPerdante));
@@ -175,9 +184,7 @@ public class JoueurIADifficile extends JoueurIA {
                             indice = getindex(getCarteMinForce(cartesJouable));
                         }
                     }
-                    
 
-                   
                 }
             } else {
                 //Si on est le joueur 1
@@ -193,11 +200,10 @@ public class JoueurIADifficile extends JoueurIA {
                     ArrayList<Carte> cartesPerdante = p.getJ1().getCartesPerdante(carteJ2);
                     ArrayList<Carte> cartesGagnante = p.getJ1().getCartesGagnante(carteJ2);
 
-                    
-                    if(carteJ2.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()){
+                    if (carteJ2.getFaction() == Faction.MortsVivants && !cartesGagnante.isEmpty()) {
                         indice = getindex(getCarteMinForce(cartesGagnante));
-                       
-                    }else{
+
+                    } else {
                         //si on peut perdre
                         if (!cartesPerdante.isEmpty()) {
 
@@ -228,27 +234,27 @@ public class JoueurIADifficile extends JoueurIA {
                 Carte carteNainMinJ1 = getCarteNainMin(p.getJ1().getMain());
                 Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
                 Carte carteDoppelMinJ1 = carteDoppelMin(p.getJ1().getMain());
-                
-                if(carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ1 != null){
-                    
-                    if(carteNainMinJ2.getForce() < carteNainMinJ1.getForce() && carteNainMinJ2.getForce() < carteDoppelMinJ1.getForce()){
-                        
+
+                if (carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ1 != null) {
+
+                    if (carteNainMinJ2.getForce() < carteNainMinJ1.getForce() && carteNainMinJ2.getForce() < carteDoppelMinJ1.getForce()) {
+
                         Random r = new Random();
                         int i = r.nextInt(2);
-                        
-                        if(i == 0){
+
+                        if (i == 0) {
                             indice = getindex(carteNainMinJ2);
-                        }else{
+                        } else {
                             updateGrillePhase2(p);
                             //indice = getindex(getCarteMaxForce(main));
                             indice = getIndexMaxScore(main);
                         }
-                    }else{
+                    } else {
                         updateGrillePhase2(p);
                         //indice = getindex(getCarteMaxForce(main));
                         indice = getIndexMaxScore(main);
                     }
-                }else {
+                } else {
                     updateGrillePhase2(p);
                     //indice = getindex(getCarteMaxForce(main));
                     indice = getIndexMaxScore(main);
@@ -279,9 +285,9 @@ public class JoueurIADifficile extends JoueurIA {
                         //si on ne peut que perdre
                     } else {
                         Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
-                        if(carteNainMinJ2 != null && p.containsCard(cartesJouable, carteNainMinJ2)){
+                        if (carteNainMinJ2 != null && p.containsCard(cartesJouable, carteNainMinJ2)) {
                             indice = getindex(carteNainMinJ2);
-                        }else{
+                        } else {
                             indice = getindex(getCarteMinForce(cartesJouable));
                         }
                     }
@@ -297,27 +303,27 @@ public class JoueurIADifficile extends JoueurIA {
                 Carte carteNainMinJ1 = getCarteNainMin(p.getJ1().getMain());
                 Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
                 Carte carteDoppelMinJ2 = carteDoppelMin(p.getJ2().getMain());
-                
-                if(carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ2 != null){
-                    
-                    if(carteNainMinJ1.getForce() < carteNainMinJ2.getForce() && carteNainMinJ1.getForce() < carteDoppelMinJ2.getForce()){
-                        
+
+                if (carteNainMinJ2 != null && carteNainMinJ1 != null && carteDoppelMinJ2 != null) {
+
+                    if (carteNainMinJ1.getForce() < carteNainMinJ2.getForce() && carteNainMinJ1.getForce() < carteDoppelMinJ2.getForce()) {
+
                         Random r = new Random();
                         int i = r.nextInt(2);
-                        
-                        if(i == 0){
+
+                        if (i == 0) {
                             indice = getindex(carteNainMinJ1);
-                        }else{
+                        } else {
                             updateGrillePhase2(p);
                             //indice = getindex(getCarteMaxForce(main));
                             indice = getIndexMaxScore(main);
                         }
-                    }else{
+                    } else {
                         updateGrillePhase2(p);
                         //indice = getindex(getCarteMaxForce(main));
                         indice = getIndexMaxScore(main);
                     }
-                }else {
+                } else {
                     updateGrillePhase2(p);
                     //indice = getindex(getCarteMaxForce(main));
                     indice = getIndexMaxScore(main);
@@ -348,9 +354,9 @@ public class JoueurIADifficile extends JoueurIA {
                         //si on ne peut que perdre
                     } else {
                         Carte carteNainMinJ2 = getCarteNainMin(p.getJ2().getMain());
-                        if(carteNainMinJ2 != null && p.containsCard(cartesJouable, carteNainMinJ2)){
+                        if (carteNainMinJ2 != null && p.containsCard(cartesJouable, carteNainMinJ2)) {
                             indice = getindex(carteNainMinJ2);
-                        }else{
+                        } else {
                             indice = getindex(getCarteMinForce(cartesJouable));
                         }
                     }
@@ -584,14 +590,29 @@ public class JoueurIADifficile extends JoueurIA {
         }
         int mult1 = 1;
         int mult2 = 1;
-        switch(c.getFaction()){
-            case Chevaliers: mult1 = 6; mult2 = 4; break;
-            case Doppelgangers: mult1 = 2; mult2 = 8; break;
-            case Gobelins: mult1 = 8; mult2 = 2; break;
-            case MortsVivants: mult1 = 8; mult2 = 2; break;
-            case Nains: mult1 = 2; mult2 = 8; break;
+        switch (c.getFaction()) {
+            case Chevaliers:
+                mult1 = 6;
+                mult2 = 4;
+                break;
+            case Doppelgangers:
+                mult1 = 2;
+                mult2 = 8;
+                break;
+            case Gobelins:
+                mult1 = 8;
+                mult2 = 2;
+                break;
+            case MortsVivants:
+                mult1 = 8;
+                mult2 = 2;
+                break;
+            case Nains:
+                mult1 = 2;
+                mult2 = 8;
+                break;
         }
-        return ((wins1 + 1)*mult1) * ((wins2 + 1)*mult2) * (1+c.getForce()/2) * coefsFactions.get(getIndexfactions(c.getFaction()));
+        return ((wins1 + 1) * mult1) * ((wins2 + 1) * mult2) * (1 + c.getForce() / 2) * coefsFactions.get(getIndexfactions(c.getFaction()));
     }
 
     private int getScore(Carte c) {
@@ -617,7 +638,7 @@ public class JoueurIADifficile extends JoueurIA {
                         //if((arrayListContains(arrayIndexGrilleMain, i) && !arrayListContains(arrayIndexGrilleMain, j)) || (!arrayListContains(arrayIndexGrilleMain, i) && arrayListContains(arrayIndexGrilleMain, j))){
                         if (!arrayListContains(arrayIndexGrilleMain, j)) {
                             int win = grilleMatchUp.get(i).get(j);
-                            if(win == 1){
+                            if (win == 1) {
                                 //System.out.println("Victoire 1: " + cartes.get(j).getFaction() + cartes.get(j).getForce());
                                 //System.out.println("V1: " + j);
                             }
@@ -627,7 +648,7 @@ public class JoueurIADifficile extends JoueurIA {
                     if (j == indexCard) {
                         if (!arrayListContains(arrayIndexGrilleMain, i)) {
                             int win = grilleMatchUp.get(i).get(j);
-                            if(win == 0){
+                            if (win == 0) {
                                 //System.out.println("Victoire 2:" + cartes.get(i).getFaction() + cartes.get(i).getForce());
                                 //System.out.println("V2: " + i);
                             }
@@ -640,15 +661,30 @@ public class JoueurIADifficile extends JoueurIA {
         }
         int mult1 = 1;
         int mult2 = 1;
-        switch(c.getFaction()){
-            case Chevaliers: mult1 = 6; mult2 = 4; break;
-            case Doppelgangers: mult1 = 2; mult2 = 8; break;
-            case Gobelins: mult1 = 8; mult2 = 2; break;
-            case MortsVivants: mult1 = 8; mult2 = 2; break;
-            case Nains: mult1 = 2; mult2 = 8; break;
+        switch (c.getFaction()) {
+            case Chevaliers:
+                mult1 = 6;
+                mult2 = 4;
+                break;
+            case Doppelgangers:
+                mult1 = 2;
+                mult2 = 8;
+                break;
+            case Gobelins:
+                mult1 = 8;
+                mult2 = 2;
+                break;
+            case MortsVivants:
+                mult1 = 8;
+                mult2 = 2;
+                break;
+            case Nains:
+                mult1 = 2;
+                mult2 = 8;
+                break;
         }
         //System.out.println("Score 1er: " + wins1 + " Score2eme: " + wins2);
-        return (wins1 + 1)*mult1 * (wins2 + 1)*mult2 * (1+c.getForce()/2) * coefsFactions.get(getIndexfactions(c.getFaction()));
+        return (wins1 + 1) * mult1 * (wins2 + 1) * mult2 * (1 + c.getForce() / 2) * coefsFactions.get(getIndexfactions(c.getFaction()));
     }
 
     private boolean wantCard(int score) {
@@ -761,7 +797,7 @@ public class JoueurIADifficile extends JoueurIA {
             scores.add(score1 * score2);
             index ++;
         }*/
-        
+
         ArrayList<Integer> scores = new ArrayList();
         Iterator<Carte> it = cartes.iterator();
         while (it.hasNext()) {
@@ -770,9 +806,8 @@ public class JoueurIADifficile extends JoueurIA {
         }
 
         Collections.sort(scores);
-       
-        
-        return score > scores.get(grilleMatchUp.size()/2);
+
+        return score > scores.get(grilleMatchUp.size() / 2);
 
     }
 
@@ -990,24 +1025,29 @@ public class JoueurIADifficile extends JoueurIA {
         }
         return carteNainMin;
     }
-    
-    private int getIndexfactions(Faction faction){
+
+    private int getIndexfactions(Faction faction) {
         int indice = -1;
-        switch(faction){
-            case Nains:indice = 0; 
-            break;
-            
-            case Chevaliers:indice = 1;
-            break;
-            
-            case Doppelgangers:indice = 2;
-            break;
-            
-            case Gobelins:indice = 3;
-            break;
-            
-            case MortsVivants:indice = 4;
-            break;
+        switch (faction) {
+            case Nains:
+                indice = 0;
+                break;
+
+            case Chevaliers:
+                indice = 1;
+                break;
+
+            case Doppelgangers:
+                indice = 2;
+                break;
+
+            case Gobelins:
+                indice = 3;
+                break;
+
+            case MortsVivants:
+                indice = 4;
+                break;
         }
         return indice;
     }
@@ -1038,30 +1078,709 @@ public class JoueurIADifficile extends JoueurIA {
         ArrayList<Carte> defausse = new ArrayList();//defausse
         ArrayList<Carte> main1 = new ArrayList();
         ArrayList<Carte> main2 = new ArrayList();
-        
-        if(p.getPhase()==1){
-            if(this.getIsJ1()){
+
+        if (p.getPhase() == 1) {
+            if (this.getIsJ1()) {
                 pp1 = p.getJ1().getCartesPartisans();
-            }else{
+            } else {
                 pp2 = p.getJ2().getCartesPartisans();
             }
         }
-        
+
         ps1 = p.getJ1().getCartesScore();
         ps2 = p.getJ2().getCartesScore();
         defausse = p.getDefausse();
 
-        
-        if(this.getIsJ1()){
+        if (this.getIsJ1()) {
             main1 = p.getJ1().getMain();
-        }else{
+        } else {
             main2 = p.getJ2().getMain();
         }
-        
-        
-        
-        
-            
+
     }
 
+    public int chooseCardPhase2MiniMax(Plateau p) {
+        ArrayList<Integer> scores = new ArrayList();
+
+        if (getIsJ1()) {
+            if (p.isJ1Courant()) {
+                scores.add(miniMax(p.getJ1().getMain(), p.getJ2().getMain(), p.getJ1().getCartesScore(), p.getJ2().getCartesScore(), p.isJ1Courant(), null));
+            } else {
+                scores.add(miniMaxAdversaire(p.getJ1().getMain(), p.getJ2().getMain(), p.getJ1().getCartesScore(), p.getJ2().getCartesScore(), p.isJ1Courant(), null));
+            }
+        } else {
+            if (!p.isJ1Courant()) {
+                scores.add(miniMax(p.getJ1().getMain(), p.getJ2().getMain(), p.getJ1().getCartesScore(), p.getJ2().getCartesScore(), p.isJ1Courant(), null));
+            } else {
+                scores.add(miniMaxAdversaire(p.getJ1().getMain(), p.getJ2().getMain(), p.getJ1().getCartesScore(), p.getJ2().getCartesScore(), p.isJ1Courant(), null));
+            }
+        }
+
+        if (getIsJ1()) {
+            if (p.isJ1Courant()) {
+                Iterator<Carte> it = getMain().iterator();
+                while (it.hasNext()) {
+                    Carte next = it.next();
+
+                }
+            }
+        }
+
+        int scoreMax = Collections.max(scores);
+        int indice = -1;
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i) == scoreMax) {
+                indice = i;
+                i = scores.size();
+            }
+        }
+        return indice;
+    }
+
+    private int miniMax(ArrayList<Carte> main1, ArrayList<Carte> main2, ArrayList<Carte> score1, ArrayList<Carte> score2, boolean isJ1Leader, Carte carteJouee) {
+        if (main1.size() == 0 && main2.size() == 0) {
+            if (getIsJ1()) {
+                if (aGagne(score1, score2)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                if (aGagne(score2, score1)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+        } else {
+            ArrayList<Carte> cartesJouable = new ArrayList();
+            ArrayList<Integer> scores = new ArrayList();
+
+            if (getIsJ1()) {
+                if (isJ1Leader) {
+                    cartesJouable = main1;
+                } else {
+                    cartesJouable = getCartesJouable(carteJouee);
+                }
+            } else {
+                if (!isJ1Leader) {
+                    cartesJouable = main2;
+                } else {
+                    cartesJouable = getCartesJouable(carteJouee);
+                }
+            }
+
+            for (Carte c : cartesJouable) {
+
+                //si on est le premier a devoir jouer
+                if (carteJouee == null) {
+                    //modif config
+                    ArrayList<Carte> mainCopie = new ArrayList();
+                    if (getIsJ1()) {
+                        mainCopie = (ArrayList<Carte>) main1.clone();
+                    } else {
+                        mainCopie = (ArrayList<Carte>) main2.clone();
+                    }
+                    Iterator<Carte> it2 = mainCopie.iterator();
+                    boolean alreadyRemoved = false;
+                    while (it2.hasNext() && !alreadyRemoved) {
+                        Carte carte = it2.next();
+                        if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()) {
+                            it2.remove();
+                            alreadyRemoved = true;
+                        }
+
+                    }
+                    if (getIsJ1()) {
+                        scores.add(miniMaxAdversaire(mainCopie, main2, score1, score2, isJ1Leader, c));
+                    } else {
+                        scores.add(miniMaxAdversaire(main1, mainCopie, score1, score2, isJ1Leader, c));
+                    }
+                } else {
+
+                    //modif config
+                    ArrayList<Carte> mainCopie = new ArrayList();
+                    ArrayList<Carte> scoreCopie1 = (ArrayList<Carte>) score1.clone();
+                    ArrayList<Carte> scoreCopie2 = (ArrayList<Carte>) score2.clone();
+                    if (getIsJ1()) {
+                        mainCopie = (ArrayList<Carte>) main1.clone();
+                    } else {
+                        mainCopie = (ArrayList<Carte>) main2.clone();
+                    }
+                    Iterator<Carte> it2 = mainCopie.iterator();
+                    boolean alreadyRemoved = false;
+                    while (it2.hasNext() && !alreadyRemoved) {
+                        Carte carte = it2.next();
+                        if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()) {
+                            it2.remove();
+                            alreadyRemoved = true;
+                        }
+
+                    }
+
+                    //si on gagne le pli avec la carte c
+                    if (gagnePli(carteJouee, c) == 1) {
+                        if (getIsJ1()) {
+                            if (carteJouee.getFaction() == Faction.Nains) {
+                                scoreCopie2.add(c);
+                            } else {
+                                scoreCopie1.add(c);
+                            }
+                            if (c.getFaction() == Faction.Nains) {
+                                scoreCopie2.add(c);
+                            } else {
+                                scoreCopie1.add(c);
+                            }
+
+                        }
+
+                        if (getIsJ1()) {
+                            scores.add(miniMax(mainCopie, main2, scoreCopie1, scoreCopie2, true, c));
+                        } else {
+                            scores.add(miniMax(main1, mainCopie, scoreCopie1, scoreCopie2, false, c));
+                        }
+
+                        //si on perd le pli
+                    } else {
+                        if (getIsJ1()) {
+                            if (carteJouee.getFaction() == Faction.Nains) {
+                                scoreCopie1.add(c);
+                            } else {
+                                scoreCopie2.add(c);
+                            }
+                            if (c.getFaction() == Faction.Nains) {
+                                scoreCopie1.add(c);
+                            } else {
+                                scoreCopie2.add(c);
+                            }
+
+                        }
+
+                        if (getIsJ1()) {
+                            scores.add(miniMaxAdversaire(mainCopie, main2, scoreCopie1, scoreCopie2, false, c));
+                        } else {
+                            scores.add(miniMaxAdversaire(main1, mainCopie, scoreCopie1, scoreCopie2, true, c));
+                        }
+                    }
+
+                }
+            }
+            System.out.println("[Test minimax ]");
+            System.out.println(scores.get(0));
+            return Collections.max(scores);
+        }
+
+    }
+
+    private int miniMaxAdversaire(ArrayList<Carte> main1, ArrayList<Carte> main2, ArrayList<Carte> score1, ArrayList<Carte> score2, boolean isJ1Leader, Carte carteJouee) {
+        if (main1.size() == 0 && main2.size() == 0) {
+            if (getIsJ1()) {
+                if (aGagne(score1, score2)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                if (aGagne(score2, score1)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+        } else {
+            ArrayList<Carte> cartesJouable = new ArrayList();
+            ArrayList<Integer> scores = new ArrayList();
+
+            if (getIsJ1()) {
+                if (isJ1Leader) {
+                    cartesJouable = main2;
+                } else {
+                    cartesJouable = getCartesJouable(carteJouee);
+                }
+            } else {
+                if (!isJ1Leader) {
+                    cartesJouable = main1;
+                } else {
+                    cartesJouable = getCartesJouable(carteJouee);
+                }
+            }
+
+            Iterator<Carte> it = cartesJouable.iterator();
+            while (it.hasNext()) {
+                Carte c = it.next();
+                //si on est le premier a devoir jouer
+                if (carteJouee == null) {
+                    //modif config
+                    ArrayList<Carte> mainCopie = new ArrayList();
+                    if (getIsJ1()) {
+                        mainCopie = (ArrayList<Carte>) main1.clone();
+                    } else {
+                        mainCopie = (ArrayList<Carte>) main2.clone();
+                    }
+                    Iterator<Carte> it2 = mainCopie.iterator();
+                    boolean alreadyRemoved = false;
+                    while (it2.hasNext() && !alreadyRemoved) {
+                        Carte carte = it2.next();
+                        if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()) {
+                            it2.remove();
+                            alreadyRemoved = true;
+                        }
+
+                    }
+                    if (getIsJ1()) {
+                        scores.add(miniMaxAdversaire(mainCopie, main2, score1, score2, isJ1Leader, c));
+                    } else {
+                        scores.add(miniMaxAdversaire(main1, mainCopie, score1, score2, isJ1Leader, c));
+                    }
+                } else {
+
+                    //modif config
+                    ArrayList<Carte> mainCopie = new ArrayList();
+                    ArrayList<Carte> scoreCopie1 = (ArrayList<Carte>) score1.clone();
+                    ArrayList<Carte> scoreCopie2 = (ArrayList<Carte>) score2.clone();
+                    if (getIsJ1()) {
+                        mainCopie = (ArrayList<Carte>) main1.clone();
+                    } else {
+                        mainCopie = (ArrayList<Carte>) main2.clone();
+                    }
+                    Iterator<Carte> it2 = mainCopie.iterator();
+                    boolean alreadyRemoved = false;
+                    while (it2.hasNext() && !alreadyRemoved) {
+                        Carte carte = it2.next();
+                        if (carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()) {
+                            it2.remove();
+                            alreadyRemoved = true;
+                        }
+
+                    }
+
+                    //si on gagne le pli avec la carte c
+                    if (gagnePli(carteJouee, c) == 1) {
+                        if (getIsJ1()) {
+                            if (carteJouee.getFaction() == Faction.Nains) {
+                                scoreCopie2.add(c);
+                            } else {
+                                scoreCopie1.add(c);
+                            }
+                            if (c.getFaction() == Faction.Nains) {
+                                scoreCopie2.add(c);
+                            } else {
+                                scoreCopie1.add(c);
+                            }
+
+                        }
+
+                        if (getIsJ1()) {
+                            scores.add(miniMax(mainCopie, main2, scoreCopie1, scoreCopie2, true, c));
+                        } else {
+                            scores.add(miniMax(main1, mainCopie, scoreCopie1, scoreCopie2, false, c));
+                        }
+
+                        //si on perd le pli
+                    } else {
+                        if (getIsJ1()) {
+                            if (carteJouee.getFaction() == Faction.Nains) {
+                                scoreCopie1.add(c);
+                            } else {
+                                scoreCopie2.add(c);
+                            }
+                            if (c.getFaction() == Faction.Nains) {
+                                scoreCopie1.add(c);
+                            } else {
+                                scoreCopie2.add(c);
+                            }
+
+                        }
+
+                        if (getIsJ1()) {
+                            scores.add(miniMaxAdversaire(mainCopie, main2, scoreCopie1, scoreCopie2, false, c));
+                        } else {
+                            scores.add(miniMaxAdversaire(main1, mainCopie, scoreCopie1, scoreCopie2, true, c));
+                        }
+                    }
+
+                }
+            }
+            if (scores.size() > 0) {
+                return Collections.min(scores);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    private boolean aGagne(ArrayList<Carte> score1, ArrayList<Carte> score2) {
+        ArrayList<Integer> nbCartesFactions = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        ArrayList<Integer> forceMaxCartesFactions1 = new ArrayList(Arrays.asList(-1, -1, -1, -1, -1));
+        ArrayList<Integer> forceMaxCartesFactions2 = new ArrayList(Arrays.asList(-1, -1, -1, -1, -1));
+
+        Iterator<Carte> it = score1.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            int indiceFaction = getIndexfactions(c.getFaction());
+            nbCartesFactions.set(indiceFaction, nbCartesFactions.get(indiceFaction) + 1);
+            int forceMaxCarteFaction = forceMaxCartesFactions1.get(indiceFaction);
+            if (c.getForce() > forceMaxCarteFaction) {
+                forceMaxCartesFactions1.set(indiceFaction, c.getForce());
+            }
+        }
+
+        Iterator<Carte> it2 = score2.iterator();
+        while (it2.hasNext()) {
+            Carte c = it2.next();
+            int indiceFaction = getIndexfactions(c.getFaction());
+            nbCartesFactions.set(indiceFaction, nbCartesFactions.get(indiceFaction) - 1);
+            int forceMaxCarteFaction = forceMaxCartesFactions2.get(indiceFaction);
+            if (c.getForce() > forceMaxCarteFaction) {
+                forceMaxCartesFactions2.set(indiceFaction, c.getForce());
+            }
+        }
+
+        int voteFaction = 0;
+        int i = 0;
+        Iterator<Integer> it3 = nbCartesFactions.iterator();
+        while (it3.hasNext()) {
+            Integer nbCarteF = it3.next();
+            if (nbCarteF > 0) {
+                voteFaction++;
+            } else if (nbCarteF < 0) {
+                voteFaction--;
+            } else {
+                if (forceMaxCartesFactions1.get(i) > forceMaxCartesFactions2.get(i)) {
+                    voteFaction++;
+                } else if (forceMaxCartesFactions1.get(i) < forceMaxCartesFactions2.get(i)) {
+                    voteFaction--;
+                }
+            }
+
+            i++;
+        }
+        return voteFaction > 0;
+    }
+
+    private int getIndexMeilleurConfig(Plateau p, ArrayList<Carte> main) {
+        int indice = -1;
+        int scoreMax = -1;
+        int i = 0;
+        Iterator<Carte> it = main.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            int score = getConfigsPoids(p, c);
+            if (score > scoreMax) {
+                scoreMax = score;
+                indice = i;
+            }
+            i++;
+        }
+        return indice;
+    }
+
+    private int getConfigsPoids(Plateau p, Carte c) {
+        //Partie création de la nouvelle configuration
+        //on joue la carte c
+
+        boolean isJ1C = p.isJ1Courant() == true;
+        Joueur j1 = p.getJ1().copie();
+        Joueur j2 = p.getJ2().copie();
+        Carte c2 = null;
+        Carte c1 = null;
+        if(p.getCarteJ1() != null){
+            c1 = p.getCarteJ1().copie();
+        }
+        if(p.getCarteJ2() != null){
+            c2 = p.getCarteJ2().copie();
+        }
+        
+        Plateau pNewConfig = new Plateau(isJ1C, j1, j2, (ArrayList<Coup>)p.getHistorique().clone(), (Stack<Coup>)p.getContreHistorique().clone(), c1, c2, null, null, (Stack<Carte>)p.getPioche().clone(), (ArrayList<Carte>)p.getDefausse().clone(), (ArrayList<Integer>)p.getScore().clone(), 2, p.isFini() == true);
+        
+        boolean premierJoueur;
+
+        if (isJ1) {
+            pNewConfig.setCarteJ1(c);
+            premierJoueur = (pNewConfig.getCarteJ2() == null);
+        } else {
+            pNewConfig.setCarteJ2(c);
+            premierJoueur = (pNewConfig.getCarteJ1() == null);
+        }
+
+        if (!premierJoueur) {
+            pNewConfig.calculPli();
+        }
+        
+        int i = 0;
+        int indice = -1;
+        boolean trouve = false;
+        Iterator<Plateau> it = configs.iterator();
+        while (it.hasNext() && !trouve) {
+            Plateau plat = it.next();
+            if(plat.egal(pNewConfig)){
+                indice = i;   
+                trouve = true;
+            }
+            i++;
+        }
+
+        return poids.get(indice);
+        //return configsPoids.get(pNewConfig);
+    }
+
+    private void creerConfigsPoids(Plateau p) {
+        boolean isJ1C = p.isJ1Courant() == true;
+        Joueur j1 = p.getJ1().copie();
+        Joueur j2 = p.getJ2().copie();
+        Carte c2 = null;
+        Carte c1 = null;
+        if(p.getCarteJ1() != null){
+            c1 = p.getCarteJ1().copie();
+        }
+        if(p.getCarteJ2() != null){
+            c2 = p.getCarteJ2().copie();
+        }
+        
+        Plateau plateau = new Plateau(isJ1C, j1, j2, (ArrayList<Coup>)p.getHistorique().clone(), (Stack<Coup>)p.getContreHistorique().clone(), c1, c2, null, null, (Stack<Carte>)p.getPioche().clone(), (ArrayList<Carte>)p.getDefausse().clone(), (ArrayList<Integer>)p.getScore().clone(), 2, p.isFini() == true);
+        //on doit créer pour chaque config possible une entrée dans notre hashmap
+
+        ArrayList<Carte> cartesJouables = new ArrayList();
+        boolean isJ1 = true;
+
+        //si on est le joueur 1
+        if (getIsJ1()) {
+            //si on est le premier a devoir jouer
+            if (plateau.isJ1Courant()) {
+                cartesJouables = getMain();
+            } else {
+                cartesJouables = getCartesJouable(p.getCarteJ2());
+            }
+        } else {
+            isJ1 = false;
+            //si on est le premier a devoir jouer
+            if (!plateau.isJ1Courant()) {
+                cartesJouables = getMain();
+            } else {
+                cartesJouables = getCartesJouable(p.getCarteJ1());
+            }
+        }
+
+        Iterator<Carte> it = cartesJouables.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            workerMiniMax(plateau, isJ1, c, configsPoids, 6);
+        }
+    }
+
+    private int workerMiniMax(Plateau p, boolean isJ1, Carte c, HashMap<Plateau, Integer> configsPoids, int ttl) {
+        //Partie création de la nouvelle configuration
+        //on joue la carte c
+
+        boolean isJ1C = p.isJ1Courant() == true;
+        Joueur j1 = p.getJ1().copie();
+        Joueur j2 = p.getJ2().copie();
+        Carte c2 = null;
+        Carte c1 = null;
+        if(p.getCarteJ1() != null){
+            c1 = p.getCarteJ1().copie();
+        }
+        if(p.getCarteJ2() != null){
+            c2 = p.getCarteJ2().copie();
+        }
+        
+        Plateau pNewConfig = new Plateau(isJ1C, j1, j2, (ArrayList<Coup>)p.getHistorique().clone(), (Stack<Coup>)p.getContreHistorique().clone(), c1, c2, null, null, (Stack<Carte>)p.getPioche().clone(), (ArrayList<Carte>)p.getDefausse().clone(), (ArrayList<Integer>)p.getScore().clone(), 2, p.isFini() == true);
+        
+        boolean premierJoueur;
+
+        if (isJ1) {
+            pNewConfig.setCarteJ1(c);
+            premierJoueur = (pNewConfig.getCarteJ2() == null);
+        } else {
+            pNewConfig.setCarteJ2(c);
+            premierJoueur = (pNewConfig.getCarteJ1() == null);
+        }
+
+        if (!premierJoueur) {
+            pNewConfig.calculPli();
+        }
+
+        //si on est sur une configration terminale
+        if (pNewConfig.getJ1().getMain().size() == 0 && pNewConfig.getJ2().getMain().size() == 0) {
+            int j1Victory = -1;
+            if (aGagne(pNewConfig.getJ1().getCartesScore(), pNewConfig.getJ2().getCartesScore())) {
+                j1Victory = 1;
+            } else {
+                j1Victory = 0;
+            }
+            if (isJ1) {
+                configs.add(pNewConfig);
+                poids.add(j1Victory);
+                //configsPoids.put(pNewConfig, j1Victory);
+                return j1Victory;
+            } else {
+                configs.add(pNewConfig);
+                poids.add(1-j1Victory);
+                //configsPoids.put(pNewConfig, 1 - j1Victory);
+                return 1 - j1Victory;
+            }
+            //sinon
+        } else {
+
+            if (ttl > 0) {
+                boolean aMoiDeJouer = false;
+                ArrayList<Carte> cartesJouables = new ArrayList();
+                //si on était le premier joueur, c'est à l'adversaire de jouer
+                if (premierJoueur) {
+                    if (isJ1) {
+                        cartesJouables = pNewConfig.getJ2().getCartesJouable(c);
+                    } else {
+                        cartesJouables = pNewConfig.getJ1().getCartesJouable(c);
+                    }
+                } else {
+                    //si on a gagné le pli , c'est à nous sinon, c'est à l'autre joueur
+
+                    //si le joueur 1 a gagné le pli
+                    if (pNewConfig.isJ1Courant()) {
+                        if (isJ1) {
+                            aMoiDeJouer = true;
+                        }
+
+                        cartesJouables = pNewConfig.getJ1().getMain();
+
+                        //si le joueur 2 a gagné le pli
+                    } else {
+                        if (!isJ1) {
+                            aMoiDeJouer = true;
+                        }
+                        cartesJouables = pNewConfig.getJ2().getMain();
+
+                    }
+                }
+
+                //On recupere le score max/min des nouvelle config par rapport a si c'est à nous de jouer ou pas
+                int scoreMax = -1;
+                int scoreMin = 2;
+                //si c'est à nous de jouer
+                Iterator<Carte> it = cartesJouables.iterator();
+                while (it.hasNext()) {
+                    Carte carte = it.next();
+                    int score = workerMiniMax(pNewConfig, isJ1, carte, configsPoids, ttl-1);
+                    if (aMoiDeJouer) {
+                        if (score > scoreMax) {
+                            scoreMax = score;
+                        }
+                    } else {
+                        if (score < scoreMin) {
+                            scoreMin = score;
+                        }
+                    }
+                }
+                if (aMoiDeJouer) {
+                    if(pNewConfig == null){
+                        System.out.println("test1");
+                    }
+                    configs.add(pNewConfig);
+                    poids.add(scoreMax);
+                    //configsPoids.put(pNewConfig, scoreMax);
+                    return scoreMax;
+                } else {
+                    if(pNewConfig == null){
+                        System.out.println("test2");
+                    }
+                    configs.add(pNewConfig);
+                    poids.add(scoreMin);
+                    //configsPoids.put(pNewConfig, scoreMin);
+                    return scoreMin;
+                }
+            }else{
+                return 0;
+            }
+
+        }
+
+    }
+    
+    @Override
+    public JoueurIADifficile copie(){
+        
+        ArrayList<Carte> mainCopie = (ArrayList<Carte>) main.clone();
+        ArrayList<Carte> cartesScore = (ArrayList<Carte>) this.cartesScore.clone();
+        boolean isJ1 = this.isJ1 == true;
+        ArrayList<ArrayList<Integer>> grilleMatchUp = (ArrayList<ArrayList<Integer>>) this.grilleMatchUp.clone();
+        ArrayList<Carte> cartes = (ArrayList<Carte>) this.cartes.clone();
+        ArrayList<Carte> cartesRetirees = (ArrayList<Carte>) this.cartesRetirees.clone();
+        ArrayList<Integer> coefsFactions = (ArrayList<Integer>) this.coefsFactions.clone();
+        ArrayList<Plateau> configs = (ArrayList<Plateau>) this.configs.clone();
+        ArrayList<Integer> poids = (ArrayList<Integer>) this.poids.clone();
+        
+        JoueurIADifficile jCopie = new JoueurIADifficile(this.main, this.isJ1,this.cartes);
+        jCopie.setCartes(cartes);
+        jCopie.setMain(mainCopie);
+        jCopie.setCartesScore(cartesScore);
+        jCopie.setIsJ1(isJ1);
+        jCopie.setGrilleMatchUp(grilleMatchUp);
+        jCopie.setCartesRetirees(cartesRetirees);
+        jCopie.setCoefsFactions(coefsFactions);
+        jCopie.setConfigs(configs);
+        jCopie.setPoids(poids);
+        
+        return jCopie;
+    }
+
+    public ArrayList<Carte> getCartes() {
+        return cartes;
+    }
+
+    public void setCartes(ArrayList<Carte> cartes) {
+        this.cartes = cartes;
+    }
+
+    public ArrayList<Carte> getCartesRetirees() {
+        return cartesRetirees;
+    }
+
+    public void setCartesRetirees(ArrayList<Carte> cartesRetirees) {
+        this.cartesRetirees = cartesRetirees;
+    }
+
+    public ArrayList<ArrayList<Integer>> getGrilleMatchUp() {
+        return grilleMatchUp;
+    }
+
+    public void setGrilleMatchUp(ArrayList<ArrayList<Integer>> grilleMatchUp) {
+        this.grilleMatchUp = grilleMatchUp;
+    }
+
+    public ArrayList<Integer> getCoefsFactions() {
+        return coefsFactions;
+    }
+
+    public void setCoefsFactions(ArrayList<Integer> coefsFactions) {
+        this.coefsFactions = coefsFactions;
+    }
+
+    public HashMap<Plateau, Integer> getConfigsPoids() {
+        return configsPoids;
+    }
+
+    public void setConfigsPoids(HashMap<Plateau, Integer> configsPoids) {
+        this.configsPoids = configsPoids;
+    }
+
+    public ArrayList<Plateau> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(ArrayList<Plateau> configs) {
+        this.configs = configs;
+    }
+
+    public ArrayList<Integer> getPoids() {
+        return poids;
+    }
+
+    public void setPoids(ArrayList<Integer> poids) {
+        this.poids = poids;
+    }
+
+    
+    
 }

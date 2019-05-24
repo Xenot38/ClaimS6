@@ -9,6 +9,21 @@ public class JoueurIAFacile  extends JoueurIA{
     public JoueurIAFacile(ArrayList<Carte> main, boolean isJ1) {
             super(main, isJ1);
     }
+    
+    @Override
+    public JoueurIAFacile copie(){
+        
+        ArrayList<Carte> mainCopie = (ArrayList<Carte>) main.clone();
+        ArrayList<Carte> cartesScore = (ArrayList<Carte>) this.cartesScore.clone();
+        boolean isJ1 = this.isJ1 == true;
+        
+        JoueurIAFacile jCopie = new JoueurIAFacile(this.main, this.isJ1);
+        jCopie.setMain(mainCopie);
+        jCopie.setCartesScore(cartesScore);
+        jCopie.setIsJ1(isJ1);
+        
+        return jCopie;
+    }
 
     @Override
     public Boolean winCard(Plateau p) {

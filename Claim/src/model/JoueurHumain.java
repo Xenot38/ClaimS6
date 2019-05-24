@@ -37,5 +37,19 @@ public class JoueurHumain extends Joueur{
                 return str;
         }
 	
+        @Override
+        public JoueurHumain copie(){
+        
+        ArrayList<Carte> mainCopie = (ArrayList<Carte>) main.clone();
+        ArrayList<Carte> cartesScore = (ArrayList<Carte>) this.cartesScore.clone();
+        boolean isJ1 = this.isJ1 == true;
+        
+        JoueurHumain jCopie = new JoueurHumain(this.main, this.isJ1);
+        jCopie.setMain(mainCopie);
+        jCopie.setCartesScore(cartesScore);
+        jCopie.setIsJ1(isJ1);
+        
+        return jCopie;
+    }
 	
 }
