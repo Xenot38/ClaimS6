@@ -323,10 +323,10 @@ public abstract class Joueur implements Serializable {
         }
     }
     
-    public int getIndexCarteMain(Carte c){
+    public int getIndexCarteMain(Carte c, ArrayList<Carte> main){
         int indice = -1;
         int i = 0;
-        Iterator<Carte> it = getMain().iterator();
+        Iterator<Carte> it = main.iterator();
         while (it.hasNext()) {
             Carte carte = it.next();
             if(carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
