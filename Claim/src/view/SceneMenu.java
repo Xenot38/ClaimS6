@@ -5,9 +5,15 @@
  */
 package view;
 
+import controler.ControllerEnver;
 import static controler.Launcher.hauteur;
 import static controler.Launcher.largeur;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,6 +36,13 @@ import javafx.scene.layout.VBox;
  * @author kekae
  */
 public class SceneMenu {
+    
+    public Button Jouer = new Button("Jouer");
+    public Button Charger = new Button("Charger");
+    public Button Option  = new Button("Option");
+    public Button Quitter = new Button("Quitter");
+    
+    
     public SceneMenu(){
        
        
@@ -45,8 +58,6 @@ public class SceneMenu {
            System.out.println("lol ça n'a pas charger mdr");
        }
         //then you set to your node
-        
-        
         
         Canvas can_thon = new Canvas();
         Pane esp1 = new Pane(can_thon);
@@ -74,10 +85,7 @@ public class SceneMenu {
 
         //menu bouton
         VBox Button_Menu = new VBox();
-        Button Jouer = new Button("Jouer");
-        Button Charger = new Button("Charger");
-        Button Option  = new Button("Option");
-        Button Quitter = new Button("Quitter");
+        
         Button_Menu.getChildren().add(Jouer);
         Button_Menu.getChildren().add(Charger);
         Button_Menu.getChildren().add(Option);

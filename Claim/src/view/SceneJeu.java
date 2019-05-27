@@ -176,67 +176,94 @@ public class SceneJeu {
        Pane paneCentre9 = new Pane(canCentre9);
        HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
        
-       
-       for(int i =0;i<8 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+       VBox vbCheval = new VBox();
+        
+        double cubeCheval = ControllerEnver.hauteurScore/8;
+        
+        for(int i =0; i<8 ;i ++){
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            score.add(p, 0, i);
+           0.0, cubeCheval,
+           ControllerEnver.largeurScore, cubeCheval,
+           ControllerEnver.largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbCheval.getChildren().add(poly);
         }
+        score.add(vbCheval,0,0);
        ImageView imChevalier = ControllerEnver.creerImageView("IconeCh.png",20,20);
-       /*chevalierGrid.add(imChevalier,0,0);
-       chevalierGrid.add(chevalierScore,1,0);*/
        score.add(imChevalier, 0, 8);
        score.add(chevalierScore, 0, 9);
        
        
-       for(int i =0;i<10 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+        VBox vbMv = new VBox();
+        
+        double cubeMv = ControllerEnver.hauteurScore/10;
+        
+        for(int i =0; i<10 ;i ++){
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            score.add(p, 1, i);
+           0.0, cubeMv,
+           ControllerEnver.largeurScore, cubeMv,
+           ControllerEnver.largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbMv.getChildren().add(poly);
         }
+        score.add(vbMv,1,0);
        
-       for(int i =0;i<10 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+       VBox vbDopple = new VBox();
+        
+        double cubeDopple = ControllerEnver.hauteurScore/10;
+        
+        for(int i =0; i<10 ;i ++){
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            score.add(p, 2, i);
+           0.0, cubeDopple,
+           ControllerEnver.largeurScore, cubeDopple,
+           ControllerEnver.largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbDopple.getChildren().add(poly);
         }
+        score.add(vbDopple,2,0);
        
-       for(int i =0;i<10 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+       VBox vbNain = new VBox();
+        
+        double cubeNain = ControllerEnver.hauteurScore/10;
+        
+        for(int i =0; i<10 ;i ++){
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            score.add(p, 3, i);
+           0.0, cubeNain,
+           ControllerEnver.largeurScore, cubeNain,
+           ControllerEnver.largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbNain.getChildren().add(poly);
         }
+        score.add(vbNain,3,0);
        
-       for(int i =0;i<14 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+       VBox vbGobelin = new VBox();
+        
+        double cubeGobelin = ControllerEnver.hauteurScore/14;
+        
+        for(int i =0; i<14 ;i ++){
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            score.add(p, 4, i);
+           0.0, cubeGobelin,
+           ControllerEnver.largeurScore, cubeGobelin,
+           ControllerEnver.largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbGobelin.getChildren().add(poly);
         }
+        score.add(vbGobelin,4,0);
        
        
        

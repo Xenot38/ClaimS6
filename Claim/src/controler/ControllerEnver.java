@@ -13,15 +13,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
@@ -35,13 +40,14 @@ import view.SceneMenu;
 import view.SceneOptionPartie;
 
 public class ControllerEnver {
-
+    public static double largeurScore = 40.0;
+    public static double hauteurScore = 300.0;
     public Plateau p;
     public SceneJeu jeu;
     public SceneCharger charger;
     public SceneMenu menu;
     public SceneOptionPartie option;
-    int choixScene = 4;
+    int choixScene = 1;
     boolean J1joue = true;
     public Scene scene;
     Stage stage;
@@ -60,6 +66,7 @@ public class ControllerEnver {
     public void afficher() throws FileNotFoundException {
         switch (choixScene) {
             case 1:
+                setupMenu();
                 scene = menu.creerMenu();
                 stage.setScene(scene);
                 stage.show();
@@ -82,15 +89,35 @@ public class ControllerEnver {
                 break;
         }
     }
-
+    
+    
+    public void setupMenu(){
+        menu.Jouer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 4;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        menu.Quitter.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+    
     public void setupJeu() {
         jeu.Main1 = getHBMain(p.getJ1().getMain(), 1);
         jeu.Main2 = getHBMain(p.getJ2().getMain(), 0);
+        updateScore();
 
     }
 
-    public void setupMenu() {
-    }
+
 
     public void setupOption() {
     }
@@ -373,178 +400,206 @@ public class ControllerEnver {
         jeu.gobelinGrid.getChildren().clear();
         
         ///////CHEVALIER/////////
+        VBox vbCheval = new VBox();
         
-       /* Label chevalLabeler = new Label("chelvalier");
-        chevalLabeler.setRotate(-90);
-        jeu.score.add(chevalLabeler, 0, 4);*/
-        
+        double cubeCheval = hauteurScore/chevalier;
         
         for(int i =0; i<chevalierJ2 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.RED);
-            jeu.score.add(p, 0, i);
+           0.0, cubeCheval,
+           largeurScore, cubeCheval,
+           largeurScore, 0.0 });
+           poly.setFill(Color.RED);
+           poly.setStroke(Color.BLACK);
+           vbCheval.getChildren().add(poly);
         }
         for(int i =chevalierJ2; i<chevalierJ2+chevalierB ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            jeu.score.add(p, 0, i);
+           0.0, cubeCheval,
+           largeurScore, cubeCheval,
+           largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbCheval.getChildren().add(poly);
         }
         for(int i =chevalierJ2+chevalierB; i<chevalierJ2+chevalierB+chevalierJ1 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.GREEN);
-            jeu.score.add(p, 0, i);
+           0.0, cubeCheval,
+           largeurScore, cubeCheval,
+           largeurScore, 0.0 });
+           poly.setFill(Color.GREEN);
+           poly.setStroke(Color.BLACK);
+           vbCheval.getChildren().add(poly);
         }
         ////////////
         
         ////////MortVivant/////////
+        VBox vbMv = new VBox();
+        double cubeMv = hauteurScore/10;
         for(int i =0; i<mvJ2 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.RED);
-            jeu.score.add(p, 1, i);
+           0.0, cubeMv,
+           largeurScore, cubeMv,
+           largeurScore, 0.0 });
+           poly.setFill(Color.RED);
+           poly.setStroke(Color.BLACK);
+           vbMv.getChildren().add(poly);
         }
         for(int i =mvJ2; i<mvJ2+mvB ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            jeu.score.add(p,1, i);
+           0.0, cubeMv,
+           largeurScore, cubeMv,
+           largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbMv.getChildren().add(poly);
         }
         for(int i =mvJ2+mvB; i<mvJ2+mvB+mvJ1 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.GREEN);
-            jeu.score.add(p, 1, i);
+           0.0, cubeMv,
+           largeurScore, cubeMv,
+           largeurScore, 0.0 });
+           poly.setFill(Color.GREEN);
+           poly.setStroke(Color.BLACK);
+           vbMv.getChildren().add(poly);
         }
         ///////////////////////
         
         
         
         //////////DoppleGanger///////
+        
+        VBox vbDopple = new VBox();
+        double cubeDopple  = hauteurScore/doppleGanger;
         for(int i =0; i<doppleGangerJ2 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.RED);
-            jeu.score.add(p, 2, i);
+           0.0, cubeDopple,
+           largeurScore, cubeDopple,
+           largeurScore, 0.0 });
+           poly.setFill(Color.RED);
+           poly.setStroke(Color.BLACK);
+           vbDopple.getChildren().add(poly);
         }
         for(int i =doppleGangerJ2; i<doppleGangerJ2+doppleGangerB ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            jeu.score.add(p, 2, i);
+           0.0, cubeDopple,
+           largeurScore, cubeDopple,
+           largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbDopple.getChildren().add(poly);
         }
         for(int i =doppleGangerJ2+doppleGangerB; i<doppleGangerJ2+doppleGangerB+doppleGangerJ1 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.GREEN);
-            jeu.score.add(p, 2, i);
+           0.0, cubeDopple,
+           largeurScore, cubeDopple,
+           largeurScore, 0.0 });
+           poly.setFill(Color.GREEN);
+           poly.setStroke(Color.BLACK);
+           vbDopple.getChildren().add(poly);
         }
         /////////////////////
         
         
         //////////Nain////////////
+        VBox vbNain = new VBox();
+        double cubeNain = hauteurScore/nain;
         for(int i =0; i<nainJ2 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.RED);
-            jeu.score.add(p,3, i);
+           0.0, cubeNain,
+           largeurScore, cubeNain,
+           largeurScore, 0.0 });
+           poly.setFill(Color.RED);
+           poly.setStroke(Color.BLACK);
+           vbNain.getChildren().add(poly);
         }
         for(int i =nainJ2; i<nainJ2+nainB ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            jeu.score.add(p, 3, i);
+           0.0, cubeNain,
+           largeurScore, cubeNain,
+           largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbNain.getChildren().add(poly);
         }
         for(int i =nainJ2+nainB; i<nainJ2+nainB+nainJ1 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.GREEN);
-            jeu.score.add(p, 3, i);
+           0.0, cubeNain,
+           largeurScore, cubeNain,
+           largeurScore, 0.0 });
+           poly.setFill(Color.GREEN);
+           poly.setStroke(Color.BLACK);
+           vbNain.getChildren().add(poly);
         }
         //////////////////////
         
         ////////////Gobelin///////////
+        VBox vbGoblin = new VBox();
+        double cubeGoblin = hauteurScore/gobelin;
         for(int i =0; i<gobelinJ2 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.RED);
-            jeu.score.add(p, 4, i);
+           0.0, cubeGoblin,
+           largeurScore, cubeGoblin,
+           largeurScore, 0.0 });
+           poly.setFill(Color.RED);
+           poly.setStroke(Color.BLACK);
+           vbGoblin.getChildren().add(poly);
         }
         for(int i =gobelinJ2; i<gobelinJ2+gobelinB ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.WHITE);
-            jeu.score.add(p, 4, i);
+           0.0, cubeGoblin,
+           largeurScore, cubeGoblin,
+           largeurScore, 0.0 });
+           poly.setFill(Color.WHITE);
+           poly.setStroke(Color.BLACK);
+           vbGoblin.getChildren().add(poly);
         }
         for(int i =gobelinJ2+gobelinB; i<gobelinJ2+gobelinB+gobelinJ1 ;i ++){
-           Polygon p= new Polygon();
-           p.getPoints().addAll(new Double[]{
+           Polygon poly= new Polygon();
+           poly.getPoints().addAll(new Double[]{
            0.0, 0.0,
-           0.0, 20.0,
-           20.0, 20.0,
-           20.0, 0.0 });
-           p.setFill(Color.GREEN);
-            jeu.score.add(p, 4, i);
+           0.0, cubeGoblin,
+           largeurScore, cubeGoblin,
+           largeurScore, 0.0 });
+           poly.setFill(Color.GREEN);
+           poly.setStroke(Color.BLACK);
+           vbGoblin.getChildren().add(poly);
         }
         ///////////////
+        
+        jeu.score.add(vbCheval,0,0);
+        jeu.score.add(vbMv,1,0);
+        jeu.score.add(vbDopple,2,0);
+        jeu.score.add(vbNain,3,0);
+        jeu.score.add(vbGoblin,4,0);
          
         }
         
