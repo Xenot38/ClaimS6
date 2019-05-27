@@ -323,5 +323,19 @@ public abstract class Joueur implements Serializable {
         }
     }
     
+    public int getIndexCarteMain(Carte c){
+        int indice = -1;
+        int i = 0;
+        Iterator<Carte> it = getMain().iterator();
+        while (it.hasNext()) {
+            Carte carte = it.next();
+            if(carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
+                indice = i;
+            }
+            i++;
+        }
+        return indice;
+    }
+    
     
 }

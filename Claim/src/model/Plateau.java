@@ -861,36 +861,65 @@ public class Plateau implements Serializable{
     String hashString() {
         //les 2 joueurs(les 2 piles scores / les 2 mains) / et les 2 cartes au milieux
         String hashcode = "";
+        
+        //Main J1
+        hashcode+="MainJ1[";
         Iterator<Carte> it = getJ1().getMain().iterator();
         while (it.hasNext()) {
             Carte c = it.next();
             hashcode+=c.getFaction().toString() + c.getForce();
+            hashcode+=" ";
         }
+        hashcode+="]";
+        
+        //Main J2
+        hashcode+="MainJ2[";
         it = getJ2().getMain().iterator();
         while (it.hasNext()) {
             Carte c = it.next();
             hashcode+=c.getFaction().toString() + c.getForce();
+            hashcode+=" ";
         }
+        hashcode+="]";
+        
+        //Score J1
+        hashcode+="ScoreJ1[";
         it = getJ1().getCartesScore().iterator();
         while (it.hasNext()) {
             Carte c = it.next();
             hashcode+=c.getFaction().toString() + c.getForce();
+            hashcode+=" ";
         }
+        hashcode+="]";
+        
+        //Score J2
+        hashcode+="ScoreJ2[";
         it = getJ2().getCartesScore().iterator();
         while (it.hasNext()) {
             Carte c = it.next();
             hashcode+=c.getFaction().toString() + c.getForce();
+            hashcode+=" ";
         }
+        hashcode+="]";
+        
+        //Carte J1
+        hashcode+="CarteJ1[";
         if(getCarteJ1()==null){
             hashcode+="null";
         }else{
             hashcode+=getCarteJ1().getFaction().toString() + getCarteJ1().getForce();
         }
+        hashcode+="]";
+        
+        //Carte J2
+        hashcode+="CarteJ2[";
         if(getCarteJ2()==null){
             hashcode+="null";
         }else{
             hashcode+=getCarteJ2().getFaction().toString() + getCarteJ2().getForce();
         }
+        hashcode+="]";
+        
         return hashcode;
     }
 

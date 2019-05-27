@@ -12,8 +12,7 @@ import java.util.Stack;
  
 public class JoueurIADifficile extends JoueurIA {
 
-    private int pronfondeurMax = 6;
-    private int ttlConfigsPoids = 6;
+    private int pronfondeurMax;
     private ArrayList<Carte> cartes;
     private ArrayList<Carte> cartesRetirees;
     //private ArrayList<Boolean> J1HasFactions;
@@ -40,6 +39,7 @@ public class JoueurIADifficile extends JoueurIA {
         configsPoids = new HashMap();
         configs = new ArrayList();
         poids = new ArrayList();
+        setPronfondeurMax(5);
         /*
         //Affichage des scores de chaques cartes au début de la partie
         Iterator<Carte> it = cartes.iterator();
@@ -71,12 +71,19 @@ public class JoueurIADifficile extends JoueurIA {
             return indice;
         } else {
             //Phase2
-            if(ttlConfigsPoids==0){
-                creerConfigsPoids(p);
-                ttlConfigsPoids = pronfondeurMax;
-            }else{
-                ttlConfigsPoids--;
-            }
+            configsPoids = new HashMap();
+            creerConfigsPoids(p);
+            int i = 0;
+            /*configsPoids.entrySet().forEach((en) -> {
+                System.out.println("Config: ");
+                String key = en.getKey();
+                String[] config = key.split("]");
+                for (int j = 0; j < config.length; j++) {
+                    System.out.println("\t"+config[j]);
+                }
+                int value = en.getValue();
+                //System.out.println(key);
+            });*/
             //indice = chooseCardPhase2(p);
             indice = getIndexMeilleurConfig(p, this.getMain());
             //System.out.println("Indice: " + indice);
@@ -1528,11 +1535,11 @@ public class JoueurIADifficile extends JoueurIA {
         }
 
         //return poids.get(indice);
-        if(configsPoids.get(pNewConfig.hashString()) == null){
+        /*if(configsPoids.get(pNewConfig.hashString()) == null){
             return getScoreConf(pNewConfig);
-        }else{
+        }else{*/
             return configsPoids.get(pNewConfig.hashString());
-        }
+        //}
     }
 
     private void creerConfigsPoids(Plateau p) {
@@ -1552,21 +1559,19 @@ public class JoueurIADifficile extends JoueurIA {
         //on doit créer pour chaque config possible une entrée dans notre hashmap
 
         ArrayList<Carte> cartesJouables = new ArrayList();
-        boolean isJ1 = true;
 
         //si on est le joueur 1
         if (getIsJ1()) {
             //si on est le premier a devoir jouer
             if (plateau.isJ1Courant()) {
-                cartesJouables = getMain();
+                cartesJouables = plateau.getJ1().getMain();
             } else {
                 cartesJouables = getCartesJouable(p.getCarteJ2());
             }
         } else {
-            isJ1 = false;
             //si on est le premier a devoir jouer
             if (!plateau.isJ1Courant()) {
-                cartesJouables = getMain();
+                cartesJouables = plateau.getJ2().getMain();
             } else {
                 cartesJouables = getCartesJouable(p.getCarteJ1());
             }
@@ -1575,7 +1580,8 @@ public class JoueurIADifficile extends JoueurIA {
         Iterator<Carte> it = cartesJouables.iterator();
         while (it.hasNext()) {
             Carte c = it.next();
-            workerMiniMax(plateau, isJ1, c, configsPoids, pronfondeurMax);
+            System.out.println(""+c.getFaction() + c.getForce());
+            workerMiniMax(plateau, getIsJ1(), c, configsPoids, getPronfondeurMax());
         }
     }
 
@@ -1600,11 +1606,14 @@ public class JoueurIADifficile extends JoueurIA {
         boolean premierJoueur;
 
         if (isJ1) {
+            //pNewConfig.getJ1().choisirCarte(getIndexCarteMain(c));
             pNewConfig.setCarteJ1(c);
-            premierJoueur = (pNewConfig.getCarteJ2() == null);
+            
+            premierJoueur = pNewConfig.isJ1Courant();
         } else {
+            //pNewConfig.getJ2().choisirCarte(getIndexCarteMain(c));
             pNewConfig.setCarteJ2(c);
-            premierJoueur = (pNewConfig.getCarteJ1() == null);
+            premierJoueur = !pNewConfig.isJ1Courant();
         }
 
         if (!premierJoueur) {
@@ -1632,7 +1641,6 @@ public class JoueurIADifficile extends JoueurIA {
             }
             //sinon
         } else {
-
             if (ttl > 0) {
                 boolean aMoiDeJouer = false;
                 ArrayList<Carte> cartesJouables = new ArrayList();
@@ -1671,7 +1679,12 @@ public class JoueurIADifficile extends JoueurIA {
                 Iterator<Carte> it = cartesJouables.iterator();
                 while (it.hasNext()) {
                     Carte carte = it.next();
-                    int score = workerMiniMax(pNewConfig, isJ1, carte, configsPoids, ttl-1);
+                    int score;
+                    if(aMoiDeJouer){
+                        score = workerMiniMax(pNewConfig, isJ1, carte, configsPoids, ttl-1);
+                    }else{
+                        score = workerMiniMax(pNewConfig, !isJ1, carte, configsPoids, ttl-1);
+                    }
                     if (aMoiDeJouer) {
                         if (score > scoreMax) {
                             scoreMax = score;
@@ -1683,24 +1696,27 @@ public class JoueurIADifficile extends JoueurIA {
                     }
                 }
                 if (aMoiDeJouer) {
-                    if(pNewConfig == null){
+                    /*if(pNewConfig == null){
                         System.out.println("test1");
-                    }
+                    }*/
                     //configs.add(pNewConfig);
                     //poids.add(scoreMax);
+                   
                     configsPoids.put(pNewConfig.hashString(), scoreMax);
                     return scoreMax;
                 } else {
-                    if(pNewConfig == null){
+                    /*if(pNewConfig == null){
                         System.out.println("test2");
-                    }
+                    }*/
                     //configs.add(pNewConfig);
                     //poids.add(scoreMin);
+                   
                     configsPoids.put(pNewConfig.hashString(), scoreMin);
                     return scoreMin;
                 }
             }else{
                 int scoreConf = getScoreConf(pNewConfig);
+                
                 configsPoids.put(pNewConfig.hashString(), scoreConf);
                 return scoreConf;
             }
@@ -1861,6 +1877,15 @@ public class JoueurIADifficile extends JoueurIA {
         return scoreConf;
     }
 
+    public int getPronfondeurMax() {
+        return pronfondeurMax;
+    }
+
+    public void setPronfondeurMax(int pronfondeurMax) {
+        this.pronfondeurMax = pronfondeurMax;
+    }
+
+    
     
     
 }
