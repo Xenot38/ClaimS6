@@ -12,14 +12,18 @@ package controler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import model.Carte;
 import model.Faction;
@@ -201,7 +205,7 @@ public class ControllerEnver {
                 CoupIA();
             }
         });
-
+        updateScore();
         if (p.isJ1Courant()) {
             if (p.getCarteJ1() != null) {
                 new Thread(iaJoue).start();
@@ -315,6 +319,235 @@ public class ControllerEnver {
             jeu.refMain1[i]=i;
             jeu.refMain2[i]=i;
         }
+    }
+    
+    
+    public void updateScore(){
+        int chevalier = 8;
+        int doppleGanger = 10;
+        int nain = 10;
+        int gobelin = 14;
+        
+        Iterator<Carte> it = p.getDefausse().iterator();
+        
+        while( it.hasNext()){
+            switch(it.next().getFaction()){
+                case Chevaliers:
+                    chevalier--;
+                    break;
+                case Doppelgangers:
+                    doppleGanger--;
+                    break;
+                case Nains:
+                    nain--;
+                    break;
+                case Gobelins:
+                    gobelin--;
+                    break;
+            }
+            
+        int chevalierJ2 = p.getNBCartesScore(false ,Faction.Chevaliers);
+        int doppleGangerJ2 = p.getNBCartesScore(false ,Faction.Doppelgangers);
+        int nainJ2 = p.getNBCartesScore(false ,Faction.Nains);
+        int gobelinJ2 = p.getNBCartesScore(false ,Faction.Gobelins);
+        int mvJ2 = p.getNBCartesScore(false ,Faction.MortsVivants);
+        
+        int chevalierJ1 = p.getNBCartesScore(true ,Faction.Chevaliers);
+        int doppleGangerJ1 = p.getNBCartesScore(true ,Faction.Doppelgangers);
+        int nainJ1 = p.getNBCartesScore(true ,Faction.Nains);
+        int gobelinJ1 = p.getNBCartesScore(true ,Faction.Gobelins);
+        int mvJ1 = p.getNBCartesScore(true ,Faction.MortsVivants);
+        
+        
+        int chevalierB = chevalier-(chevalierJ2+chevalierJ1);
+        int doppleGangerB = doppleGanger-(doppleGangerJ2+doppleGangerJ1);
+        int nainB = nain-(nainJ2+nainJ1);
+        int gobelinB = gobelin-(gobelinJ2+gobelinJ1);
+        int mvB = 10-(mvJ2+mvJ1);
+        
+        jeu.score.getChildren().clear();
+        jeu.chevalierGrid.getChildren().clear();
+        jeu.mortVivantGrid.getChildren().clear();
+        jeu.nainGrid.getChildren().clear();
+        jeu.doppelGangerGrid.getChildren().clear();
+        jeu.gobelinGrid.getChildren().clear();
+        
+        ///////CHEVALIER/////////
+        
+       /* Label chevalLabeler = new Label("chelvalier");
+        chevalLabeler.setRotate(-90);
+        jeu.score.add(chevalLabeler, 0, 4);*/
+        
+        
+        for(int i =0; i<chevalierJ2 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.RED);
+            jeu.score.add(p, 0, i);
+        }
+        for(int i =chevalierJ2; i<chevalierJ2+chevalierB ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            jeu.score.add(p, 0, i);
+        }
+        for(int i =chevalierJ2+chevalierB; i<chevalierJ2+chevalierB+chevalierJ1 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.GREEN);
+            jeu.score.add(p, 0, i);
+        }
+        ////////////
+        
+        ////////MortVivant/////////
+        for(int i =0; i<mvJ2 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.RED);
+            jeu.score.add(p, 1, i);
+        }
+        for(int i =mvJ2; i<mvJ2+mvB ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            jeu.score.add(p,1, i);
+        }
+        for(int i =mvJ2+mvB; i<mvJ2+mvB+mvJ1 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.GREEN);
+            jeu.score.add(p, 1, i);
+        }
+        ///////////////////////
+        
+        
+        
+        //////////DoppleGanger///////
+        for(int i =0; i<doppleGangerJ2 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.RED);
+            jeu.score.add(p, 2, i);
+        }
+        for(int i =doppleGangerJ2; i<doppleGangerJ2+doppleGangerB ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            jeu.score.add(p, 2, i);
+        }
+        for(int i =doppleGangerJ2+doppleGangerB; i<doppleGangerJ2+doppleGangerB+doppleGangerJ1 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.GREEN);
+            jeu.score.add(p, 2, i);
+        }
+        /////////////////////
+        
+        
+        //////////Nain////////////
+        for(int i =0; i<nainJ2 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.RED);
+            jeu.score.add(p,3, i);
+        }
+        for(int i =nainJ2; i<nainJ2+nainB ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            jeu.score.add(p, 3, i);
+        }
+        for(int i =nainJ2+nainB; i<nainJ2+nainB+nainJ1 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.GREEN);
+            jeu.score.add(p, 3, i);
+        }
+        //////////////////////
+        
+        ////////////Gobelin///////////
+        for(int i =0; i<gobelinJ2 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.RED);
+            jeu.score.add(p, 4, i);
+        }
+        for(int i =gobelinJ2; i<gobelinJ2+gobelinB ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.WHITE);
+            jeu.score.add(p, 4, i);
+        }
+        for(int i =gobelinJ2+gobelinB; i<gobelinJ2+gobelinB+gobelinJ1 ;i ++){
+           Polygon p= new Polygon();
+           p.getPoints().addAll(new Double[]{
+           0.0, 0.0,
+           0.0, 20.0,
+           20.0, 20.0,
+           20.0, 0.0 });
+           p.setFill(Color.GREEN);
+            jeu.score.add(p, 4, i);
+        }
+        ///////////////
+         
+        }
+        
     }
 
 }
