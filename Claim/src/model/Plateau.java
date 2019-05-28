@@ -59,7 +59,7 @@ public class Plateau implements Serializable{
                         case "facile":
                                 j2 = new JoueurIAFacile(mainTemp, false);
                                 break;
-                        case "moyen":
+                        case "moyenne":
                                 j2 = new JoueurIAMoyen(mainTemp, false, piocheTemp);
                                 break;
                         case "difficile":
@@ -105,7 +105,7 @@ public class Plateau implements Serializable{
                         case "facile":
                                 j2 = new JoueurIAFacile(mainTemp, false);
                                 break;
-                        case "moyen":
+                        case "moyenne":
                                 j2 = new JoueurIAMoyen(mainTemp, false, piocheTemp);
                                 break;
                         case "difficile":

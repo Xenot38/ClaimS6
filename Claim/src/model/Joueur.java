@@ -337,5 +337,16 @@ public abstract class Joueur implements Serializable {
         return indice;
     }
     
+    public int getNbCartesFactions(Faction f, ArrayList<Carte> arr){
+        int nbCF = 0;
+        Iterator<Carte> it = arr.iterator();
+        while (it.hasNext()) {
+            Carte c = it.next();
+            if(c.getFaction() == f){
+                nbCF++;
+            }
+        }
+        return nbCF;
+    }
     
 }
