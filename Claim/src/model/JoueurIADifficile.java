@@ -40,7 +40,7 @@ public class JoueurIADifficile extends JoueurIA {
         configsPoids = new HashMap();
         configs = new ArrayList();
         poids = new ArrayList();
-        setPronfondeurMax(3);
+        setPronfondeurMax(4);
         /*
         //Affichage des scores de chaques cartes au début de la partie
         Iterator<Carte> it = cartes.iterator();
@@ -221,11 +221,11 @@ public class JoueurIADifficile extends JoueurIA {
     public int chooseCardPhase2(Plateau p) {
         updateGrillePhase2(p);
         int indice = -1;
-        /*if (getNbTours() != 0) {
+        if (getNbTours() != 0) {
             if (getNbTours() % 2 == 0) {
                 setPronfondeurMax(getPronfondeurMax() + 1);
             }
-        }*/
+        }
         //Phase2
         configsPoids = new HashMap();
         creerConfigsPoids(p);
@@ -1384,25 +1384,32 @@ public class JoueurIADifficile extends JoueurIA {
     }
 
     public int getScoreConf(Plateau p) {
-        ArrayList<Integer> scoresFactions1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
-        scoresFactions1.set(0, p.getJ1().getNbCartesFactions(Faction.Nains,p.getJ1().getMain()));
-        scoresFactions1.set(1, p.getJ1().getNbCartesFactions(Faction.Chevaliers,p.getJ1().getMain()));
-        scoresFactions1.set(2, p.getJ1().getNbCartesFactions(Faction.Doppelgangers,p.getJ1().getMain()));
-        scoresFactions1.set(3, p.getJ1().getNbCartesFactions(Faction.Gobelins,p.getJ1().getMain()));
-        scoresFactions1.set(4, p.getJ1().getNbCartesFactions(Faction.MortsVivants,p.getJ1().getMain()));
+        ArrayList<Faction> factions = new ArrayList(Arrays.asList(Faction.Nains, Faction.Chevaliers, Faction.Doppelgangers, Faction.Gobelins, Faction.MortsVivants));
         
-        ArrayList<Integer> scoresFactions2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
-        scoresFactions2.set(0, p.getJ2().getNbCartesFactions(Faction.Nains,p.getJ2().getMain()));
-        scoresFactions2.set(1, p.getJ2().getNbCartesFactions(Faction.Chevaliers,p.getJ2().getMain()));
-        scoresFactions2.set(2, p.getJ2().getNbCartesFactions(Faction.Doppelgangers,p.getJ2().getMain()));
-        scoresFactions2.set(3, p.getJ2().getNbCartesFactions(Faction.Gobelins,p.getJ2().getMain()));
-        scoresFactions2.set(4, p.getJ2().getNbCartesFactions(Faction.MortsVivants,p.getJ2().getMain()));
+        ArrayList<Integer> nbCartesFactionsMain1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCartesFactionsMain1.set(0, p.getJ1().getNbCartesFactions(Faction.Nains,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(1, p.getJ1().getNbCartesFactions(Faction.Chevaliers,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(2, p.getJ1().getNbCartesFactions(Faction.Doppelgangers,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(3, p.getJ1().getNbCartesFactions(Faction.Gobelins,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(4, p.getJ1().getNbCartesFactions(Faction.MortsVivants,p.getJ1().getMain()));
         
+        ArrayList<Integer> nbCartesFactionsMain2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCartesFactionsMain2.set(0, p.getJ2().getNbCartesFactions(Faction.Nains,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(1, p.getJ2().getNbCartesFactions(Faction.Chevaliers,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(2, p.getJ2().getNbCartesFactions(Faction.Doppelgangers,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(3, p.getJ2().getNbCartesFactions(Faction.Gobelins,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(4, p.getJ2().getNbCartesFactions(Faction.MortsVivants,p.getJ2().getMain()));
+        
+        
+        ArrayList<Integer> coefFactions = new ArrayList(Arrays.asList(4, 4, 4, 4, 4));
         
         int scoreConf = 0;
 
         int factionsVotesJ1 = 0;
         int factionsVotesJ2 = 0;
+        
+        int factionsVotesJ1Certain = 0;
+        int factionsVotesJ2Certain = 0;
 
         int scoresMain1 = 0;
         int scoresMain2 = 0;
@@ -1415,11 +1422,11 @@ public class JoueurIADifficile extends JoueurIA {
         nbCarteFactions1.set(4, p.getNBCartesScore(true, Faction.MortsVivants));
 
         ArrayList<Integer> nbCarteFactions2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
-        nbCarteFactions1.set(0, p.getNBCartesScore(false, Faction.Nains));
-        nbCarteFactions1.set(1, p.getNBCartesScore(false, Faction.Chevaliers));
-        nbCarteFactions1.set(2, p.getNBCartesScore(false, Faction.Doppelgangers));
-        nbCarteFactions1.set(3, p.getNBCartesScore(false, Faction.Gobelins));
-        nbCarteFactions1.set(4, p.getNBCartesScore(false, Faction.MortsVivants));
+        nbCarteFactions2.set(0, p.getNBCartesScore(false, Faction.Nains));
+        nbCarteFactions2.set(1, p.getNBCartesScore(false, Faction.Chevaliers));
+        nbCarteFactions2.set(2, p.getNBCartesScore(false, Faction.Doppelgangers));
+        nbCarteFactions2.set(3, p.getNBCartesScore(false, Faction.Gobelins));
+        nbCarteFactions2.set(4, p.getNBCartesScore(false, Faction.MortsVivants));
 
         ArrayList<Integer> forceCarteFactions1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
         forceCarteFactions1.set(0, p.getMaxCartesScore(true, Faction.Nains));
@@ -1435,7 +1442,8 @@ public class JoueurIADifficile extends JoueurIA {
         forceCarteFactions2.set(3, p.getMaxCartesScore(false, Faction.Gobelins));
         forceCarteFactions2.set(4, p.getMaxCartesScore(false, Faction.MortsVivants));
 
-        Iterator<Integer> it = nbCarteFactions1.iterator();
+        //votes factions
+        /*Iterator<Integer> it = nbCarteFactions1.iterator();
         int i = 0;
         while (it.hasNext()) {
             int nbCaFa = it.next();
@@ -1451,28 +1459,64 @@ public class JoueurIADifficile extends JoueurIA {
                 factionsVotesJ2++;
             }
             i++;
+        }*/
+        
+        //votes factions
+        Iterator<Integer> it = nbCarteFactions1.iterator();
+        int j = 0;
+        while (it.hasNext()) {
+            int nbCaFa = it.next();
+            if (nbCaFa > nbCarteFactions2.get(j)) {
+                if(nbCaFa > (nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    coefFactions.set(j,3);
+                    factionsVotesJ1Certain++;
+                }
+                factionsVotesJ1++;
+            } else if (nbCaFa == nbCarteFactions2.get(j)) {
+                if((nbCaFa == nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    if (forceCarteFactions1.get(j) > forceCarteFactions2.get(j)) {
+                        coefFactions.set(j,3);
+                        factionsVotesJ1Certain++;
+                    } else if (forceCarteFactions1.get(j) < forceCarteFactions2.get(j)) {
+                        coefFactions.set(j,3);
+                        factionsVotesJ2Certain++;
+                    }
+                }
+                if (forceCarteFactions1.get(j) > forceCarteFactions2.get(j)) {
+                    factionsVotesJ1++;
+                } else if (forceCarteFactions1.get(j) < forceCarteFactions2.get(j)) {
+                    factionsVotesJ2++;
+                }
+            } else {
+                if(nbCaFa < (nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    factionsVotesJ1Certain++;
+                    coefFactions.set(j,3);
+                }
+                factionsVotesJ2++;
+            }
+            j++;
         }
 
         //scoreMain
         //J1
-        Iterator<Carte> it2 = p.getJ1().getMain().iterator();
-        while (it2.hasNext()) {
-            Carte c = it2.next();
-            scoresMain1 += getScore(c);
+        Iterator<Carte> it3 = p.getJ1().getMain().iterator();
+        while (it3.hasNext()) {
+            Carte c = it3.next();
+            scoresMain1 += getScore(c) * coefFactions.get(getIndexfactions(c.getFaction()));
         }
 
         //J2
-        it2 = p.getJ2().getMain().iterator();
-        while (it2.hasNext()) {
-            Carte c = it2.next();
-            scoresMain2 += getScore(c);
+        it3 = p.getJ2().getMain().iterator();
+        while (it3.hasNext()) {
+            Carte c = it3.next();
+            scoresMain2 += getScore(c) * coefFactions.get(getIndexfactions(c.getFaction()));
         }
 
         //Calcul score conf        
         if (getIsJ1()) {
-            scoreConf = (factionsVotesJ1 - factionsVotesJ2) + (scoresMain1 - scoresMain2);
+            scoreConf = (factionsVotesJ1 - factionsVotesJ2) + (scoresMain1 - scoresMain2) + (factionsVotesJ1Certain - factionsVotesJ2Certain);
         } else {
-            scoreConf = (factionsVotesJ2 - factionsVotesJ1) + (scoresMain2 - scoresMain1);
+            scoreConf = (factionsVotesJ2 - factionsVotesJ1) + (scoresMain2 - scoresMain1) + (factionsVotesJ2Certain - factionsVotesJ1Certain);
         }
 
         return scoreConf;
