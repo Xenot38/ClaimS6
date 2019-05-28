@@ -22,6 +22,19 @@ import javafx.scene.layout.VBox;
  * @author kekae
  */
 public class SceneOptionPartie {
+    
+    public Button facile = new Button("Facile");
+    public Button moyen = new Button("Moyen");
+    public Button difficile = new Button("Difficile");
+    public Button resolution1 = new Button("1680X1050");
+    public Button resolution2 = new Button("1920X1080");
+    public Button resolution3 = new Button("2560x1440");
+    public Button retour = new Button("Retour");
+    public Button lancer = new Button("Lancer");
+    public String difficulteIa = "facile";
+    public String resolutionecran = "1920X1080";
+
+    
     public SceneOptionPartie(){
         
     }
@@ -46,6 +59,7 @@ public class SceneOptionPartie {
         Pane esp7 = new Pane(can7);
         
         
+        
         HBox textIa = new HBox();
         Label titreIa = new Label("Veuillez selectionner une diffculter pour votre adversaire");
         textIa.getChildren().add(titreIa);
@@ -53,9 +67,7 @@ public class SceneOptionPartie {
         //////////////////////////////////////////////
         //Button de selection de difficulter de l'IA//
         HBox choixIa = new HBox();
-        Button facile = new Button("Facile");
-        Button moyen = new Button("Moyen");
-        Button difficile = new Button("Difficile");
+        
         
         //choixIa.getChildren().add(esp4);
         choixIa.getChildren().add(facile);
@@ -64,11 +76,20 @@ public class SceneOptionPartie {
         choixIa.setAlignment(Pos.BASELINE_CENTER);
         ///////////////////////////////////////////////
         
+        HBox textResolution = new HBox();
+        Label titreResolution = new Label("Veuillez selectionner la dimension d'ecran qui vous convient");
+        textResolution.getChildren().add(titreResolution);
+        textResolution.setAlignment(Pos.BASELINE_CENTER);
+        //Choix de la reolution de l'ecran//
+        HBox choixResolution = new HBox();
+        choixResolution.getChildren().add(resolution1);
+        choixResolution.getChildren().add(resolution2);
+        choixResolution.getChildren().add(resolution3);
+        choixResolution.setAlignment(Pos.BASELINE_CENTER);
         /////////////////////////////////////////////
         //Button de retour - lancement de la partie//
         HBox retourJouer = new HBox();
-        Button retour = new Button("Retour");
-        Button lancer = new Button("Lancer");
+        
         
         retourJouer.getChildren().add(esp5);
         retourJouer.getChildren().add(retour);
@@ -81,7 +102,7 @@ public class SceneOptionPartie {
         HBox.setHgrow(esp7, Priority.ALWAYS);
         
         //////////////////////////////////////////////
-        
+        VBox.setVgrow(esp4, Priority.ALWAYS);
         
         
         VBox boiteScene = new VBox();
@@ -90,6 +111,9 @@ public class SceneOptionPartie {
         boiteScene.getChildren().add(textIa);
         boiteScene.getChildren().add(choixIa);
         boiteScene.getChildren().add(esp2);
+        boiteScene.getChildren().add(textResolution);
+        boiteScene.getChildren().add(choixResolution);
+        boiteScene.getChildren().add(esp4);
         boiteScene.getChildren().add(retourJouer);
         boiteScene.getChildren().add(esp3);
         

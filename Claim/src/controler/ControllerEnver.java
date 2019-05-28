@@ -47,19 +47,15 @@ public class ControllerEnver {
     public SceneCharger charger;
     public SceneMenu menu;
     public SceneOptionPartie option;
-    int choixScene = 1;
+    int choixScene = 2;
     boolean J1joue = true;
     public Scene scene;
     Stage stage;
 
-    public ControllerEnver(Stage s) {
-        p = new Plateau("facile");
-        p.setCarteEnJeu(p.getPioche().pop());
-        p.setCarteEnJeuPerdant(p.getPioche().pop());
+    public ControllerEnver(Stage s) {        
         stage = s;
         menu = new SceneMenu();
         option = new SceneOptionPartie();
-        jeu = new SceneJeu(p);
         charger = new SceneCharger();
     }
 
@@ -72,7 +68,8 @@ public class ControllerEnver {
                 stage.show();
                 break;
             case 2:
-                scene = menu.creerMenu();
+                setupOption();
+                scene = option.creerOptionPartie(600,250);
                 stage.setScene(scene);
                 stage.show();
                 break;
@@ -94,7 +91,7 @@ public class ControllerEnver {
     public void setupMenu(){
         menu.Jouer.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                choixScene = 4;
+                choixScene = 2;
                 try {
                     afficher();
                 } catch (FileNotFoundException ex) {
@@ -120,6 +117,82 @@ public class ControllerEnver {
 
 
     public void setupOption() {
+        option.facile.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                option.difficulteIa="facile";
+                
+                System.out.println(option.difficulteIa);
+            }
+        });
+        option.moyen.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                option.difficulteIa="moyenne";
+                System.out.println(option.difficulteIa);
+            }
+        });
+        option.difficile.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                option.difficulteIa="difficile";
+                System.out.println(option.difficulteIa);
+            }
+        });
+        option.resolution1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 4;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        option.resolution2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 4;
+                
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        option.resolution3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 4;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        option.retour.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 1;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        option.lancer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                choixScene = 4;
+                p = new Plateau(option.difficulteIa);
+                p.setCarteEnJeu(p.getPioche().pop());
+                p.setCarteEnJeuPerdant(p.getPioche().pop());
+                jeu = new SceneJeu(p);
+                try {
+                    System.out.println("looooollllooll");
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
     public void setupCharger() {

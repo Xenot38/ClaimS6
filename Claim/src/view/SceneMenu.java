@@ -39,8 +39,8 @@ public class SceneMenu {
     
     public Button Jouer = new Button("Jouer");
     public Button Charger = new Button("Charger");
-    public Button Option  = new Button("Option");
     public Button Quitter = new Button("Quitter");
+    public Button Regles = new Button("Règles");
     
     
     public SceneMenu(){
@@ -73,14 +73,9 @@ public class SceneMenu {
 
         // Une boite horizontale avec 3 bouts de texte
         VBox Titre = new VBox();
-        Label label = new Label("Claim");
-        Titre.getChildren().add(label);
         // Le texte est centré dans l'espace qu'on lui alloue
-        label.setAlignment(Pos.CENTER);
         Titre.setAlignment(Pos.BASELINE_CENTER);
         // S'il y a de la place, on donne tout au label
-        VBox.setVgrow(label, Priority.ALWAYS);
-        label.setMaxWidth(Double.MAX_VALUE);
 
 
         //menu bouton
@@ -88,12 +83,11 @@ public class SceneMenu {
         
         Button_Menu.getChildren().add(Jouer);
         Button_Menu.getChildren().add(Charger);
-        Button_Menu.getChildren().add(Option);
         Button_Menu.getChildren().add(Quitter);
         Button_Menu.setAlignment(Pos.BASELINE_CENTER);
 
         HBox Regles_Droite = new HBox();
-        Button Regles = new Button("Règles");
+        
         Regles_Droite.getChildren().add(esp4);
         Regles_Droite.getChildren().add(Regles);
         Regles.setAlignment(Pos.BOTTOM_RIGHT);
