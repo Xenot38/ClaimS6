@@ -73,6 +73,10 @@ public class SceneJeu {
    public Label gobelinScore = new Label("0");
    public int tailleCarteX = 200;
    public int tailleCarteY = 175;
+   public Button sauver = new Button("sauvegarder");
+   public Button recommencer = new Button("recommencer");
+   public Button menu = new Button("menu");
+   public Button Quitter = new Button("quitter");
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -82,7 +86,7 @@ public class SceneJeu {
    public Scene creerjeu(int x,int y) throws FileNotFoundException{
        ////////////////////////////
        BackgroundImage myBI = null;
-       try{  myBI= new BackgroundImage(new Image(new File("ressources/images/bg.png").toURI().toString(), 1900, 1000, false, true),
+       try{  myBI= new BackgroundImage(new Image(new File("ressources/images/bg.png").toURI().toString(), 2500, 1400, false, true),
         BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
         BackgroundSize.DEFAULT);}
        catch(Exception e){
@@ -276,19 +280,39 @@ public class SceneJeu {
        
        
        
+       VBox buttonGauche = new VBox();
        
+       Canvas canvasbutton1 = new Canvas(40,40);
+       Canvas canvasbutton2 = new Canvas(20,20);
+       Canvas canvasbutton3 = new Canvas(20,20);
+       Canvas canvasbutton4 = new Canvas(20,20);
+       buttonGauche.getChildren().add(canvasbutton1);
+       buttonGauche.getChildren().add(sauver);
+       buttonGauche.getChildren().add(canvasbutton2);
+       buttonGauche.getChildren().add(recommencer);
+       buttonGauche.getChildren().add(canvasbutton3);
+       buttonGauche.getChildren().add(menu);
+       buttonGauche.getChildren().add(canvasbutton4);
+       buttonGauche.getChildren().add(Quitter);
        
-       
-       
+       Canvas canCentre10 = new Canvas();
+       Pane paneCentre10 = new Pane(canCentre10);
+       HBox.setHgrow(paneCentre10, Priority.ALWAYS);
+       Canvas canCentre11 = new Canvas();
+       Pane paneCentre11 = new Pane(canCentre11);
+       HBox.setHgrow(paneCentre11, Priority.ALWAYS);
 
-       partieCentrale.getChildren().add(paneCentre4);   
+       partieCentrale.getChildren().add(paneCentre4);
+       partieCentrale.getChildren().add(buttonGauche);
        partieCentrale.getChildren().add(paneCentre8);
+       partieCentrale.getChildren().add(paneCentre10);
        partieCentrale.getChildren().add(defausse);
        partieCentrale.getChildren().add(paneCentre6);
        partieCentrale.getChildren().add(carteJouer);
        partieCentrale.getChildren().add(paneCentre7);
        partieCentrale.getChildren().add(carteAGagner);
        partieCentrale.getChildren().add(paneCentre9);
+       partieCentrale.getChildren().add(paneCentre11);
        partieCentrale.getChildren().add(score);
        partieCentrale.getChildren().add(paneCentre5);
        

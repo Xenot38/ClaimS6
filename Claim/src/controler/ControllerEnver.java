@@ -10,9 +10,16 @@ package controler;
  * @author kekae
  */
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Task;
@@ -21,6 +28,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
@@ -36,6 +44,7 @@ import model.Carte;
 import model.Faction;
 import model.Plateau;
 import view.CarteView;
+import view.Règle;
 import view.SceneCharger;
 import view.SceneJeu;
 import view.SceneMenu;
@@ -47,13 +56,17 @@ public class ControllerEnver {
     public Plateau p;
     public SceneJeu jeu;
     public SceneCharger charger;
+    public Règle regle;
     public SceneMenu menu;
     public SceneOptionPartie option;
     int choixScene = 1;
     boolean J1joue = true;
+    boolean partieEncour = false;
     public Scene scene;
     public static int tailleCarteX = 200;
     public static int tailleCarteY = 175;
+    public int tailleFenetreJeuX= 1900;
+    public int tailleFenetreJeuY= 1000;
     Stage stage;
 
     public ControllerEnver(Stage s) {        
@@ -61,6 +74,7 @@ public class ControllerEnver {
         menu = new SceneMenu();
         option = new SceneOptionPartie();
         charger = new SceneCharger();
+        regle = new Règle();
     }
 
     public void afficher() throws FileNotFoundException {
@@ -69,23 +83,33 @@ public class ControllerEnver {
                 setupMenu();
                 scene = menu.creerMenu();
                 stage.setScene(scene);
+                stage.setResizable(false);
                 stage.show();
                 break;
             case 2:
                 setupOption();
                 scene = option.creerOptionPartie(600,250);
                 stage.setScene(scene);
+                stage.setResizable(false);
                 stage.show();
                 break;
             case 3:
                 scene = menu.creerMenu();
                 stage.setScene(scene);
+                stage.setResizable(false);
                 stage.show();
                 break;
             case 4:
                 setupJeu();
-                scene = jeu.creerjeu(1900, 1000);
+                scene = jeu.creerjeu(tailleFenetreJeuX, tailleFenetreJeuY);
                 scene.getStylesheets().add("view/css/Jeu.css");
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
+                break;
+            case 5:
+                setupRegle();
+                scene = regle.creerSceneRegle();
                 stage.setScene(scene);
                 stage.show();
                 break;
@@ -110,15 +134,73 @@ public class ControllerEnver {
                 System.exit(0);
             }
         });
+        
+        
+        menu.Regles.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+               choixScene = 5;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
     
     public void setupJeu() {
         jeu.Main1 = getHBMain(p.getJ1().getMain(), 1);
         jeu.Main2 = getHBMainIA(p.getJ2().getMain(), 0);
+        jeu.sauver.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+               Sauvegarder(p);
+            }
+        });
+        jeu.recommencer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                p = new Plateau(p.getJ2().getDifficulte());
+                p.setCarteEnJeu(p.getPioche().pop());
+                p.setCarteEnJeuPerdant(p.getPioche().pop());
+                jeu = new SceneJeu(p);
+                
+               choixScene = 4;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        jeu.menu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+               choixScene = 1;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        jeu.Quitter.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+               System.exit(0);
+            }
+        });
         updateScore();
 
     }
-
+    public void setupRegle(){
+        regle.retour.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+               choixScene = 1;
+                try {
+                    afficher();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
 
 
     public void setupOption() {
@@ -143,27 +225,34 @@ public class ControllerEnver {
         });
         option.resolution1.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
+                tailleCarteX= 170;
+                tailleCarteY=150;
+                tailleFenetreJeuX = 1600;
+                tailleFenetreJeuY = 980;
+                largeurScore = 35.0;
+                hauteurScore = 275.0;
+                
             }
         });
         option.resolution2.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                choixScene = 4;
+                tailleCarteX= 200;
+                tailleCarteY=175;
+                tailleFenetreJeuX = 1900;
+                tailleFenetreJeuY = 1000;
+                largeurScore = 40.0;
+                hauteurScore = 300.0;
                 
-                try {
-                    afficher();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         });
         option.resolution3.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                choixScene = 4;
-                try {
-                    afficher();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                tailleCarteX= 275;
+                tailleCarteY=235;
+                tailleFenetreJeuX = 2500;
+                tailleFenetreJeuY = 1400;
+                largeurScore = 50.0;
+                hauteurScore = 350.0;
             }
         });
         
@@ -328,10 +417,11 @@ public class ControllerEnver {
             }
         } else {
             if (p.getCarteJ2() != null) {
-                /*for(int i =0;i<p.getJ1().getMain().size();i++){
-                    if(p.isJouable(jeu.refMain1[i])){
-                    jeu.arMain1.get(i).getStyleClass().add("carte-jouable");}
-                }*/
+                ArrayList<Carte> arcarte = p.getJ1().getCartesJouable(p.getCarteJ2());
+                for(int i =0;i<p.getJ1().getMain().size();i++){
+                    if(p.getJ1().isCarteJouable(arcarte,p.getJ1().getMain().get(jeu.refMain1[i]))){
+                    jeu.arMain1.get(i).getPane().getStyleClass().add("carte-jouable");}
+                }
                 setJ1joue(true);
             } else {
                 new Thread(iaJoue).start();
@@ -372,16 +462,16 @@ public class ControllerEnver {
                     
                     
                 jeu.carteJouerJoueur1.getPane().getChildren().clear();
-                ImageView imageSelected1 = creerImageView("ressources/images/CarteJouerJ1.png",200,175);
+                ImageView imageSelected1 = creerImageView("ressources/images/CarteJouerJ1.png",tailleCarteX,tailleCarteY);
                 jeu.carteJouerJoueur1.SetImage(imageSelected1);
 
                 jeu.carteJouerJoueur2.getPane().getChildren().clear();
-                ImageView imageSelected2 = creerImageView("ressources/images/CarteJouerJ2.png",200,175);
+                ImageView imageSelected2 = creerImageView("ressources/images/CarteJouerJ2.png",tailleCarteX,tailleCarteY);
                 jeu.carteJouerJoueur2.SetImage(imageSelected2);
                 
                 if(p.getPhase()==1){
-                    ImageView im1 = creerImageView(p.getCarteEnJeu().getCheminImage(),200,175);
-                    ImageView im2 = creerImageView(p.getCarteEnJeuPerdant().getCheminImage(),200,175);
+                    ImageView im1 = creerImageView(p.getCarteEnJeu().getCheminImage(),tailleCarteX,tailleCarteY);
+                    ImageView im2 = creerImageView(p.getCarteEnJeuPerdant().getCheminImage(),tailleCarteX,tailleCarteY);
                     p.calculPli();
                     jeu.PartisanJ1.getPane().getChildren().clear();
                     jeu.PartisanJ2.getPane().getChildren().clear();
@@ -397,7 +487,7 @@ public class ControllerEnver {
                             jeu.PartisanJ1.SetImage(im2);}
                             p.setCarteEnJeu(p.getPioche().pop());
                             p.setCarteEnJeuPerdant(p.getPioche().pop());
-                            ImageView imageSelected3 = creerImageView(p.getCarteEnJeu().getCheminImage(),200,175);                
+                            ImageView imageSelected3 = creerImageView(p.getCarteEnJeu().getCheminImage(),tailleCarteX,tailleCarteY);                
                             jeu.centreCarteAGagner.getPane().getChildren().clear();
                             jeu.centreCarteAGagner.SetImage(imageSelected3);
                     
@@ -709,5 +799,53 @@ public class ControllerEnver {
         }
         
     }
+    public void Sauvegarder(Plateau p){
+                String sep = java.io.File.separator;
+                String home = System.getProperty("user.home");
+                String chemin = home + sep + "SauvegardesClaim";
+                if (!Files.exists(Paths.get(chemin))) {
+                        new File(chemin).mkdirs();
+                        System.out.println("Le dossier " + chemin + " a été créé");   
+                }
+
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Choisissez le nom du fichier sauvegardé");
+                String nomFichier = sc.nextLine();
+                chemin = chemin + sep + nomFichier;
+                System.out.println("Le fichier a pour chemin " + chemin);
+                File file = new File(chemin);
+                try {
+                        file.createNewFile();
+                        FileOutputStream fos = new FileOutputStream(chemin);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(p);
+                        oos.close();
+                }
+                catch(Exception e) {
+                        System.out.println("Impossible de créer ce fichier");
+                }
+        }
+    public Plateau Charger(){
+                String sep = java.io.File.separator;
+                String home = System.getProperty("user.home");
+                String chemin = home + sep + "SauvegardesClaim";
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Choisissez le nom du fichier a charger");
+                String nomFichier = sc.nextLine();
+                chemin = chemin + sep + nomFichier;
+                System.out.println("Le fichier a pour chemin " + chemin);
+                Plateau plateauCharge = null;
+                try{
+                        FileInputStream fin = new FileInputStream(chemin);
+                        ObjectInputStream ois = new ObjectInputStream(fin);
+                        plateauCharge = (Plateau) ois.readObject();
+                        ois.close();
+                }
+                catch(Exception e){
+                        System.out.println("lul");
+                }
+                
+                return plateauCharge;
+        }
 
 }
