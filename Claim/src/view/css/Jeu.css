@@ -10,6 +10,11 @@ and open the template in the editor.
     -fx-border-width: 4;
     -fx-margin: 4;
 }
+.carte-jouableIA{
+    -fx-border-color: #800000;
+    -fx-border-width: 4;
+    -fx-margin: 4;
+}
 .carte {
     -fx-border-width: 0;
 }

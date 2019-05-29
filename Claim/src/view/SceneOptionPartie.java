@@ -7,11 +7,18 @@ package view;
 
 import static controler.Launcher.hauteur;
 import static controler.Launcher.largeur;
+import java.io.File;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -40,6 +47,18 @@ public class SceneOptionPartie {
     }
     
     public Scene creerOptionPartie(int x, int y){
+        VBox boiteScene = new VBox();
+        Scene s = new Scene(boiteScene, x, y);
+        s.getStylesheets().add("view/css/Option.css");
+        facile.getStyleClass().add("buttonChoisi");
+        difficile.getStyleClass().add("button");
+        moyen.getStyleClass().add("button");
+        resolution1.getStyleClass().add("button");
+        resolution2.getStyleClass().add("buttonChoisi");
+        resolution3.getStyleClass().add("button");
+         lancer.getStyleClass().add("button");
+        retour.getStyleClass().add("button");
+       
         Canvas can_thon = new Canvas();
         Pane esp1 = new Pane(can_thon);
 
@@ -58,10 +77,21 @@ public class SceneOptionPartie {
         Canvas can7 = new Canvas();
         Pane esp7 = new Pane(can7);
         
+        Canvas can8 = new Canvas(10,10);
+        Canvas can9 = new Canvas(10,10);
         
+        
+        
+        BackgroundImage myBI = null;
+       try{  myBI= new BackgroundImage(new Image(new File("ressources/images/bg2.png").toURI().toString(), 600, 250, false, true),
+        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+        BackgroundSize.DEFAULT);}
+       catch(Exception e){
+       }
         
         HBox textIa = new HBox();
-        Label titreIa = new Label("Veuillez selectionner une diffculter pour votre adversaire");
+        Label titreIa = new Label("Veuillez sélectionner une difficulté pour votre adversaire");
+        titreIa.getStyleClass().add("label");
         textIa.getChildren().add(titreIa);
         textIa.setAlignment(Pos.BASELINE_CENTER);
         //////////////////////////////////////////////
@@ -77,7 +107,8 @@ public class SceneOptionPartie {
         ///////////////////////////////////////////////
         
         HBox textResolution = new HBox();
-        Label titreResolution = new Label("Veuillez selectionner la dimension d'ecran qui vous convient");
+        Label titreResolution = new Label("Veuillez sélectionner la dimension d'écran qui vous convient");
+        titreResolution.getStyleClass().add("label");
         textResolution.getChildren().add(titreResolution);
         textResolution.setAlignment(Pos.BASELINE_CENTER);
         //Choix de la reolution de l'ecran//
@@ -105,24 +136,26 @@ public class SceneOptionPartie {
         VBox.setVgrow(esp4, Priority.ALWAYS);
         
         
-        VBox boiteScene = new VBox();
         
         boiteScene.getChildren().add(esp1);
         boiteScene.getChildren().add(textIa);
+        boiteScene.getChildren().add(can8);
         boiteScene.getChildren().add(choixIa);
         boiteScene.getChildren().add(esp2);
         boiteScene.getChildren().add(textResolution);
+        boiteScene.getChildren().add(can9);
         boiteScene.getChildren().add(choixResolution);
         boiteScene.getChildren().add(esp4);
         boiteScene.getChildren().add(retourJouer);
         boiteScene.getChildren().add(esp3);
+        boiteScene.setBackground(new Background(myBI));
         
         VBox.setVgrow(esp1, Priority.ALWAYS);
         VBox.setVgrow(esp2, Priority.ALWAYS);
         VBox.setVgrow(esp3, Priority.ALWAYS);
         
 
-        Scene s = new Scene(boiteScene, x, y);
+        
         return s;
     }
     

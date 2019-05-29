@@ -73,10 +73,10 @@ public class SceneJeu {
    public Label gobelinScore = new Label("0");
    public int tailleCarteX = 200;
    public int tailleCarteY = 175;
-   public Button sauver = new Button("sauvegarder");
-   public Button recommencer = new Button("recommencer");
-   public Button menu = new Button("menu");
-   public Button Quitter = new Button("quitter");
+   public Button sauver = new Button("Sauvegarder");
+   public Button recommencer = new Button("Recommencer");
+   public Button menu = new Button("Menu");
+   public Button Quitter = new Button("Quitter");
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -90,7 +90,7 @@ public class SceneJeu {
         BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
         BackgroundSize.DEFAULT);}
        catch(Exception e){
-           System.out.println("lol ça n'a pas charger mdr");
+           
        }
        // historique //
        /*Canvas canHistorique = new Canvas(400,900);

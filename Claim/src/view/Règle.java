@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
  * @author kekae
  */
 public class Règle {
-    public Button retour = new Button("retour");
+    public Button retour = new Button("Retour");
     public Règle(){
         
     }
