@@ -10,7 +10,7 @@ and open the template in the editor.
     -fx-border-width: 4;
 }
 .carte {
-    
+    -fx-border-width: 0;
 }
 
 .label{

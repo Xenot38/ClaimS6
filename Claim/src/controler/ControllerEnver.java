@@ -299,9 +299,9 @@ public class ControllerEnver {
                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent e) {
-                        /*for(int i =0;i<p.getJ1().getMain().size();i++){
-                            jeu.arMain1.get(i).getStyleClass().add("carte");
-                        }*/
+                        for(int i =0;i<p.getJ1().getMain().size();i++){
+                            jeu.arMain1.get(i).getPane().getStyleClass().clear();
+                        }
                         
                         if (J1joue && p.containsCard(p.getJ1().getCartesJouable(p.getCarteJ2()),p.getJ1().getMain().get(jeu.refMain1[test]))) {
                             
@@ -417,9 +417,17 @@ public class ControllerEnver {
             }
         } else {
             if (p.getCarteJ2() != null) {
+                for (int i=0; i<jeu.arMain1.size();i++){
+                    jeu.arMain1.get(i).getPane().getChildren().clear();
+                }
+                for (int i=0; i<jeu.arMain2.size();i++){
+                    jeu.arMain2.get(i).getPane().getChildren().clear();
+                }
+                setupJeuPhase1();
                 ArrayList<Carte> arcarte = p.getJ1().getCartesJouable(p.getCarteJ2());
                 for(int i =0;i<p.getJ1().getMain().size();i++){
                     if(p.getJ1().isCarteJouable(arcarte,p.getJ1().getMain().get(jeu.refMain1[i]))){
+                    jeu.arMain1.get(i).getPane().getStyleClass().clear();
                     jeu.arMain1.get(i).getPane().getStyleClass().add("carte-jouable");}
                 }
                 setJ1joue(true);
@@ -517,7 +525,14 @@ public class ControllerEnver {
         imageSelected.setImage(im);
         return imageSelected;
     }
-    
+    public void setupJeuPhase1(){
+        for (int i =0; i<p.getJ1().getMain().size();i++){
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),tailleCarteX,tailleCarteY));
+            jeu.arMain2.get(i).SetImage(creerImageView("ressources/images/Dos.png",tailleCarteX,tailleCarteY));
+            jeu.refMain1[i]=i;
+            jeu.refMain2[i]=i;
+        }
+    }
     
     public void setupJeuPhase2(){
         for (int i =0; i<p.getJ1().getMain().size();i++){
