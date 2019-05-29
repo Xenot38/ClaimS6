@@ -40,7 +40,7 @@ public class JoueurIADifficile extends JoueurIA {
         configsPoids = new HashMap();
         configs = new ArrayList();
         poids = new ArrayList();
-        setPronfondeurMax(3);
+        setPronfondeurMax(5);
         /*
         //Affichage des scores de chaques cartes au début de la partie
         Iterator<Carte> it = cartes.iterator();
@@ -221,11 +221,11 @@ public class JoueurIADifficile extends JoueurIA {
     public int chooseCardPhase2(Plateau p) {
         updateGrillePhase2(p);
         int indice = -1;
-        /*if (getNbTours() != 0) {
+        if (getNbTours() != 0) {
             if (getNbTours() % 2 == 0) {
                 setPronfondeurMax(getPronfondeurMax() + 1);
             }
-        }*/
+        }
         //Phase2
         configsPoids = new HashMap();
         creerConfigsPoids(p);
@@ -1509,25 +1509,38 @@ public class JoueurIADifficile extends JoueurIA {
             Carte c = it3.next();
             scoresMain2 += getScore(c) * coefFactions.get(getIndexfactions(c.getFaction()));
         }
+        
+        int j1Victory = -1;
+
+        
 
         //victoire j1
         if(factionsVotesJ1Certain >= 3){
-            if(getIsJ1()){
-                
-            }
-        //victoire j1
+            j1Victory = 1000000;
+        //victoire j2
         }else if(factionsVotesJ2Certain >= 3){
-            
-        }else{
+            j1Victory = -1000000;
+        }
+        
+        //si la partie n'a pas encore de gagnant
+        if(j1Victory == -1){
             //Calcul score conf        
             if (getIsJ1()) {
-                scoreConf = (factionsVotesJ1 - factionsVotesJ2)*1000 + (scoresMain1 - scoresMain2) + (factionsVotesJ1Certain - factionsVotesJ2Certain)*10000;
+                scoreConf = (factionsVotesJ1 - factionsVotesJ2)*1000 + (scoresMain1 - scoresMain2) + (factionsVotesJ1Certain - factionsVotesJ2Certain)*20000;
             } else {
-                scoreConf = (factionsVotesJ2 - factionsVotesJ1)*1000 + (scoresMain2 - scoresMain1) + (factionsVotesJ2Certain - factionsVotesJ1Certain)*10000;
+                scoreConf = (factionsVotesJ2 - factionsVotesJ1)*1000 + (scoresMain2 - scoresMain1) + (factionsVotesJ2Certain - factionsVotesJ1Certain)*20000;
+            }
+            return scoreConf;
+            
+        }else{
+            
+            if (getIsJ1()) {
+                return j1Victory;
+            } else {
+                return -1 * j1Victory;
             }
         }
         
-        return scoreConf;
     }
 
     public int getPronfondeurMax() {
