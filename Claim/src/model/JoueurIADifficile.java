@@ -40,7 +40,7 @@ public class JoueurIADifficile extends JoueurIA {
         configsPoids = new HashMap();
         configs = new ArrayList();
         poids = new ArrayList();
-        setPronfondeurMax(4);
+        setPronfondeurMax(3);
         /*
         //Affichage des scores de chaques cartes au début de la partie
         Iterator<Carte> it = cartes.iterator();
@@ -221,11 +221,11 @@ public class JoueurIADifficile extends JoueurIA {
     public int chooseCardPhase2(Plateau p) {
         updateGrillePhase2(p);
         int indice = -1;
-        if (getNbTours() != 0) {
+        /*if (getNbTours() != 0) {
             if (getNbTours() % 2 == 0) {
                 setPronfondeurMax(getPronfondeurMax() + 1);
             }
-        }
+        }*/
         //Phase2
         configsPoids = new HashMap();
         creerConfigsPoids(p);
@@ -1295,9 +1295,7 @@ public class JoueurIADifficile extends JoueurIA {
                 configsPoids.put(pNewConfig.hashString(), scoreConf);
                 return scoreConf;
             }
-
         }
-
     }
 
     @Override
@@ -1512,13 +1510,19 @@ public class JoueurIADifficile extends JoueurIA {
             scoresMain2 += getScore(c) * coefFactions.get(getIndexfactions(c.getFaction()));
         }
 
-        //Calcul score conf        
-        if (getIsJ1()) {
-            scoreConf = (factionsVotesJ1 - factionsVotesJ2) + (scoresMain1 - scoresMain2) + (factionsVotesJ1Certain - factionsVotesJ2Certain);
-        } else {
-            scoreConf = (factionsVotesJ2 - factionsVotesJ1) + (scoresMain2 - scoresMain1) + (factionsVotesJ2Certain - factionsVotesJ1Certain);
+        if(factionsVotesJ1Certain >= 3){
+            
+        }else if(factionsVotesJ2Certain >= 3){
+            
+        }else{
+            //Calcul score conf        
+            if (getIsJ1()) {
+                scoreConf = (factionsVotesJ1 - factionsVotesJ2)*1000 + (scoresMain1 - scoresMain2) + (factionsVotesJ1Certain - factionsVotesJ2Certain)*10000;
+            } else {
+                scoreConf = (factionsVotesJ2 - factionsVotesJ1)*1000 + (scoresMain2 - scoresMain1) + (factionsVotesJ2Certain - factionsVotesJ1Certain)*10000;
+            }
         }
-
+        
         return scoreConf;
     }
 
@@ -1536,6 +1540,95 @@ public class JoueurIADifficile extends JoueurIA {
 
     public void setNbTours(int nbTours) {
         this.nbTours = nbTours;
+    }
+    
+    public ArrayList<Integer> getNbVoteCertains(Plateau p){
+        
+        
+        int factionsVotesJ1Certain = 0;
+        int factionsVotesJ2Certain = 0;
+
+        int scoresMain1 = 0;
+        int scoresMain2 = 0;
+        
+        ArrayList<Integer> nbCartesFactionsMain1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCartesFactionsMain1.set(0, p.getJ1().getNbCartesFactions(Faction.Nains,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(1, p.getJ1().getNbCartesFactions(Faction.Chevaliers,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(2, p.getJ1().getNbCartesFactions(Faction.Doppelgangers,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(3, p.getJ1().getNbCartesFactions(Faction.Gobelins,p.getJ1().getMain()));
+        nbCartesFactionsMain1.set(4, p.getJ1().getNbCartesFactions(Faction.MortsVivants,p.getJ1().getMain()));
+        
+        ArrayList<Integer> nbCartesFactionsMain2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCartesFactionsMain2.set(0, p.getJ2().getNbCartesFactions(Faction.Nains,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(1, p.getJ2().getNbCartesFactions(Faction.Chevaliers,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(2, p.getJ2().getNbCartesFactions(Faction.Doppelgangers,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(3, p.getJ2().getNbCartesFactions(Faction.Gobelins,p.getJ2().getMain()));
+        nbCartesFactionsMain2.set(4, p.getJ2().getNbCartesFactions(Faction.MortsVivants,p.getJ2().getMain()));
+
+        ArrayList<Integer> nbCarteFactions1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCarteFactions1.set(0, p.getNBCartesScore(true, Faction.Nains));
+        nbCarteFactions1.set(1, p.getNBCartesScore(true, Faction.Chevaliers));
+        nbCarteFactions1.set(2, p.getNBCartesScore(true, Faction.Doppelgangers));
+        nbCarteFactions1.set(3, p.getNBCartesScore(true, Faction.Gobelins));
+        nbCarteFactions1.set(4, p.getNBCartesScore(true, Faction.MortsVivants));
+
+        ArrayList<Integer> nbCarteFactions2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        nbCarteFactions2.set(0, p.getNBCartesScore(false, Faction.Nains));
+        nbCarteFactions2.set(1, p.getNBCartesScore(false, Faction.Chevaliers));
+        nbCarteFactions2.set(2, p.getNBCartesScore(false, Faction.Doppelgangers));
+        nbCarteFactions2.set(3, p.getNBCartesScore(false, Faction.Gobelins));
+        nbCarteFactions2.set(4, p.getNBCartesScore(false, Faction.MortsVivants));
+
+        ArrayList<Integer> forceCarteFactions1 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        forceCarteFactions1.set(0, p.getMaxCartesScore(true, Faction.Nains));
+        forceCarteFactions1.set(1, p.getMaxCartesScore(true, Faction.Chevaliers));
+        forceCarteFactions1.set(2, p.getMaxCartesScore(true, Faction.Doppelgangers));
+        forceCarteFactions1.set(3, p.getMaxCartesScore(true, Faction.Gobelins));
+        forceCarteFactions1.set(4, p.getMaxCartesScore(true, Faction.MortsVivants));
+
+        ArrayList<Integer> forceCarteFactions2 = new ArrayList(Arrays.asList(0, 0, 0, 0, 0));
+        forceCarteFactions2.set(0, p.getMaxCartesScore(false, Faction.Nains));
+        forceCarteFactions2.set(1, p.getMaxCartesScore(false, Faction.Chevaliers));
+        forceCarteFactions2.set(2, p.getMaxCartesScore(false, Faction.Doppelgangers));
+        forceCarteFactions2.set(3, p.getMaxCartesScore(false, Faction.Gobelins));
+        forceCarteFactions2.set(4, p.getMaxCartesScore(false, Faction.MortsVivants));
+
+        
+
+        
+        //votes factions
+        Iterator<Integer> it = nbCarteFactions1.iterator();
+        int j = 0;
+        while (it.hasNext()) {
+            int nbCaFa = it.next();
+            if (nbCaFa > nbCarteFactions2.get(j)) {
+                if(nbCaFa > (nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    factionsVotesJ1Certain++;
+                }
+            } else if (nbCaFa == nbCarteFactions2.get(j)) {
+                if((nbCaFa == nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    if (forceCarteFactions1.get(j) > forceCarteFactions2.get(j)) {
+                        factionsVotesJ1Certain++;
+                    } else if (forceCarteFactions1.get(j) < forceCarteFactions2.get(j)) {
+                        factionsVotesJ2Certain++;
+                    }
+                }
+            } else {
+                if(nbCaFa < (nbCarteFactions2.get(j) + nbCartesFactionsMain2.get(j) + nbCartesFactionsMain1.get(j))){
+                    factionsVotesJ1Certain++;
+                }
+            }
+            j++;
+        }
+        
+        ArrayList<Integer> tabVoteCertain = new ArrayList();
+        tabVoteCertain.add(factionsVotesJ1Certain);
+        tabVoteCertain.add(factionsVotesJ2Certain);
+        return tabVoteCertain;
+    }
+    
+    public String getDifficulte(){
+        return "difficile";
     }
 
 }

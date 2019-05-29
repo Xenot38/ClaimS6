@@ -1036,6 +1036,8 @@ public class JoueurIAMoyen extends JoueurIA {
         this.grilleMatchUp = grilleMatchUp;
     }
     
-
+    public String getDifficulte(){
+        return "moyenne";
+    }
     
 }

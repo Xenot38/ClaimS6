@@ -26,5 +26,5 @@ public abstract class JoueurIA extends Joueur{
         
         public abstract int chooseCardPhase2(Plateau p);
         
-
+        public abstract String getDifficulte();
 }

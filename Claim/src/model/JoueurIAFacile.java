@@ -8,6 +8,11 @@ public class JoueurIAFacile  extends JoueurIA{
 	
     public JoueurIAFacile(ArrayList<Carte> main, boolean isJ1) {
             super(main, isJ1);
+            
+    }
+    
+    public String getDifficulte(){
+        return "facile";
     }
     
     @Override
