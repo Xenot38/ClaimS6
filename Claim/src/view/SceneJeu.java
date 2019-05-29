@@ -173,7 +173,10 @@ public class SceneJeu {
        HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
        
        VBox vbCheval = new VBox();
-        
+       Canvas cancheval = new Canvas();
+       Pane panecheval = new Pane(cancheval);
+       panecheval.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeCh.png",40,40));
+       vbCheval.getChildren().add(panecheval);
         double cubeCheval = ControllerEnver.hauteurScore/8;
         
         for(int i =0; i<8 ;i ++){
@@ -188,13 +191,13 @@ public class SceneJeu {
            vbCheval.getChildren().add(poly);
         }
         score.add(vbCheval,0,0);
-       ImageView imChevalier = ControllerEnver.creerImageView("IconeCh.png",20,20);
-       score.add(imChevalier, 0, 8);
-       score.add(chevalierScore, 0, 9);
        
        
         VBox vbMv = new VBox();
-        
+        Canvas canmv = new Canvas();
+        Pane panemv = new Pane(canmv);
+        panemv.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeMv.png",40,40));
+        vbMv.getChildren().add(panemv);
         double cubeMv = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -211,7 +214,10 @@ public class SceneJeu {
         score.add(vbMv,1,0);
        
        VBox vbDopple = new VBox();
-        
+        Canvas candp = new Canvas();
+        Pane panedp = new Pane(candp);
+        panedp.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeDp.png",40,40));
+        vbDopple.getChildren().add(panedp);
         double cubeDopple = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -228,7 +234,10 @@ public class SceneJeu {
         score.add(vbDopple,2,0);
        
        VBox vbNain = new VBox();
-        
+        Canvas cannain = new Canvas();
+        Pane panenain = new Pane(cannain);
+        panenain.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeN.png",40,40));
+        vbNain.getChildren().add(panenain);
         double cubeNain = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -245,7 +254,10 @@ public class SceneJeu {
         score.add(vbNain,3,0);
        
        VBox vbGobelin = new VBox();
-        
+        Canvas cangb = new Canvas();
+        Pane panegb = new Pane(cangb);
+        panegb.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeGb.png",40,40));
+        vbGobelin.getChildren().add(panegb);
         double cubeGobelin = ControllerEnver.hauteurScore/14;
         
         for(int i =0; i<14 ;i ++){

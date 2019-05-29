@@ -50,6 +50,14 @@ public class SceneMenu {
     
     
     public Scene creerMenu(){
+        VBox boiteScene = new VBox();
+        Scene s = new Scene(boiteScene, largeur, hauteur);
+        s.getStylesheets().add("view/css/Menu.css");
+        
+        Jouer.getStyleClass().add("button");
+        Charger.getStyleClass().add("button");
+        Quitter.getStyleClass().add("button");     
+        Regles.getStyleClass().add("button");
         BackgroundImage myBI = null;
        try{  myBI= new BackgroundImage(new Image(new File("ressources/images/Claim.png").toURI().toString(), largeur, hauteur, false, true),
         BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -94,7 +102,7 @@ public class SceneMenu {
         HBox.setHgrow(esp4, Priority.ALWAYS);
 
         // Une boite verticale pour contenir toute la scène
-        VBox boiteScene = new VBox();
+        
 
         boiteScene.getChildren().add(esp1);
         boiteScene.getChildren().add(Titre);
@@ -108,7 +116,7 @@ public class SceneMenu {
 
         boiteScene.setBackground(new Background(myBI));
         // Contenu de la fenêtre
-        Scene s = new Scene(boiteScene, largeur, hauteur);
+        
         
         return s;
     }
