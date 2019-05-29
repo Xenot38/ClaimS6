@@ -361,4 +361,7 @@ public abstract class Joueur implements Serializable {
         return b;
     }
     
+    public abstract String getDifficulte();
+
+    
 }

@@ -51,5 +51,9 @@ public class JoueurHumain extends Joueur{
         
         return jCopie;
     }
+        
+    public String getDifficulte(){
+        return "humain";
+    }
 	
 }
