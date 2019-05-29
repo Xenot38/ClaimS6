@@ -47,9 +47,11 @@ public class ControllerEnver {
     public SceneCharger charger;
     public SceneMenu menu;
     public SceneOptionPartie option;
-    int choixScene = 2;
+    int choixScene = 1;
     boolean J1joue = true;
     public Scene scene;
+    public static int tailleCarteX = 200;
+    public static int tailleCarteY = 175;
     Stage stage;
 
     public ControllerEnver(Stage s) {        
@@ -109,7 +111,7 @@ public class ControllerEnver {
     
     public void setupJeu() {
         jeu.Main1 = getHBMain(p.getJ1().getMain(), 1);
-        jeu.Main2 = getHBMain(p.getJ2().getMain(), 0);
+        jeu.Main2 = getHBMainIA(p.getJ2().getMain(), 0);
         updateScore();
 
     }
@@ -203,7 +205,7 @@ public class ControllerEnver {
         for (int i = 0; i < ar.size(); i++) {
             final int test = i;
 
-            CarteView cr = new CarteView(ar.get(i).getCheminImage());
+            CarteView cr = new CarteView(ar.get(i).getCheminImage(),tailleCarteX,tailleCarteY);
             if (a == 0) {
                 jeu.arMain2.add(cr);
             } else {
@@ -248,15 +250,28 @@ public class ControllerEnver {
                 });
             }
             mainJoueur.getChildren().add(cr.getPane());
+            
         }
         return mainJoueur;
     }
 
+    public HBox getHBMainIA(ArrayList<Carte> ar, int a){
+        HBox mainJoueur = new HBox();
+        for (int i = 0; i < ar.size(); i++) {
+            CarteView cr = new CarteView("ressources/images/Dos.png",tailleCarteX,tailleCarteY);
+            jeu.arMain2.add(cr);
+            mainJoueur.getChildren().add(cr.getPane());
+        }
+        return mainJoueur;
+    }
+    
     public void CoupIA() {
         int a = p.getJ2().joue(p);
+        ImageView im = creerImageView(p.getJ2().getMain().get(a).getCheminImage(),tailleCarteX,tailleCarteY);
         p.setCarteJ2(p.getJ2().choisirCarte(a));
         jeu.carteJouerJoueur2.getPane().getChildren().clear();
-        jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
+        jeu.carteJouerJoueur2.SetImage(im);
+        jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().clear();
 
         for (int j = a; j < jeu.refMain2.length - 1; j++) {
             jeu.refMain2[j] = jeu.refMain2[j + 1];
@@ -414,8 +429,8 @@ public class ControllerEnver {
     public void setupJeuPhase2(){
         for (int i =0; i<13;i++){
             jeu.centreCarteAGagner.getPane().getChildren().clear();
-            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),200,175));
-            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage(),200,175));
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),tailleCarteX,tailleCarteY));
+            jeu.arMain2.get(i).SetImage(creerImageView("ressources/images/Dos.png",tailleCarteX,tailleCarteY));
             jeu.refMain1[i]=i;
             jeu.refMain2[i]=i;
         }
@@ -466,11 +481,6 @@ public class ControllerEnver {
         int mvB = 10-(mvJ2+mvJ1);
         
         jeu.score.getChildren().clear();
-        jeu.chevalierGrid.getChildren().clear();
-        jeu.mortVivantGrid.getChildren().clear();
-        jeu.nainGrid.getChildren().clear();
-        jeu.doppelGangerGrid.getChildren().clear();
-        jeu.gobelinGrid.getChildren().clear();
         
         ///////CHEVALIER/////////
         VBox vbCheval = new VBox();

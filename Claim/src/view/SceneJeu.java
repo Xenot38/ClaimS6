@@ -53,12 +53,12 @@ import view.CarteView;
 public class SceneJeu {
     
    public Plateau p;
-   public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png");
-   public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
+   public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
    public CarteView centreCarteAGagner = null;
-   public CarteView Defausse = new CarteView("ressources/images/Defausse.png");
-   public CarteView PartisanJ1 = new CarteView("ressources/images/PartisantJ1.png");
-   public CarteView PartisanJ2 = new CarteView("ressources/images/PartisantJ2.png");
+   public CarteView Defausse = new CarteView("ressources/images/Defausse.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView PartisanJ1 = new CarteView("ressources/images/PartisantJ1.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView PartisanJ2 = new CarteView("ressources/images/PartisantJ2.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
    public ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
    public ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
    public int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
@@ -66,17 +66,13 @@ public class SceneJeu {
    public  HBox Main1;
    public  HBox Main2;
    public GridPane score = new GridPane();
-   public GridPane chevalierGrid = new GridPane();
    public Label chevalierScore = new Label("0");
-   public GridPane mortVivantGrid = new GridPane();
    public Label mortVivantScore = new Label("0");
-   public GridPane nainGrid = new GridPane();
    public Label nainScore = new Label("0");
-   public GridPane doppelGangerGrid = new GridPane();
    public Label doppelGangerScore = new Label("0");
-   public GridPane gobelinGrid = new GridPane();
    public Label gobelinScore = new Label("0");
-   
+   public int tailleCarteX = 200;
+   public int tailleCarteY = 175;
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -320,7 +316,7 @@ public class SceneJeu {
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
        VBox carte = new VBox();
-       centreCarteAGagner = new CarteView(p.getCarteEnJeu().getCheminImage());
+       centreCarteAGagner = new CarteView(p.getCarteEnJeu().getCheminImage(),tailleCarteX,tailleCarteY);
        carte.getChildren().add(panepousse);
        carte.getChildren().add(centreCarteAGagner.getPane());
        return carte;
