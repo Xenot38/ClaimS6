@@ -349,4 +349,16 @@ public abstract class Joueur implements Serializable {
         return nbCF;
     }
     
+    public boolean isCarteJouable(ArrayList<Carte> arr, Carte c){
+        Iterator<Carte> it = arr.iterator();
+        boolean b = false;
+        while (it.hasNext() && !b) {
+            Carte carte = it.next();
+            if(carte.getFaction() == c.getFaction() && carte.getForce() == c.getForce()){
+                b = true;
+            }
+        }
+        return b;
+    }
+    
 }
