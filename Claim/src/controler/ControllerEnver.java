@@ -20,12 +20,14 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -47,9 +49,11 @@ public class ControllerEnver {
     public SceneCharger charger;
     public SceneMenu menu;
     public SceneOptionPartie option;
-    int choixScene = 2;
+    int choixScene = 1;
     boolean J1joue = true;
     public Scene scene;
+    public static int tailleCarteX = 200;
+    public static int tailleCarteY = 175;
     Stage stage;
 
     public ControllerEnver(Stage s) {        
@@ -81,6 +85,7 @@ public class ControllerEnver {
             case 4:
                 setupJeu();
                 scene = jeu.creerjeu(1900, 1000);
+                scene.getStylesheets().add("view/css/Jeu.css");
                 stage.setScene(scene);
                 stage.show();
                 break;
@@ -109,7 +114,7 @@ public class ControllerEnver {
     
     public void setupJeu() {
         jeu.Main1 = getHBMain(p.getJ1().getMain(), 1);
-        jeu.Main2 = getHBMain(p.getJ2().getMain(), 0);
+        jeu.Main2 = getHBMainIA(p.getJ2().getMain(), 0);
         updateScore();
 
     }
@@ -138,12 +143,6 @@ public class ControllerEnver {
         });
         option.resolution1.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                choixScene = 4;
-                try {
-                    afficher();
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ControllerEnver.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         });
         option.resolution2.setOnAction(new EventHandler<ActionEvent>() {
@@ -203,7 +202,7 @@ public class ControllerEnver {
         for (int i = 0; i < ar.size(); i++) {
             final int test = i;
 
-            CarteView cr = new CarteView(ar.get(i).getCheminImage());
+            CarteView cr = new CarteView(ar.get(i).getCheminImage(),tailleCarteX,tailleCarteY);
             if (a == 0) {
                 jeu.arMain2.add(cr);
             } else {
@@ -211,7 +210,9 @@ public class ControllerEnver {
                 cr.getPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent e) {
-                        
+                        /*for(int i =0;i<p.getJ1().getMain().size();i++){
+                            jeu.arMain1.get(i).getStyleClass().add("carte");
+                        }*/
                         
                         if (J1joue && p.containsCard(p.getJ1().getCartesJouable(p.getCarteJ2()),p.getJ1().getMain().get(jeu.refMain1[test]))) {
                             
@@ -248,15 +249,28 @@ public class ControllerEnver {
                 });
             }
             mainJoueur.getChildren().add(cr.getPane());
+            
         }
         return mainJoueur;
     }
 
+    public HBox getHBMainIA(ArrayList<Carte> ar, int a){
+        HBox mainJoueur = new HBox();
+        for (int i = 0; i < ar.size(); i++) {
+            CarteView cr = new CarteView("ressources/images/Dos.png",tailleCarteX,tailleCarteY);
+            jeu.arMain2.add(cr);
+            mainJoueur.getChildren().add(cr.getPane());
+        }
+        return mainJoueur;
+    }
+    
     public void CoupIA() {
         int a = p.getJ2().joue(p);
+        ImageView im = creerImageView(p.getJ2().getMain().get(a).getCheminImage(),tailleCarteX,tailleCarteY);
         p.setCarteJ2(p.getJ2().choisirCarte(a));
         jeu.carteJouerJoueur2.getPane().getChildren().clear();
-        jeu.carteJouerJoueur2.SetImage((ImageView) jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().get(0));
+        jeu.carteJouerJoueur2.SetImage(im);
+        jeu.arMain2.get(jeu.refMain2[a]).getPane().getChildren().clear();
 
         for (int j = a; j < jeu.refMain2.length - 1; j++) {
             jeu.refMain2[j] = jeu.refMain2[j + 1];
@@ -314,6 +328,10 @@ public class ControllerEnver {
             }
         } else {
             if (p.getCarteJ2() != null) {
+                /*for(int i =0;i<p.getJ1().getMain().size();i++){
+                    if(p.isJouable(jeu.refMain1[i])){
+                    jeu.arMain1.get(i).getStyleClass().add("carte-jouable");}
+                }*/
                 setJ1joue(true);
             } else {
                 new Thread(iaJoue).start();
@@ -412,10 +430,10 @@ public class ControllerEnver {
     
     
     public void setupJeuPhase2(){
-        for (int i =0; i<13;i++){
+        for (int i =0; i<p.getJ1().getMain().size();i++){
             jeu.centreCarteAGagner.getPane().getChildren().clear();
-            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),200,175));
-            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage(),200,175));
+            jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(),tailleCarteX,tailleCarteY));
+            jeu.arMain2.get(i).SetImage(creerImageView("ressources/images/Dos.png",tailleCarteX,tailleCarteY));
             jeu.refMain1[i]=i;
             jeu.refMain2[i]=i;
         }
@@ -466,15 +484,13 @@ public class ControllerEnver {
         int mvB = 10-(mvJ2+mvJ1);
         
         jeu.score.getChildren().clear();
-        jeu.chevalierGrid.getChildren().clear();
-        jeu.mortVivantGrid.getChildren().clear();
-        jeu.nainGrid.getChildren().clear();
-        jeu.doppelGangerGrid.getChildren().clear();
-        jeu.gobelinGrid.getChildren().clear();
         
         ///////CHEVALIER/////////
         VBox vbCheval = new VBox();
-        
+        Canvas cancheval = new Canvas();
+        Pane panecheval = new Pane(cancheval);
+        panecheval.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeCh.png",40,40));
+        vbCheval.getChildren().add(panecheval);
         double cubeCheval = hauteurScore/chevalier;
         
         for(int i =0; i<chevalierJ2 ;i ++){
@@ -514,6 +530,10 @@ public class ControllerEnver {
         
         ////////MortVivant/////////
         VBox vbMv = new VBox();
+        Canvas canmv = new Canvas();
+        Pane panemv = new Pane(canmv);
+        panemv.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeMv.png",40,40));
+        vbMv.getChildren().add(panemv);
         double cubeMv = hauteurScore/10;
         for(int i =0; i<mvJ2 ;i ++){
            Polygon poly= new Polygon();
@@ -555,6 +575,10 @@ public class ControllerEnver {
         //////////DoppleGanger///////
         
         VBox vbDopple = new VBox();
+        Canvas candp = new Canvas();
+        Pane panedp = new Pane(candp);
+        panedp.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeDp.png",40,40));
+        vbDopple.getChildren().add(panedp);
         double cubeDopple  = hauteurScore/doppleGanger;
         for(int i =0; i<doppleGangerJ2 ;i ++){
            Polygon poly= new Polygon();
@@ -594,6 +618,10 @@ public class ControllerEnver {
         
         //////////Nain////////////
         VBox vbNain = new VBox();
+        Canvas cannain = new Canvas();
+        Pane panenain = new Pane(cannain);
+        panenain.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeN.png",40,40));
+        vbNain.getChildren().add(panenain);
         double cubeNain = hauteurScore/nain;
         for(int i =0; i<nainJ2 ;i ++){
            Polygon poly= new Polygon();
@@ -632,6 +660,10 @@ public class ControllerEnver {
         
         ////////////Gobelin///////////
         VBox vbGoblin = new VBox();
+        Canvas cangb = new Canvas();
+        Pane panegb = new Pane(cangb);
+        panegb.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeGb.png",40,40));
+        vbGoblin.getChildren().add(panegb);
         double cubeGoblin = hauteurScore/gobelin;
         for(int i =0; i<gobelinJ2 ;i ++){
            Polygon poly= new Polygon();

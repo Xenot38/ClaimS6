@@ -18,9 +18,9 @@ import javafx.scene.layout.Pane;
 public class CarteView {
     AnchorPane pane;
     
-    public CarteView(String s){
+    public CarteView(String s, int x, int y){
         Image image1=null;
-        try{image1 = new Image(new File(s).toURI().toString(), 180, 175, true, true);}catch(Exception e){System.out.println("pas trouver");}
+        try{image1 = new Image(new File(s).toURI().toString(), x, y, true, true);}catch(Exception e){System.out.println("pas trouver");}
         ImageView imageSelected = new ImageView();
         imageSelected.setImage(image1);
         pane = new AnchorPane();

@@ -53,12 +53,12 @@ import view.CarteView;
 public class SceneJeu {
     
    public Plateau p;
-   public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png");
-   public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png");
+   public CarteView carteJouerJoueur1 = new CarteView("ressources/images/CarteJouerJ1.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView carteJouerJoueur2 = new CarteView("ressources/images/CarteJouerJ2.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
    public CarteView centreCarteAGagner = null;
-   public CarteView Defausse = new CarteView("ressources/images/Defausse.png");
-   public CarteView PartisanJ1 = new CarteView("ressources/images/PartisantJ1.png");
-   public CarteView PartisanJ2 = new CarteView("ressources/images/PartisantJ2.png");
+   public CarteView Defausse = new CarteView("ressources/images/Defausse.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView PartisanJ1 = new CarteView("ressources/images/PartisantJ1.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
+   public CarteView PartisanJ2 = new CarteView("ressources/images/PartisantJ2.png",ControllerEnver.tailleCarteX,ControllerEnver.tailleCarteY);
    public ArrayList<CarteView> arMain1 = new ArrayList<CarteView>();
    public ArrayList<CarteView> arMain2 = new ArrayList<CarteView>();
    public int[] refMain1 = {0,1,2,3,4,5,6,7,8,9,10,11,12};
@@ -66,17 +66,13 @@ public class SceneJeu {
    public  HBox Main1;
    public  HBox Main2;
    public GridPane score = new GridPane();
-   public GridPane chevalierGrid = new GridPane();
    public Label chevalierScore = new Label("0");
-   public GridPane mortVivantGrid = new GridPane();
    public Label mortVivantScore = new Label("0");
-   public GridPane nainGrid = new GridPane();
    public Label nainScore = new Label("0");
-   public GridPane doppelGangerGrid = new GridPane();
    public Label doppelGangerScore = new Label("0");
-   public GridPane gobelinGrid = new GridPane();
    public Label gobelinScore = new Label("0");
-   
+   public int tailleCarteX = 200;
+   public int tailleCarteY = 175;
    
    public SceneJeu(Plateau plateau){
        this.p = plateau;
@@ -177,7 +173,10 @@ public class SceneJeu {
        HBox.setHgrow(paneCentre9, Priority.ALWAYS);   
        
        VBox vbCheval = new VBox();
-        
+       Canvas cancheval = new Canvas();
+       Pane panecheval = new Pane(cancheval);
+       panecheval.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeCh.png",40,40));
+       vbCheval.getChildren().add(panecheval);
         double cubeCheval = ControllerEnver.hauteurScore/8;
         
         for(int i =0; i<8 ;i ++){
@@ -192,13 +191,13 @@ public class SceneJeu {
            vbCheval.getChildren().add(poly);
         }
         score.add(vbCheval,0,0);
-       ImageView imChevalier = ControllerEnver.creerImageView("IconeCh.png",20,20);
-       score.add(imChevalier, 0, 8);
-       score.add(chevalierScore, 0, 9);
        
        
         VBox vbMv = new VBox();
-        
+        Canvas canmv = new Canvas();
+        Pane panemv = new Pane(canmv);
+        panemv.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeMv.png",40,40));
+        vbMv.getChildren().add(panemv);
         double cubeMv = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -215,7 +214,10 @@ public class SceneJeu {
         score.add(vbMv,1,0);
        
        VBox vbDopple = new VBox();
-        
+        Canvas candp = new Canvas();
+        Pane panedp = new Pane(candp);
+        panedp.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeDp.png",40,40));
+        vbDopple.getChildren().add(panedp);
         double cubeDopple = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -232,7 +234,10 @@ public class SceneJeu {
         score.add(vbDopple,2,0);
        
        VBox vbNain = new VBox();
-        
+        Canvas cannain = new Canvas();
+        Pane panenain = new Pane(cannain);
+        panenain.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeN.png",40,40));
+        vbNain.getChildren().add(panenain);
         double cubeNain = ControllerEnver.hauteurScore/10;
         
         for(int i =0; i<10 ;i ++){
@@ -249,7 +254,10 @@ public class SceneJeu {
         score.add(vbNain,3,0);
        
        VBox vbGobelin = new VBox();
-        
+        Canvas cangb = new Canvas();
+        Pane panegb = new Pane(cangb);
+        panegb.getChildren().add(ControllerEnver.creerImageView("ressources/images/IconeGb.png",40,40));
+        vbGobelin.getChildren().add(panegb);
         double cubeGobelin = ControllerEnver.hauteurScore/14;
         
         for(int i =0; i<14 ;i ++){
@@ -320,7 +328,7 @@ public class SceneJeu {
        Canvas canpousse = new Canvas(0,70);
        Pane panepousse = new Pane(canpousse);
        VBox carte = new VBox();
-       centreCarteAGagner = new CarteView(p.getCarteEnJeu().getCheminImage());
+       centreCarteAGagner = new CarteView(p.getCarteEnJeu().getCheminImage(),tailleCarteX,tailleCarteY);
        carte.getChildren().add(panepousse);
        carte.getChildren().add(centreCarteAGagner.getPane());
        return carte;
