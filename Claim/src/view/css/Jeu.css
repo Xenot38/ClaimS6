@@ -6,8 +6,9 @@ and open the template in the editor.
 
 
 .carte-jouable {
-    -fx-border-color: #F0E68C;
+    -fx-border-color: #7FFF00;
     -fx-border-width: 4;
+    -fx-margin: 4;
 }
 .carte {
     -fx-border-width: 0;
