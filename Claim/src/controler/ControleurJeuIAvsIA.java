@@ -23,7 +23,7 @@ public class ControleurJeuIAvsIA {
         Plateau plateauJeu;
         
         public ControleurJeuIAvsIA() {
-                this.plateauJeu = new Plateau("facile",true);
+                this.plateauJeu = new Plateau("moyenne",true);
         }
         
         public void lancerJeu() {

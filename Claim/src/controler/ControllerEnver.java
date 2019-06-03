@@ -455,7 +455,7 @@ public class ControllerEnver {
     public HBox getHBMainIA(ArrayList<Carte> ar, int a) {
         HBox mainJoueur = new HBox();
         for (int i = 0; i < ar.size(); i++) {
-            CarteView cr = new CarteView("ressources/images/Dos.png", tailleCarteX, tailleCarteY);
+            CarteView cr = new CarteView(p.getJ2().getMain().get(i).getCheminImage(), tailleCarteX, tailleCarteY);
             jeu.arMain2.add(cr);
             mainJoueur.getChildren().add(cr.getPane());
         }
@@ -687,8 +687,14 @@ public class ControllerEnver {
     public void setupJeuPhase1() {
         for (int i = 0; i < p.getJ1().getMain().size(); i++) {
             jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(), tailleCarteX, tailleCarteY));
-            jeu.arMain2.get(i).SetImage(creerImageView("ressources/images/Dos.png", tailleCarteX, tailleCarteY));
+            
             jeu.refMain1[i] = i;
+            
+            
+            
+        }
+        for (int i = 0; i < p.getJ2().getMain().size(); i++) {
+            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage(), tailleCarteX, tailleCarteY));
             jeu.refMain2[i] = i;
         }
     }
@@ -697,8 +703,10 @@ public class ControllerEnver {
         for (int i = 0; i < p.getJ1().getMain().size(); i++) {
             jeu.centreCarteAGagner.getPane().getChildren().clear();
             jeu.arMain1.get(i).SetImage(creerImageView(p.getJ1().getMain().get(i).getCheminImage(), tailleCarteX, tailleCarteY));
-            jeu.arMain2.get(i).SetImage(creerImageView("ressources/images/Dos.png", tailleCarteX, tailleCarteY));
             jeu.refMain1[i] = i;
+        }
+        for (int i = 0; i < p.getJ2().getMain().size(); i++) {
+            jeu.arMain2.get(i).SetImage(creerImageView(p.getJ2().getMain().get(i).getCheminImage(), tailleCarteX, tailleCarteY));
             jeu.refMain2[i] = i;
         }
     }

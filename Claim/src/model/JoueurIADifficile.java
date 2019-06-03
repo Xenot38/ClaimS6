@@ -340,7 +340,16 @@ public class JoueurIADifficile extends JoueurIA {
         // on parcours toutes les cartes pour trouver celles de plus grandes valeurs
         while (it.hasNext()) {
             Carte c = (Carte) it.next();
-            if (c.getFaction() != Faction.MortsVivants || (c.getFaction() == Faction.MortsVivants && c.getForce() <= 3)) {
+            if(main.size() > 4){
+                if (c.getFaction() != Faction.MortsVivants || (c.getFaction() == Faction.MortsVivants && c.getForce() <= 3)) {
+                    if (c.getForce() < mins.get(0).getForce()) {
+                        mins.clear();
+                        mins.add(c);
+                    } else if (c.getForce() == mins.get(0).getForce()) {
+                        mins.add(c);
+                    }
+                }
+            }else{
                 if (c.getForce() < mins.get(0).getForce()) {
                     mins.clear();
                     mins.add(c);
@@ -348,6 +357,7 @@ public class JoueurIADifficile extends JoueurIA {
                     mins.add(c);
                 }
             }
+            
 
         }
         Random r = new Random();
