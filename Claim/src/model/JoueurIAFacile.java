@@ -67,11 +67,11 @@ public class JoueurIAFacile  extends JoueurIA{
                     //si on peut gagner
                     if(!cartesGagnante.isEmpty()){
                     System.out.println("carte gagnantes pas empty");
-                        indice = getindex(getCarteMinForce(cartesGagnante));
+                        indice = getindex(getRandomCarte(cartesGagnante));
                     //si on ne peut que perdre
                     }else{
                         System.out.println("carte gagnantes empty");
-                        indice = getindex(getCarteMinForce(cartesJouable));
+                        indice = getindex(getRandomCarte(cartesJouable));
                     }
                 }
             }else{
