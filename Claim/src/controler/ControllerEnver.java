@@ -278,46 +278,46 @@ public class ControllerEnver {
             @Override
             public void handle(ActionEvent e) {
                 option.difficulteIa = "facile";
-                option.facile.getStyleClass().clear();
-                option.facile.getStyleClass().add("buttonChoisi");
-                option.moyen.getStyleClass().clear();
-                option.moyen.getStyleClass().add("button");
-                option.difficile.getStyleClass().clear();
+                option.difficile.getStyleClass().remove("buttonChoisi");
                 option.difficile.getStyleClass().add("button");
+                option.moyen.getStyleClass().remove("buttonChoisi");
+                option.moyen.getStyleClass().add("button");
+                option.facile.getStyleClass().remove("button");
+                option.facile.getStyleClass().add("buttonChoisi");
             }
         });
         option.moyen.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 option.difficulteIa = "moyenne";
-                option.facile.getStyleClass().clear();
-                option.facile.getStyleClass().add("button");
-                option.moyen.getStyleClass().clear();
-                option.moyen.getStyleClass().add("buttonChoisi");
-                option.difficile.getStyleClass().clear();
+                option.difficile.getStyleClass().remove("buttonChoisi");
                 option.difficile.getStyleClass().add("button");
+                option.moyen.getStyleClass().remove("button");
+                option.moyen.getStyleClass().add("buttonChoisi");
+                option.facile.getStyleClass().remove("buttonChoisi");
+                option.facile.getStyleClass().add("button");
             }
         });
         option.difficile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 option.difficulteIa = "difficile";
-                option.difficile.getStyleClass().clear();
+                option.difficile.getStyleClass().remove("button");
                 option.difficile.getStyleClass().add("buttonChoisi");
-                option.moyen.getStyleClass().clear();
+                option.moyen.getStyleClass().remove("buttonChoisi");
                 option.moyen.getStyleClass().add("button");
-                option.facile.getStyleClass().clear();
+                option.facile.getStyleClass().remove("buttonChoisi");
                 option.facile.getStyleClass().add("button");
             }
         });
         option.resolution1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                option.resolution1.getStyleClass().clear();
+                option.resolution1.getStyleClass().remove("button");
                 option.resolution1.getStyleClass().add("buttonChoisi");
-                option.resolution2.getStyleClass().clear();
+                option.resolution2.getStyleClass().remove("buttonChoisi");
                 option.resolution2.getStyleClass().add("button");
-                option.resolution3.getStyleClass().clear();
+                option.resolution3.getStyleClass().remove("buttonChoisi");
                 option.resolution3.getStyleClass().add("button");
                 tailleCarteX = 170;
                 tailleCarteY = 150;
@@ -331,11 +331,11 @@ public class ControllerEnver {
         option.resolution2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                option.resolution1.getStyleClass().clear();
+                option.resolution1.getStyleClass().remove("buttonChoisi");
                 option.resolution1.getStyleClass().add("button");
-                option.resolution2.getStyleClass().clear();
+                option.resolution2.getStyleClass().remove("button");
                 option.resolution2.getStyleClass().add("buttonChoisi");
-                option.resolution3.getStyleClass().clear();
+                option.resolution3.getStyleClass().remove("buttonChoisi");
                 option.resolution3.getStyleClass().add("button");
                 tailleCarteX = 200;
                 tailleCarteY = 175;
@@ -349,11 +349,11 @@ public class ControllerEnver {
         option.resolution3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                option.resolution1.getStyleClass().clear();
+                option.resolution1.getStyleClass().remove("buttonChoisi");
                 option.resolution1.getStyleClass().add("button");
-                option.resolution2.getStyleClass().clear();
+                option.resolution2.getStyleClass().remove("buttonChoisi");
                 option.resolution2.getStyleClass().add("button");
-                option.resolution3.getStyleClass().clear();
+                option.resolution3.getStyleClass().remove("button");
                 option.resolution3.getStyleClass().add("buttonChoisi");
                 tailleCarteX = 275;
                 tailleCarteY = 235;
